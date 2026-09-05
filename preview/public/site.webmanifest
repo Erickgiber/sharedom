@@ -1,0 +1,17 @@
+{
+  "name": "ShareDOM — Fast DOM Screenshot Library",
+  "short_name": "ShareDOM",
+  "description": "Zero-dependency DOM snapshot and screenshot capture library for the browser and SSR.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#08090d",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://erickgiber.github.io/sharedom/sitemap.xml
