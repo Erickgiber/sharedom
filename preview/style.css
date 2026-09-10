@@ -1851,10 +1851,7 @@ footer {
 .privacy-nav-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 2rem;
-  gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .privacy-back-btn {
@@ -1878,35 +1875,6 @@ footer {
   border-color: rgba(139, 92, 246, 0.4);
   transform: translateX(-3px);
   color: var(--accent-light);
-}
-
-.privacy-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.85rem;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #34d399;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.privacy-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
 }
 
 .privacy-header {
@@ -2087,11 +2055,6 @@ footer {
     padding: 1.25rem;
   }
 
-  .privacy-nav-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
 }
 
 .pdf-section {

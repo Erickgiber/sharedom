@@ -1,6 +1,6 @@
 export const de = {
   metaTitle: 'ShareDOM — Screenshots von allem, im Browser und auf dem Server',
-  metaDescription: 'Schnelle, abhängigkeitsfreie Bibliothek für DOM-Snapshots und Screenshots im Browser und in SSR (Next.js, SvelteKit, Node.js). Exportiert High-DPI-Retina-Bilder als PNG, JPEG und WebP.',
+  metaDescription: 'Offizielle Datenschutzerklärung für die ShareDOM-Bibliothek und die ShareDOM-Chrome-Erweiterung. Keine Telemetrie, kein Tracking, Ausführung zu 100 % im Client.',
   nav: {
     features: 'Funktionen',
     playground: 'Playground',
@@ -160,20 +160,34 @@ export const de = {
   privacy: {
     metaTitle: 'Datenschutzerklärung — ShareDOM',
     metaDescription: 'Offizielle Datenschutzerklärung für ShareDOM und die ShareDOM-Chrome-Erweiterung. Keine Telemetrie, kein Tracking, 100 % clientseitige Ausführung.',
-    badge: '100 % clientseitig und privat',
     title: 'Datenschutzerklärung',
-    lastUpdated: 'Zuletzt aktualisiert: 30. August 2026',
+    lastUpdated: 'Zuletzt aktualisiert: 10. September 2026',
     backHome: 'Zurück zur Startseite',
     introTitle: 'Unser Bekenntnis zum Datenschutz',
-    introText: 'ShareDOM ist ein quelloffenes Entwicklerwerkzeug und eine Browser-Erweiterung, die von Grund auf auf Datenschutz ausgelegt ist. Wir sind überzeugt, dass Entwicklerwerkzeuge die Privatsphäre vollständig respektieren sollten: keine Telemetrie, kein Analyse-Tracking, kein Konto erforderlich und keine Datenübertragung an entfernte Server.',
-    singlePurposeTitle: 'Erklärung zum einzigen Zweck',
-    singlePurposeText: 'Die ShareDOM-Erweiterung dient ausschließlich dazu, DOM-Elemente auf Webseiten zu untersuchen und als saubere, hochauflösende Screenshots zu erfassen.',
-    dataCollectionTitle: 'Keine Datenerhebung und -speicherung',
+    introText: 'ShareDOM ist Open-Source-Software in zwei Formen: eine Bibliothek, die Sie Ihrem eigenen Projekt hinzufügen, und eine Chrome-Erweiterung. Beide sind von Grund auf datenschutzfreundlich gebaut, und diese Erklärung gilt für beide: keine Telemetrie, keine Analyse-Tools, keine Konten und keine Datenübertragung an externe Server.',
+    productsTitle: 'Eine Codebasis, zwei Produkte',
+    productsText: 'ShareDOM wird als npm-Bibliothek, die Sie in Ihr eigenes Projekt einbinden, und als Chrome-Erweiterung zum Aufnehmen von Seiten beim Surfen veröffentlicht. Es sind keine getrennten Programme: Die Erweiterung bündelt den Quellcode der Bibliothek beim Bauen in ihr eigenes Paket und steuert ihn über eine grafische Oberfläche. Alles Folgende gilt für beide, sofern ein Abschnitt nicht ausdrücklich eines von beiden nennt.',
+    libraryTitle: 'Die ShareDOM-Bibliothek (npm)',
+    libraryPoints: [
+      'Sie wird nur tätig, wenn Ihr Code sie aufruft: Die Bibliothek hat keine Hintergrundaktivität und keinen eigenen Lebenszyklus. Es geschieht nichts, bis Ihre Anwendung eine ihrer Funktionen aufruft.',
+      'Ergebnisse bleiben in Ihrem Projekt: Aufnahmen, Bilder, PDFs und ZIP-Archive entstehen im Browser des Besuchers oder auf Ihrem eigenen Node.js-, Next.js- oder SvelteKit-Server und werden an Ihren Code zurückgegeben. ShareDOM lädt sie nirgendwohin hoch.',
+      'Kein Speicher, keine Kennungen: Die Bibliothek schreibt nichts in localStorage, Cookies oder auf die Festplatte und erzeugt keine Geräte- oder Nutzerkennung.',
+      'Konsolen- und Netzwerkaufnahme ist freiwillig: Die Funktionen, die Konsolenausgaben und HTTP-Anfragen aufzeichnen, bleiben untätig, bis Ihr Code startConsoleCapture() oder startNetworkCapture() aufruft. Das Aufgezeichnete bleibt im Arbeitsspeicher, damit Sie es darstellen können, und verlässt weder Seite noch Server.'
+    ],
+    extensionTitle: 'Die ShareDOM-Chrome-Erweiterung',
+    extensionPoints: [
+      'Sie wird nur tätig, wenn Sie sie starten: Die Erweiterung deklariert keine Content Scripts und läuft nie von selbst auf Seiten. Sie greift auf einen Tab erst zu, nachdem Sie das Symbolleisten-Icon anklicken, Alt+Shift+S drücken oder ihren Kontextmenüeintrag wählen.',
+      'Konsolen- und Netzwerkaufnahme bleibt in der Seite: Sobald Sie den Inspektor in einem Tab starten, behält ShareDOM die Konsolenausgabe und die Netzwerkanfragen dieser Seite (Methode, Adresse, Status und Dauer, jeweils bis zu 100) im Speicher der Seite selbst, damit Sie sie als Bild oder PDF aufnehmen können. Nichts wird auf die Festplatte geschrieben oder irgendwohin gesendet, und alles verschwindet, sobald Sie den Tab neu laden oder schließen.',
+      'Nur lokale Einstellungen: Das Einzige, was die Erweiterung speichert, sind Ihre eigenen Oberflächeneinstellungen (Standardskalierung, Exportformat und Sprache) in chrome.storage.local auf Ihrem eigenen Rechner.'
+    ],
+    singlePurposeTitle: 'Chrome-Erweiterung: Erklärung zum Einzelzweck',
+    singlePurposeText: 'Die ShareDOM-Erweiterung existiert ausschließlich dafür, dass Sie DOM-Elemente, Konsolenausgaben und Netzwerkanfragen einer Seite, die Sie ausdrücklich auswählen, untersuchen und in hoher Auflösung aufnehmen können.',
+    dataCollectionTitle: 'Was keines von beiden erhebt',
     dataCollectionPoints: [
       'Keine personenbezogenen Daten: Wir erheben keine Namen, E-Mail-Adressen, IP-Adressen, Standortdaten oder Gerätekennungen.',
-      'Kein Browserverlauf: Wir zeichnen keinen Browserverlauf, keine besuchten URLs und keine Tab-Aktivität auf, prüfen sie nicht und übertragen sie nicht.',
+      'Kein Browserverlauf: Weder die Bibliothek noch die Erweiterung verfolgen die von Ihnen besuchten Seiten, Ihre Tab-Aktivität oder irgendetwas seitenübergreifend. Die Erweiterung läuft nie im Hintergrund; sie wird auf einer Seite nur aktiv, wenn Sie sie selbst starten.',
       'Keine Telemetrie oder Analyse: In der Erweiterung und der Bibliothek sind keine Tracker von Dritten (etwa Google Analytics, Mixpanel oder Sentry) enthalten oder werden geladen.',
-      '100 % lokale Ausführung: Alle DOM-Snapshots, die Bildformatierung (PNG, JPEG, WebP), das skalierte Rendern und Zwischenablage-Operationen laufen ausschließlich in deiner Browser-Laufzeit ab.'
+      'Lokale Ausführung: DOM-Aufnahme, Bildverarbeitung (PNG, JPEG, WebP), PDF-Erzeugung und Zwischenablage laufen vollständig in Ihrem Browser. Um Bilder einzubetten, die die Seite ohnehin anzeigt, fordert eine Aufnahme sie erneut von ihren ursprünglichen Adressen an, ohne dabei Informationen über Sie mitzusenden.'
     ],
     permissionsTitle: 'Begründung der Berechtigungen der Chrome-Erweiterung',
     permissionsIntro: 'Damit ShareDOM als Browser-Erweiterung korrekt funktioniert, werden nur die minimal nötigen Berechtigungen deklariert, um Elemente zu untersuchen und Screenshots zu erzeugen:',
@@ -196,9 +210,9 @@ export const de = {
       }
     ],
     thirdPartyTitle: 'Dienste Dritter und entfernter Code',
-    thirdPartyText: 'ShareDOM enthält keinen entfernten Code, lädt keine externen Skripte dynamisch nach und überträgt keine Daten an externe API-Server oder Dritte.',
+    thirdPartyText: 'Weder die Bibliothek noch die Erweiterung enthalten Remote-Code oder laden externe Skripte: Die Erweiterung bündelt die Bibliothek beim Bauen, sodass alles, was sie ausführt, im installierten Paket enthalten ist. Es wird nichts an API-Server oder Dritte gesendet. Die einzigen Netzwerkanfragen richten sich an Bilder, die auf der aufgenommenen Seite ohnehin vorhanden sind, damit sie in das Ergebnis eingebettet werden können.',
     openSourceTitle: 'Open-Source-Transparenz',
-    openSourceText: 'ShareDOM ist freie und quelloffene Software unter der MIT-Lizenz. Der gesamte Quellcode ist öffentlich einsehbar und prüfbar auf GitHub unter',
+    openSourceText: 'ShareDOM ist freie Open-Source-Software unter der MIT-Lizenz. Bibliothek und Erweiterung liegen im selben öffentlichen Repository, sodass sich jede Aussage auf dieser Seite am Quellcode überprüfen lässt unter',
     contactTitle: 'Fragen und Support',
     contactText: 'Bei Fragen, Rückmeldungen oder Bedenken zu dieser Datenschutzerklärung oder zur Sicherheit von ShareDOM kannst du gern ein Issue im offiziellen GitHub-Repository eröffnen.'
   },

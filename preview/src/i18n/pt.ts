@@ -1,6 +1,6 @@
 export const pt = {
   metaTitle: 'ShareDOM — Captura qualquer coisa no browser e no servidor',
-  metaDescription: 'Biblioteca rápida e sem dependências para snapshots e capturas do DOM no browser e em SSR (Next.js, SvelteKit, Node.js). Exporta imagens Retina de alto DPI em PNG, JPEG e WebP.',
+  metaDescription: 'Política de Privacidade oficial da biblioteca ShareDOM e da extensão ShareDOM para Chrome. Zero telemetria, zero rastreamento, execução 100% no cliente.',
   nav: {
     features: 'Funcionalidades',
     playground: 'Playground',
@@ -160,20 +160,34 @@ export const pt = {
   privacy: {
     metaTitle: 'Política de Privacidade — ShareDOM',
     metaDescription: 'Política de Privacidade oficial do ShareDOM e da extensão ShareDOM para Chrome. Zero telemetria, zero rastreio, execução 100% do lado do cliente.',
-    badge: '100% do lado do cliente e privado',
     title: 'Política de Privacidade',
-    lastUpdated: 'Última atualização: 30 de agosto de 2026',
+    lastUpdated: 'Última atualização: 10 de setembro de 2026',
     backHome: 'Voltar ao início',
     introTitle: 'O nosso compromisso com a privacidade',
-    introText: 'O ShareDOM é uma ferramenta de programação open-source e uma extensão de browser desenhada com privacidade por omissão. Acreditamos firmemente que as ferramentas para programadores devem respeitar por completo a privacidade: zero telemetria, zero rastreio analítico, zero necessidade de conta e zero envio de dados para servidores remotos.',
-    singlePurposeTitle: 'Declaração de propósito único',
-    singlePurposeText: 'A extensão ShareDOM existe unicamente para permitir inspecionar e capturar imagens limpas e de alta resolução de elementos do DOM em páginas web.',
-    dataCollectionTitle: 'Zero recolha e armazenamento de dados',
+    introText: 'O ShareDOM é software de código aberto publicado em duas formas: uma biblioteca que você adiciona ao seu próprio projeto e uma extensão para Chrome. Ambas foram desenhadas com privacidade por padrão, e esta política cobre as duas: zero telemetria, zero análises, nenhuma necessidade de conta e zero transmissão de dados a servidores externos.',
+    productsTitle: 'Um Só Código, Dois Produtos',
+    productsText: 'O ShareDOM é distribuído como uma biblioteca npm que você instala no seu projeto e como uma extensão do Chrome para capturar páginas enquanto navega. Não são programas separados: a extensão empacota o próprio código-fonte da biblioteca no seu pacote durante a compilação e o controla por uma interface visual. Tudo o que segue se aplica às duas, exceto onde uma seção nomear uma delas.',
+    libraryTitle: 'A Biblioteca ShareDOM (npm)',
+    libraryPoints: [
+      'Só age quando o seu código a chama: A biblioteca não tem atividade em segundo plano nem ciclo de vida próprio. Nada acontece até que a sua aplicação invoque uma das suas funções.',
+      'Os resultados ficam no seu projeto: Capturas, imagens, PDFs e arquivos ZIP são gerados no navegador do visitante ou no seu próprio servidor Node.js, Next.js ou SvelteKit, e devolvidos ao seu código. O ShareDOM nunca os envia a lugar algum.',
+      'Sem armazenamento nem identificadores: A biblioteca não grava nada em localStorage, cookies ou disco, e não cria nenhum identificador de usuário ou dispositivo.',
+      'A captura de console e rede é opcional: As funções que registram a saída do console e as requisições HTTP ficam inativas até que o seu código chame startConsoleCapture() ou startNetworkCapture(). O que registram permanece em memória para você renderizar, e nunca sai da página nem do servidor.'
+    ],
+    extensionTitle: 'A Extensão ShareDOM para Chrome',
+    extensionPoints: [
+      'Só age quando você a inicia: A extensão não declara content scripts e nunca roda sozinha nas páginas. Ela atua numa aba apenas depois que você clica no ícone da barra, pressiona Alt+Shift+S ou escolhe a opção no menu de contexto.',
+      'A captura de console e rede não sai da página: Ao iniciar o inspetor numa aba, o ShareDOM mantém a saída do console e as requisições de rede daquela página (método, endereço, status e duração, até 100 de cada) na memória da própria página, para que você possa capturá-las como imagem ou PDF. Nada é gravado em disco nem enviado a lugar algum, e tudo desaparece ao recarregar ou fechar a aba.',
+      'Apenas configurações locais: A única coisa que a extensão armazena são as suas preferências de interface (escala padrão, formato de exportação e idioma) em chrome.storage.local, na sua própria máquina.'
+    ],
+    singlePurposeTitle: 'Extensão do Chrome: Declaração de Propósito Único',
+    singlePurposeText: 'A extensão ShareDOM existe unicamente para permitir que você inspecione e capture imagens de alta resolução de elementos do DOM, da saída do console e das requisições de rede de uma página que você escolhe inspecionar.',
+    dataCollectionTitle: 'O Que Nenhuma das Duas Coleta',
     dataCollectionPoints: [
       'Sem informação pessoal: não recolhemos nomes, endereços de e-mail, endereços IP, dados de localização ou identificadores de dispositivo.',
-      'Sem histórico de navegação: não registamos, inspecionamos nem transmitimos qualquer histórico de navegação, URLs visitados ou atividade dos separadores.',
+      'Sem histórico de navegação: Nem a biblioteca nem a extensão rastreiam as páginas que você visita, a atividade das suas abas ou qualquer coisa entre sites. A extensão nunca roda em segundo plano; ela age numa página apenas quando você a inicia.',
       'Sem telemetria ou analítica: não são incluídos nem carregados rastreadores de terceiros (como Google Analytics, Mixpanel ou Sentry) na extensão ou na biblioteca.',
-      'Execução 100% local: todos os snapshots do DOM, a formatação de imagem (PNG, JPEG, WebP), a renderização à escala e as operações de área de transferência acontecem estritamente dentro do teu browser.'
+      'Execução local: A captura do DOM, o processamento de imagens (PNG, JPEG, WebP), a geração de PDF e as operações de área de transferência acontecem dentro do seu navegador. Para incorporar as imagens que a página já exibe, a captura as solicita novamente nos seus endereços originais, sem acrescentar qualquer informação sobre você.'
     ],
     permissionsTitle: 'Justificação das permissões da extensão Chrome',
     permissionsIntro: 'Para funcionar corretamente como extensão de browser, o ShareDOM declara apenas as permissões mínimas necessárias para inspecionar elementos e gerar capturas:',
@@ -196,9 +210,9 @@ export const pt = {
       }
     ],
     thirdPartyTitle: 'Serviços de terceiros e código remoto',
-    thirdPartyText: 'O ShareDOM não inclui código remoto, não carrega scripts externos de forma dinâmica e não transmite dados a servidores de API externos nem a terceiros.',
+    thirdPartyText: 'Nem a biblioteca nem a extensão contêm código remoto ou carregam scripts externos: a extensão empacota a biblioteca na compilação, então tudo o que executa viaja dentro do pacote que você instala. Nada é enviado a nenhum servidor de API ou terceiro. As únicas requisições de rede que qualquer uma delas faz são às imagens já presentes na página que está sendo capturada, para incorporá-las ao resultado.',
     openSourceTitle: 'Transparência open-source',
-    openSourceText: 'O ShareDOM é software livre e open-source publicado sob a Licença MIT. Todo o código-fonte está publicamente acessível e auditável no GitHub em',
+    openSourceText: 'O ShareDOM é software livre e de código aberto sob a Licença MIT. A biblioteca e a extensão vivem no mesmo repositório público, portanto cada afirmação desta página pode ser conferida no código-fonte em',
     contactTitle: 'Perguntas e apoio',
     contactText: 'Se tiveres questões, sugestões ou preocupações sobre esta Política de Privacidade ou a segurança do ShareDOM, abre um issue no repositório oficial do GitHub.'
   },

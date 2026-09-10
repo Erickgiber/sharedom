@@ -104,9 +104,7 @@
         </div>
 
         <div class="nav-right">
-          <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener noreferrer" class="nav-coffee-btn" title="☕ Buy me a coffee" data-i18n="nav.buyCoffee" data-i18n-attr="title:nav.buyCoffee">
-            ☕ Buy me a coffee
-          </a>
+          <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener noreferrer" class="nav-coffee-btn" title="☕ Buy me a coffee" data-i18n="nav.buyCoffee" data-i18n-attr="title:nav.buyCoffee">☕ Buy me a coffee</a>
           <div class="lang-select" id="langSelect">
             <button type="button" class="lang-select-trigger" id="langSelectTrigger" aria-haspopup="menu" aria-expanded="false" title="Switch language" data-i18n-attr="title:nav.switchLanguage">
               <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
@@ -225,36 +223,121 @@
               </svg>
               <span data-i18n="privacy.backHome">Back to Home</span>
             </a>
-            <div class="privacy-badge">
-              <span class="privacy-badge-dot"></span>
-              <span data-i18n="privacy.badge">100% Client-Side &amp; Private</span>
-            </div>
           </div>
 
           <!-- Header -->
           <div class="privacy-header">
             <h1 class="privacy-title" data-i18n="privacy.title">Privacy Policy</h1>
-            <p class="privacy-last-updated" data-i18n="privacy.lastUpdated">Last Updated: August 30, 2026</p>
-            <p class="privacy-lead" data-i18n="privacy.introText">ShareDOM is an open-source developer tool and browser extension designed with privacy by default. We firmly believe that developer tools should respect user privacy completely: zero telemetry, zero analytics tracking, zero account requirements, and zero remote data transmission.</p>
+            <p class="privacy-last-updated" data-i18n="privacy.lastUpdated">Last Updated: September 10, 2026</p>
+            <p class="privacy-lead" data-i18n="privacy.introText">ShareDOM is open-source software published in two forms: a library you add to your own project, and a Chrome extension. Both are designed with privacy by default, and this policy covers them both: zero telemetry, zero analytics tracking, zero account requirements, and zero remote data transmission.</p>
+          </div>
+
+          <!-- Card: One Codebase, Two Products -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">🧩</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.productsTitle">One Codebase, Two Products</h2>
+            </div>
+            <p class="privacy-card-text" data-i18n="privacy.productsText">ShareDOM is distributed as an npm library that you install into your own project, and as a Chrome extension for capturing pages while you browse. They are not separate programs: the extension bundles the library's own source into its package at build time and drives it through a visual interface. Everything below applies to both, except where a section names one of them.</p>
+          </div>
+
+          <!-- Card: ShareDOM library -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">📦</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.libraryTitle">The ShareDOM Library (npm)</h2>
+            </div>
+            <ul class="privacy-list">
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.libraryPoints.0">It acts only when your code calls it: The library has no background activity and no lifecycle of its own. Nothing happens until your application invokes one of its functions.</span>
+                </li>
+
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.libraryPoints.1">Results stay in your project: Snapshots, images, PDFs and ZIP archives are produced in the visitor's browser or on your own Node.js, Next.js or SvelteKit server, then handed back to your code. ShareDOM never uploads them anywhere.</span>
+                </li>
+
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.libraryPoints.2">No storage, no identifiers: The library writes nothing to localStorage, cookies or disk, and creates no device or user identifier.</span>
+                </li>
+
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.libraryPoints.3">Console and network capture is opt-in: The helpers that record console output and HTTP requests stay dormant until your code calls startConsoleCapture() or startNetworkCapture(). What they record is held in memory so you can render it, and never leaves the page or server.</span>
+                </li>
+            </ul>
+          </div>
+
+          <!-- Card: ShareDOM Chrome extension -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">🧭</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.extensionTitle">The ShareDOM Chrome Extension</h2>
+            </div>
+            <ul class="privacy-list">
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.extensionPoints.0">It acts only when you start it: The extension declares no content scripts and never runs on pages by itself. It touches a tab only after you click the toolbar icon, press Alt+Shift+S, or choose its context menu item.</span>
+                </li>
+
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.extensionPoints.1">Console and network capture stays in the page: Once you start the inspector on a tab, ShareDOM keeps that page's console output and network requests (method, address, status and duration, up to 100 of each) in the page's own memory so you can capture them as an image or PDF. It is never written to disk, never sent anywhere, and it is gone when you reload or close the tab.</span>
+                </li>
+
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.extensionPoints.2">Local settings only: The one thing the extension stores is your own interface preferences (default scale, export format and language) in chrome.storage.local on your own machine.</span>
+                </li>
+            </ul>
           </div>
 
           <!-- Card 1: Single Purpose -->
           <div class="privacy-card">
             <div class="privacy-card-header">
               <div class="privacy-card-icon">🎯</div>
-              <h2 class="privacy-card-title" data-i18n="privacy.singlePurposeTitle">Single Purpose Declaration</h2>
+              <h2 class="privacy-card-title" data-i18n="privacy.singlePurposeTitle">Chrome Extension: Single Purpose Declaration</h2>
             </div>
-            <p class="privacy-card-text" data-i18n="privacy.singlePurposeText">The ShareDOM extension exists solely to allow users to inspect and capture clean, high-resolution screenshots of DOM elements on web pages.</p>
+            <p class="privacy-card-text" data-i18n="privacy.singlePurposeText">The ShareDOM extension exists solely to let you inspect and capture high-resolution images of DOM elements, console output, and network requests on a page you explicitly choose to inspect.</p>
           </div>
 
           <!-- Card 2: Zero Data Collection -->
           <div class="privacy-card">
             <div class="privacy-card-header">
               <div class="privacy-card-icon">🛡️</div>
-              <h2 class="privacy-card-title" data-i18n="privacy.dataCollectionTitle">Zero Data Collection &amp; Storage</h2>
+              <h2 class="privacy-card-title" data-i18n="privacy.dataCollectionTitle">What Neither of Them Collects</h2>
             </div>
             <ul class="privacy-list">
-              
                 <li class="privacy-list-item">
                   <span class="privacy-check-icon">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -263,16 +346,16 @@
                   </span>
                   <span data-i18n="privacy.dataCollectionPoints.0">No Personal Information: We do not collect names, email addresses, IP addresses, location data, or device identifiers.</span>
                 </li>
-              
+
                 <li class="privacy-list-item">
                   <span class="privacy-check-icon">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                   </span>
-                  <span data-i18n="privacy.dataCollectionPoints.1">No Browsing History: We do not record, inspect, log, or transmit any web browsing history, visited URLs, or tab activity.</span>
+                  <span data-i18n="privacy.dataCollectionPoints.1">No Browsing History: Neither the library nor the extension tracks the pages you visit, your tab activity, or anything across sites. The extension never runs in the background; it acts on a page only when you start it yourself.</span>
                 </li>
-              
+
                 <li class="privacy-list-item">
                   <span class="privacy-check-icon">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -281,16 +364,15 @@
                   </span>
                   <span data-i18n="privacy.dataCollectionPoints.2">No Telemetry or Analytics: No third-party trackers (such as Google Analytics, Mixpanel, or Sentry) are included or loaded in the extension or library.</span>
                 </li>
-              
+
                 <li class="privacy-list-item">
                   <span class="privacy-check-icon">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                   </span>
-                  <span data-i18n="privacy.dataCollectionPoints.3">100% Local Execution: All DOM snapshotting, image formatting (PNG, JPEG, WebP), scale rendering, and clipboard operations occur strictly inside your browser runtime.</span>
+                  <span data-i18n="privacy.dataCollectionPoints.3">Local Execution: DOM snapshotting, image formatting (PNG, JPEG, WebP), PDF generation and clipboard operations all run inside your browser. To embed pictures the page already displays, a capture re-requests them from their original addresses, without adding any information about you.</span>
                 </li>
-              
             </ul>
           </div>
 
@@ -340,7 +422,7 @@
               <div class="privacy-card-icon">🚫</div>
               <h2 class="privacy-card-title" data-i18n="privacy.thirdPartyTitle">Third-Party Services &amp; Remote Code</h2>
             </div>
-            <p class="privacy-card-text" data-i18n="privacy.thirdPartyText">ShareDOM does not include any remote code, does not load external scripts dynamically, and does not transmit data to any external API servers or third parties.</p>
+            <p class="privacy-card-text" data-i18n="privacy.thirdPartyText">Neither the library nor the extension contains remote code or loads external scripts: the extension bundles the library at build time, so everything it runs ships inside the package you install. Nothing is sent to any API server or third party. The only network requests either one makes are for images already present on the page being captured, so they can be embedded in the result.</p>
           </div>
 
           <!-- Card 5: Open Source & Contact -->
@@ -350,7 +432,7 @@
               <h2 class="privacy-card-title" data-i18n="privacy.openSourceTitle">Open Source Transparency</h2>
             </div>
             <p class="privacy-card-text">
-              <span data-i18n="privacy.openSourceText">ShareDOM is free and open-source software released under the MIT License. The entire source code is publicly accessible and auditable on GitHub at</span> 
+              <span data-i18n="privacy.openSourceText">ShareDOM is free and open-source software released under the MIT License. The library and the extension live in the same public repository, so every claim on this page can be checked against the source at</span> 
               <a href="https://github.com/Erickgiber/sharedom" target="_blank" rel="noopener noreferrer" class="privacy-link">
                 github.com/Erickgiber/sharedom ↗
               </a>.
