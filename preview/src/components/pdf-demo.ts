@@ -2,17 +2,17 @@ import { capturePDF, PdfPageSize, PdfOptions } from 'sharedom';
 import { showToast } from './toast';
 import { getT, onLanguageChange } from '../i18n';
 
+type T = ReturnType<typeof getT>;
+
 const INVOICE = {
   number: 'INV-2026-0042',
-  date: 'September 1, 2026',
-  due: 'September 15, 2026',
   from: { name: 'sharedom Studio', email: 'hello@sharedom.dev', address: '123 Dev Lane, San Francisco, CA 94107' },
   to:   { name: 'Acme Corporation', email: 'billing@acme.io',   address: '456 Business Ave, New York, NY 10001' },
   items: [
-    { desc: 'UI Component Library License', qty: 1, unit: 299.00 },
-    { desc: 'Annual Support & Maintenance',  qty: 1, unit: 149.00 },
-    { desc: 'Custom Theme Integration',      qty: 3, unit:  59.00 },
-    { desc: 'Developer Consulting Hours',    qty: 4, unit:  95.00 },
+    { qty: 1, unit: 299.00 },
+    { qty: 1, unit: 149.00 },
+    { qty: 3, unit:  59.00 },
+    { qty: 4, unit:  95.00 },
   ],
 };
 
@@ -26,11 +26,11 @@ function fmt(n: number) {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
 
-function buildInvoiceHTML(logoUrl: string): string {
+function buildInvoiceHTML(logoUrl: string, t: T): string {
   const { subtotal, tax, total } = calcInvoice();
   const rows = INVOICE.items.map((item, i) => `
     <tr class="${i % 2 === 0 ? 'row-even' : 'row-odd'}">
-      <td class="td-desc">${item.desc}</td>
+      <td class="td-desc">${t.pdfDemo.invItems[i]}</td>
       <td class="td-num">${item.qty}</td>
       <td class="td-num">${fmt(item.unit)}</td>
       <td class="td-num td-total">${fmt(item.qty * item.unit)}</td>
@@ -43,55 +43,55 @@ function buildInvoiceHTML(logoUrl: string): string {
         <span class="inv-brand-name">sharedom</span>
       </div>
       <div class="inv-meta">
-        <h2 class="inv-title">INVOICE</h2>
+        <h2 class="inv-title">${t.pdfDemo.invTitle}</h2>
         <p class="inv-number">${INVOICE.number}</p>
       </div>
     </div>
     <div class="inv-parties">
       <div class="inv-party">
-        <p class="party-label">FROM</p>
+        <p class="party-label">${t.pdfDemo.invFrom}</p>
         <p class="party-name">${INVOICE.from.name}</p>
         <p class="party-detail">${INVOICE.from.email}</p>
         <p class="party-detail">${INVOICE.from.address}</p>
       </div>
       <div class="inv-party">
-        <p class="party-label">BILL TO</p>
+        <p class="party-label">${t.pdfDemo.invBillTo}</p>
         <p class="party-name">${INVOICE.to.name}</p>
         <p class="party-detail">${INVOICE.to.email}</p>
         <p class="party-detail">${INVOICE.to.address}</p>
       </div>
       <div class="inv-party">
         <div>
-          <p class="party-label">ISSUE DATE</p>
-          <p class="party-name">${INVOICE.date}</p>
+          <p class="party-label">${t.pdfDemo.invIssueDate}</p>
+          <p class="party-name">${t.pdfDemo.invIssueDateValue}</p>
         </div>
         <div style="margin-top:12px">
-          <p class="party-label">DUE DATE</p>
-          <p class="party-name inv-due">${INVOICE.due}</p>
+          <p class="party-label">${t.pdfDemo.invDueDate}</p>
+          <p class="party-name inv-due">${t.pdfDemo.invDueDateValue}</p>
         </div>
       </div>
     </div>
     <table class="inv-table">
       <thead>
         <tr>
-          <th class="th-desc">Description</th>
-          <th class="th-num">Qty</th>
-          <th class="th-num">Unit Price</th>
-          <th class="th-num">Amount</th>
+          <th class="th-desc">${t.pdfDemo.invColDesc}</th>
+          <th class="th-num">${t.pdfDemo.invColQty}</th>
+          <th class="th-num">${t.pdfDemo.invColUnit}</th>
+          <th class="th-num">${t.pdfDemo.invColAmount}</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
     </table>
     <div class="inv-summary">
       <div class="inv-summary-rows">
-        <div class="summary-row"><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
-        <div class="summary-row"><span>Tax (8%)</span><span>${fmt(tax)}</span></div>
-        <div class="summary-row summary-total"><span>Total Due</span><span>${fmt(total)}</span></div>
+        <div class="summary-row"><span>${t.pdfDemo.invSubtotal}</span><span>${fmt(subtotal)}</span></div>
+        <div class="summary-row"><span>${t.pdfDemo.invTax}</span><span>${fmt(tax)}</span></div>
+        <div class="summary-row summary-total"><span>${t.pdfDemo.invTotalDue}</span><span>${fmt(total)}</span></div>
       </div>
     </div>
     <div class="inv-footer">
-      <p>Thank you for your business! Payment is due within 14 days.</p>
-      <p class="inv-footer-sub">Questions? Contact us at hello@sharedom.dev · sharedom.dev</p>
+      <p>${t.pdfDemo.invThanks}</p>
+      <p class="inv-footer-sub">${t.pdfDemo.invContact}</p>
     </div>
   `;
 }
@@ -147,11 +147,11 @@ export function renderPdfDemo(container: HTMLElement): void {
           <h2>${t.pdfDemo.title}</h2>
           <p>${t.pdfDemo.subtitle}</p>
         </div>
-        <div class="pdf-demo-layout anim-in" id="pdfDemoLayout" style="transition-delay:150ms" data-anim-key="pdf-body">
+        <div class="pdf-demo-layout anim-in" style="transition-delay:150ms" data-anim-key="pdf-body">
           <div class="pdf-preview-col">
             <div class="pdf-invoice-wrapper">
               <div id="invoice-card" class="invoice-card">
-                ${buildInvoiceHTML(logoUrl)}
+                ${buildInvoiceHTML(logoUrl, t)}
               </div>
             </div>
           </div>
@@ -188,9 +188,9 @@ export function renderPdfDemo(container: HTMLElement): void {
               </div>
               <div class="pdf-form-group">
                 <label class="pdf-label">${t.pdfDemo.metadataLabel}</label>
-                <input type="text" id="pdfTitle"   class="pdf-input" placeholder="${t.pdfDemo.titlePlaceholder}"   value="Invoice ${INVOICE.number}" />
+                <input type="text" id="pdfTitle"   class="pdf-input" placeholder="${t.pdfDemo.titlePlaceholder}"   value="${t.pdfDemo.invoiceLabel} ${INVOICE.number}" />
                 <input type="text" id="pdfAuthor"  class="pdf-input" placeholder="${t.pdfDemo.authorPlaceholder}"  value="sharedom Studio" style="margin-top:8px" />
-                <input type="text" id="pdfSubject" class="pdf-input" placeholder="${t.pdfDemo.subjectPlaceholder}" value="Client Invoice — Acme Corporation" style="margin-top:8px" />
+                <input type="text" id="pdfSubject" class="pdf-input" placeholder="${t.pdfDemo.subjectPlaceholder}" value="${t.pdfDemo.metaSubjectValue}" style="margin-top:8px" />
               </div>
               <div class="pdf-actions">
                 <button type="button" id="btnPreviewPDF" class="pdf-btn-outline">
@@ -205,15 +205,16 @@ export function renderPdfDemo(container: HTMLElement): void {
               <p id="pdfStatus" class="pdf-status"></p>
             </div>
           </div>
-          <div id="pdfPreviewBox" class="pdf-preview-box" style="display:none">
-            <div class="pdf-preview-topbar">
-              <p class="pdf-preview-label" style="margin:0">${t.pdfDemo.lastPdf}</p>
-              <button type="button" id="btnClosePreviewPDF" class="pdf-preview-close" title="Close">✕</button>
-            </div>
-            <iframe id="pdfPreviewFrame" class="pdf-preview-iframe" title="PDF Preview"></iframe>
-            <div class="pdf-preview-actions">
-              <button type="button" id="btnOpenPDF" class="btn-ghost">${t.pdfDemo.openNewTab}</button>
-            </div>
+        </div>
+
+        <div id="pdfPreviewBox" class="result-section pdf-preview-box" style="display:none">
+          <div class="result-header">
+            <h3>${t.pdfDemo.lastPdf}</h3>
+            <button type="button" id="btnClosePreviewPDF" class="pdf-preview-close" title="${t.pdfDemo.previewClose}">✕</button>
+          </div>
+          <iframe id="pdfPreviewFrame" class="pdf-preview-iframe" title="${t.pdfDemo.previewFrameTitle}"></iframe>
+          <div class="pdf-preview-actions">
+            <button type="button" id="btnOpenPDF" class="btn-ghost">${t.pdfDemo.openNewTab}</button>
           </div>
         </div>
       </section>
@@ -287,16 +288,17 @@ export function renderPdfDemo(container: HTMLElement): void {
         const blob = await capturePDF('#invoice-card', opts);
         lastBlobUrl = URL.createObjectURL(blob);
 
-        const layout       = document.getElementById('pdfDemoLayout');
         const previewBox   = document.getElementById('pdfPreviewBox');
         const previewFrame = document.getElementById('pdfPreviewFrame') as HTMLIFrameElement | null;
         if (previewBox && previewFrame) {
-          if (layout) layout.classList.add('has-preview');
-          previewBox.style.display = 'flex';
+          previewBox.style.display = 'block';
           previewFrame.src = lastBlobUrl;
-          if (window.innerWidth <= 1024) {
-            previewBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
+          // The blob is already complete and the frame has a fixed height, so the box will not
+          // shift once the PDF paints — scrolling now is safe and does not depend on the
+          // iframe 'load' event, which never fires where no PDF viewer is available.
+          requestAnimationFrame(() => {
+            previewBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
         }
 
         setStatus(`✓ ${(blob.size / 1024).toFixed(1)} KB · ${pageSize} · ${scale}x`);
@@ -312,12 +314,8 @@ export function renderPdfDemo(container: HTMLElement): void {
 
     // ── Close preview button ───────────────────────────────────────────────
     document.getElementById('btnClosePreviewPDF')?.addEventListener('click', () => {
-      const layout     = document.getElementById('pdfDemoLayout');
       const previewBox = document.getElementById('pdfPreviewBox');
-      if (previewBox) {
-        previewBox.style.display = 'none';
-        if (layout) layout.classList.remove('has-preview');
-      }
+      if (previewBox) previewBox.style.display = 'none';
     });
 
     // ── Open in new tab button ──────────────────────────────────────────────

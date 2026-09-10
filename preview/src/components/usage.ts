@@ -49,9 +49,9 @@ await downloadCapture('#report-table', 'analytics-report.png', {
     {
       getLabel: () => 'PDF Export',
       filename: 'client-pdf.ts',
-      getCode: () => `import { downloadPDF, capturePDF } from 'sharedom';
+      getCode: (t: ReturnType<typeof getT>) => `import { downloadPDF, capturePDF } from 'sharedom';
 
-// Direct PDF download with page presets and metadata
+${t.usage.commentPdfDownload}
 await downloadPDF('#invoice-card', 'invoice.pdf', {
   pageSize: 'A4',
   orientation: 'portrait',
@@ -61,7 +61,7 @@ await downloadPDF('#invoice-card', 'invoice.pdf', {
   author: 'sharedom Studio',
 });
 
-// Or get the raw PDF Blob for preview
+${t.usage.commentPdfBlob}
 const pdfBlob = await capturePDF('#invoice-card', { pageSize: 'A4' });`,
     },
   ];
@@ -154,13 +154,13 @@ app.post('/api/snap', async (req, res) => {
     {
       getLabel: () => 'Next.js PDF',
       filename: 'app/api/pdf/route.ts',
-      getCode: () => `import { createPdfFromImageSSR } from 'sharedom/ssr';
+      getCode: (t: ReturnType<typeof getT>) => `import { createPdfFromImageSSR } from 'sharedom/ssr';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const { image, title } = await request.json();
 
-  // Generates valid PDF 1.4 Uint8Array directly from image bytes or Data URL
+  ${t.usage.commentPdfSsr}
   const pdfBytes = createPdfFromImageSSR(image, {
     pageSize: 'A4',
     orientation: 'portrait',

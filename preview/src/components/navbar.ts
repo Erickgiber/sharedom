@@ -16,7 +16,7 @@ export function renderNavbar(container: HTMLElement): void {
 
         <div class="nav-links">
           <a href="#playground">${t.nav.playground}</a>
-          <a href="#pdf-demo">PDF Demo</a>
+          <a href="#pdf-demo">${t.nav.pdfDemo}</a>
           <a href="#telemetry-demo">${t.nav.telemetry}</a>
           <a href="#features">${t.nav.features}</a>
           <a href="#usage">${t.nav.usage}</a>
@@ -26,7 +26,7 @@ export function renderNavbar(container: HTMLElement): void {
           <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener noreferrer" class="nav-coffee-btn" title="${t.nav.buyCoffee}">
             ${t.nav.buyCoffee}
           </a>
-          <button type="button" class="lang-switch-btn" id="langSwitchBtn" title="Switch language">
+          <button type="button" class="lang-switch-btn" id="langSwitchBtn" title="${t.nav.switchLanguage}">
             ${currentLang.toUpperCase()}
           </button>
         </div>

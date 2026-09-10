@@ -9,12 +9,16 @@ import {
 } from 'sharedom';
 import { showToast } from './toast';
 
+/** Demo captures run at the highest quality tier so the output is shown at full sharpness. */
+const PREVIEW_SCALE = 3;
+
 export function renderTelemetryDemo(container: HTMLElement): void {
   startConsoleCapture();
   startNetworkCapture();
 
   let previewDataUrl = '';
   let previewMeta = '';
+  let loadingLabel = '';
 
   function emitSampleLogs(): void {
     console.log('[App] Initialized successfully in environment: production');
@@ -29,6 +33,35 @@ export function renderTelemetryDemo(container: HTMLElement): void {
       fetch('https://api.example.com/v1/users/me').catch(() => undefined),
       fetch('https://api.example.com/v1/products?limit=10').catch(() => undefined),
     ]);
+  }
+
+  /** Lets the loader paint before the capture starts, since cloning styles blocks the main thread. */
+  function nextPaint(): Promise<void> {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+  }
+
+  function setLoading(label: string): void {
+    loadingLabel = label;
+
+    const section = document.getElementById('telemetryResultSection');
+    const body = container.querySelector('.telemetry-result-body');
+    const loaderLabel = document.getElementById('telemetryLoaderLabel');
+    const metaEl = document.getElementById('telemetryResultMeta');
+    if (!section || !body) return;
+
+    if (label) {
+      if (loaderLabel) loaderLabel.textContent = label;
+      if (metaEl) metaEl.textContent = '';
+      body.classList.add('is-loading');
+      section.style.display = 'block';
+      requestAnimationFrame(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    } else {
+      body.classList.remove('is-loading');
+    }
   }
 
   function showResult(dataUrl: string, meta: string): void {
@@ -46,6 +79,7 @@ export function renderTelemetryDemo(container: HTMLElement): void {
     img.addEventListener(
       'load',
       () => {
+        setLoading('');
         requestAnimationFrame(() => {
           section.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
@@ -53,17 +87,21 @@ export function renderTelemetryDemo(container: HTMLElement): void {
       { once: true }
     );
     img.src = dataUrl;
+    if (img.complete) setLoading('');
   }
 
   async function runAction(button: HTMLButtonElement, action: () => Promise<void>): Promise<void> {
     if (button.disabled) return;
     button.disabled = true;
+    button.classList.add('is-busy');
     try {
       await action();
     } catch (err) {
-      showToast(`Capture failed: ${String(err)}`);
+      setLoading('');
+      showToast(`${getT().telemetryDemo.toastError}: ${String(err)}`);
     } finally {
       button.disabled = false;
+      button.classList.remove('is-busy');
     }
   }
 
@@ -92,10 +130,12 @@ export function renderTelemetryDemo(container: HTMLElement): void {
               <p class="telemetry-card-desc">${t.telemetryDemo.consoleCardDesc}</p>
               <div class="telemetry-actions">
                 <button type="button" id="btnCapLogs" class="btn-primary telemetry-btn">
-                  ${t.telemetryDemo.btnCaptureLogs}
+                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                  <span class="telemetry-btn-label">${t.telemetryDemo.btnCaptureLogs}</span>
                 </button>
                 <button type="button" id="btnPdfLogs" class="btn-outline telemetry-btn">
-                  ${t.telemetryDemo.btnDownloadLogsPdf}
+                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                  <span class="telemetry-btn-label">${t.telemetryDemo.btnDownloadLogsPdf}</span>
                 </button>
               </div>
             </div>
@@ -114,23 +154,30 @@ export function renderTelemetryDemo(container: HTMLElement): void {
               <p class="telemetry-card-desc">${t.telemetryDemo.networkCardDesc}</p>
               <div class="telemetry-actions">
                 <button type="button" id="btnCapNetwork" class="btn-primary telemetry-btn">
-                  ${t.telemetryDemo.btnCaptureNetwork}
+                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                  <span class="telemetry-btn-label">${t.telemetryDemo.btnCaptureNetwork}</span>
                 </button>
                 <button type="button" id="btnPdfNetwork" class="btn-outline telemetry-btn">
-                  ${t.telemetryDemo.btnDownloadNetworkPdf}
+                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                  <span class="telemetry-btn-label">${t.telemetryDemo.btnDownloadNetworkPdf}</span>
                 </button>
               </div>
             </div>
           </article>
         </div>
 
-        <div id="telemetryResultSection" class="result-section telemetry-result" style="display: ${previewDataUrl ? 'block' : 'none'};">
+        <div id="telemetryResultSection" class="result-section telemetry-result" style="display: ${previewDataUrl || loadingLabel ? 'block' : 'none'};">
           <div class="result-header">
             <h3>${t.telemetryDemo.resultTitle}</h3>
-            <span id="telemetryResultMeta" class="result-meta">${previewMeta}</span>
+            <span id="telemetryResultMeta" class="result-meta">${loadingLabel ? '' : previewMeta}</span>
           </div>
-          <div class="result-body telemetry-result-body">
-            <img id="telemetryResultImg" src="${previewDataUrl}" alt="Telemetry Capture Result" class="telemetry-result-img" />
+          <div class="result-body telemetry-result-body ${loadingLabel ? 'is-loading' : ''}">
+            <div class="telemetry-loader">
+              <span class="telemetry-loader-ring" aria-hidden="true"></span>
+              <p id="telemetryLoaderLabel" class="telemetry-loader-label">${loadingLabel}</p>
+              <span class="telemetry-loader-hint">${t.telemetryDemo.loaderQuality}</span>
+            </div>
+            <img id="telemetryResultImg" src="${previewDataUrl}" alt="${t.telemetryDemo.resultAlt}" class="telemetry-result-img" />
           </div>
         </div>
       </section>
@@ -144,32 +191,42 @@ export function renderTelemetryDemo(container: HTMLElement): void {
     btnCapLogs?.addEventListener('click', () =>
       runAction(btnCapLogs, async () => {
         emitSampleLogs();
-        showResult(await captureConsoleLogs({ language: lang }), 'Console Logs • PNG');
-        showToast('Console logs captured!');
+        setLoading(t.telemetryDemo.loaderConsole);
+        await nextPaint();
+        showResult(
+          await captureConsoleLogs({ language: lang, scale: PREVIEW_SCALE }),
+          `${t.telemetryDemo.metaConsole} • PNG • ${PREVIEW_SCALE}x`
+        );
+        showToast(t.telemetryDemo.toastLogsCaptured);
       })
     );
 
     btnPdfLogs?.addEventListener('click', () =>
       runAction(btnPdfLogs, async () => {
         emitSampleLogs();
-        await downloadConsoleLogsPDF('console-logs.pdf', { language: lang });
-        showToast('Console logs PDF downloaded!');
+        await downloadConsoleLogsPDF('console-logs.pdf', { language: lang, scale: PREVIEW_SCALE });
+        showToast(t.telemetryDemo.toastLogsPdf);
       })
     );
 
     btnCapNetwork?.addEventListener('click', () =>
       runAction(btnCapNetwork, async () => {
         await emitSampleRequests();
-        showResult(await captureNetworkRequests({ language: lang }), 'Network Requests • PNG');
-        showToast('Network requests captured!');
+        setLoading(t.telemetryDemo.loaderNetwork);
+        await nextPaint();
+        showResult(
+          await captureNetworkRequests({ language: lang, scale: PREVIEW_SCALE }),
+          `${t.telemetryDemo.metaNetwork} • PNG • ${PREVIEW_SCALE}x`
+        );
+        showToast(t.telemetryDemo.toastNetworkCaptured);
       })
     );
 
     btnPdfNetwork?.addEventListener('click', () =>
       runAction(btnPdfNetwork, async () => {
         await emitSampleRequests();
-        await downloadNetworkRequestsPDF('network-requests.pdf', { language: lang });
-        showToast('Network requests PDF downloaded!');
+        await downloadNetworkRequestsPDF('network-requests.pdf', { language: lang, scale: PREVIEW_SCALE });
+        showToast(t.telemetryDemo.toastNetworkPdf);
       })
     );
   }

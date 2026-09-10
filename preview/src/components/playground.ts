@@ -99,7 +99,7 @@ export function renderPlayground(container: HTMLElement): void {
           </div>
           <div class="result-body">
             <div class="result-img-frame" id="playImgFrame">
-              <img id="playResultImg" src="${lastDataUrl}" alt="Snapshot" />
+              <img id="playResultImg" src="${lastDataUrl}" alt="${t.playground.resultAlt}" />
             </div>
             <div class="result-btns">
               <button type="button" id="btnCopyDataUrl" class="btn-ghost">${t.playground.copyDataUrl}</button>

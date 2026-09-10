@@ -23,7 +23,7 @@ export function renderHero(container: HTMLElement): void {
           <p class="hero-sub">${t.hero.subtitle}</p>
           <div class="hero-actions">
             <a href="#usage" class="btn-primary">${t.hero.readDocs}</a>
-            <button type="button" class="btn-ghost" id="copyNpmBtn" aria-label="Copy npm install command">
+            <button type="button" class="btn-ghost" id="copyNpmBtn" aria-label="${t.hero.copyCommandAria}">
               <span>${t.hero.copyCommand}</span>
               <svg class="copy-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
