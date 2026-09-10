@@ -2,6 +2,7 @@ import { getT, onLanguageChange } from '../i18n';
 import { capture, downloadCapture, CaptureOptions } from 'sharedom';
 import { showToast } from './toast';
 import { playCameraShutterSound } from '../utils/audio';
+import { trackPointerGlow } from '../utils/pointer-glow';
 import logoUrl from '../../public/logo.svg';
 
 export function renderPlayground(container: HTMLElement): void {
@@ -59,7 +60,7 @@ export function renderPlayground(container: HTMLElement): void {
               <label>${t.playground.scaleLabel}</label>
               <div class="btn-group" id="scaleGroup">
                 <button type="button" class="btn-opt ${currentScale === 1 ? 'active' : ''}" data-scale="1">1x</button>
-                <button type="button" class="btn-opt ${currentScale === 2 ? 'active' : ''}" data-scale="2">2x (Retina)</button>
+                <button type="button" class="btn-opt ${currentScale === 2 ? 'active' : ''}" data-scale="2">2x (${t.playground.scaleRetina})</button>
                 <button type="button" class="btn-opt ${currentScale === 3 ? 'active' : ''}" data-scale="3">3x</button>
               </div>
             </div>
@@ -122,16 +123,7 @@ export function renderPlayground(container: HTMLElement): void {
 
   function bindEvents(): void {
     const t = getT();
-    const controlsContainer = container.querySelector<HTMLElement>('.controls-container');
-    if (controlsContainer) {
-      controlsContainer.addEventListener('mousemove', (e) => {
-        const rect = controlsContainer.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        controlsContainer.style.setProperty('--ctrl-mouse-x', `${x}px`);
-        controlsContainer.style.setProperty('--ctrl-mouse-y', `${y}px`);
-      });
-    }
+    trackPointerGlow(container.querySelector<HTMLElement>('.controls-container'));
 
     document.querySelectorAll('#scaleGroup .btn-opt').forEach((btn) => {
       btn.addEventListener('click', () => {

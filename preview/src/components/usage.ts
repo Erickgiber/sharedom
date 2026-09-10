@@ -47,7 +47,7 @@ await downloadCapture('#report-table', 'analytics-report.png', {
 });`,
     },
     {
-      getLabel: () => 'PDF Export',
+      getLabel: (t: ReturnType<typeof getT>) => t.usage.subTabPdf,
       filename: 'client-pdf.ts',
       getCode: (t: ReturnType<typeof getT>) => `import { downloadPDF, capturePDF } from 'sharedom';
 
@@ -152,7 +152,7 @@ app.post('/api/snap', async (req, res) => {
 });`,
     },
     {
-      getLabel: () => 'Next.js PDF',
+      getLabel: (t: ReturnType<typeof getT>) => t.usage.subTabNextjsPdf,
       filename: 'app/api/pdf/route.ts',
       getCode: (t: ReturnType<typeof getT>) => `import { createPdfFromImageSSR } from 'sharedom/ssr';
 import { NextResponse } from 'next/server';

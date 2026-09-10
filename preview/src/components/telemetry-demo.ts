@@ -1,4 +1,4 @@
-import { getT, onLanguageChange, getLanguage } from '../i18n';
+import { getT, onLanguageChange, getLanguage, Language } from '../i18n';
 import {
   captureConsoleLogs,
   downloadConsoleLogsPDF,
@@ -6,11 +6,16 @@ import {
   downloadNetworkRequestsPDF,
   startConsoleCapture,
   startNetworkCapture,
+  Language as LibraryLanguage,
 } from 'sharedom';
 import { showToast } from './toast';
 
 /** Demo captures run at the highest quality tier so the output is shown at full sharpness. */
 const PREVIEW_SCALE = 3;
+
+function toLibraryLanguage(lang: Language): LibraryLanguage {
+  return lang === 'es' ? 'es' : 'en';
+}
 
 export function renderTelemetryDemo(container: HTMLElement): void {
   startConsoleCapture();
@@ -107,7 +112,7 @@ export function renderTelemetryDemo(container: HTMLElement): void {
 
   function update(): void {
     const t = getT();
-    const lang = getLanguage();
+    const lang = toLibraryLanguage(getLanguage());
 
     container.innerHTML = `
       <section class="playground-section telemetry-section" id="telemetry-demo">

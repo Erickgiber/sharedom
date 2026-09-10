@@ -1,6 +1,7 @@
 import { capturePDF, PdfPageSize, PdfOptions } from 'sharedom';
 import { showToast } from './toast';
 import { getT, onLanguageChange } from '../i18n';
+import { trackPointerGlow } from '../utils/pointer-glow';
 
 type T = ReturnType<typeof getT>;
 
@@ -161,7 +162,7 @@ export function renderPdfDemo(container: HTMLElement): void {
               <div class="pdf-form-group">
                 <label class="pdf-label">${t.pdfDemo.pageSizeLabel}</label>
                 <div class="btn-group" id="pageSizeGroup">
-                  <button type="button" class="btn-opt ${pageSize === 'auto'   ? 'active' : ''}" data-size="auto">Auto</button>
+                  <button type="button" class="btn-opt ${pageSize === 'auto'   ? 'active' : ''}" data-size="auto">${t.pdfDemo.pageSizeAuto}</button>
                   <button type="button" class="btn-opt ${pageSize === 'A4'     ? 'active' : ''}" data-size="A4">A4</button>
                   <button type="button" class="btn-opt ${pageSize === 'Letter' ? 'active' : ''}" data-size="Letter">Letter</button>
                   <button type="button" class="btn-opt ${pageSize === 'A3'     ? 'active' : ''}" data-size="A3">A3</button>
@@ -182,7 +183,7 @@ export function renderPdfDemo(container: HTMLElement): void {
                 <label class="pdf-label">${t.pdfDemo.scaleLabel}</label>
                 <div class="btn-group" id="scaleGroup">
                   <button type="button" class="btn-opt ${scale === 1 ? 'active' : ''}" data-sc="1">1x</button>
-                  <button type="button" class="btn-opt ${scale === 2 ? 'active' : ''}" data-sc="2">2x (Retina)</button>
+                  <button type="button" class="btn-opt ${scale === 2 ? 'active' : ''}" data-sc="2">2x (${t.pdfDemo.scaleRetina})</button>
                   <button type="button" class="btn-opt ${scale === 3 ? 'active' : ''}" data-sc="3">3x</button>
                 </div>
               </div>
@@ -225,6 +226,8 @@ export function renderPdfDemo(container: HTMLElement): void {
 
   function bindEvents() {
     const t = getT();
+
+    trackPointerGlow(container.querySelector<HTMLElement>('.pdf-ctrl-card'));
 
     document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(btn => {
       btn.addEventListener('click', () => {
