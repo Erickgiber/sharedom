@@ -3,8 +3,11 @@
 [![NPM Version](https://img.shields.io/npm/v/sharedom?color=blue)](https://www.npmjs.com/package/sharedom)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-sharedom-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-erickgiber.github.io%2Fsharedom-7c3aed)](https://erickgiber.github.io/sharedom/)
 
 Fast, zero-dependency DOM snapshot, screenshot, and PDF capture library for the browser and SSR (Node.js, Next.js, SvelteKit).
+
+**🌐 [Try the interactive playground &rarr;](https://erickgiber.github.io/sharedom/)** &nbsp;·&nbsp; capture, PDF export and telemetry demos running live in your browser.
 
 > 🧩 **Available as both an NPM Library and an Official Chrome Extension:**
 > - **[NPM Library (`sharedom`)](https://www.npmjs.com/package/sharedom)**: Full programmatic API for your web applications, dashboards, telemetry tools, or automated testing (Playwright/Puppeteer).

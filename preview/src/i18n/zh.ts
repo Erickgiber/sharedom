@@ -36,7 +36,7 @@ export const zh = {
     cardStat1Label: '渲染引擎',
     cardStat1Val: 'SVG + Canvas',
     cardStat2Label: '性能',
-    cardStat2Val: '13.2 kB Gzipped',
+    cardStat2Val: '13.5 kB Gzipped',
     cardQuote: 'sharedom 能干净可靠地捕获带样式的 DOM 元素。',
     scaleLabel: '缩放倍数：',
     formatLabel: '格式：',

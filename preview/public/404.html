@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#08090d" />
+  <title>Page not found — ShareDOM</title>
+  <script>
+    // GitHub Pages answers any unknown path with this file, so a near-miss such as
+    // /privacy/ lands here. Normalising the few real routes turns those into the
+    // clean URL instead of a dead end; anything else genuinely stays a 404.
+    (function () {
+      var ROUTES = ['/privacy'];
+      var path = location.pathname.replace(/\/+$/, '').replace(/\.html$/, '');
+      for (var i = 0; i < ROUTES.length; i++) {
+        if (path.slice(-ROUTES[i].length) === ROUTES[i] && path !== location.pathname) {
+          location.replace(path + location.search + location.hash);
+          return;
+        }
+      }
+    })();
+  </script>
+  <link rel="icon" type="image/svg+xml" href="/sharedom/favicon.svg" />
+  <style>
+    :root { color-scheme: dark; }
+    body { background: #08090d; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif;
+           display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 24px; }
+    main { text-align: center; max-width: 34rem; }
+    h1 { font-size: clamp(2.5rem, 8vw, 4rem); margin: 0 0 .5rem; letter-spacing: -.03em; }
+    p { color: #94a3b8; line-height: 1.6; margin: 0 0 2rem; }
+    a { color: #a78bfa; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    nav a { margin: 0 .75rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>404</h1>
+    <p>This page does not exist. ShareDOM is a zero-dependency DOM snapshot, screenshot and PDF capture library for the browser and SSR.</p>
+    <nav>
+      <a href="/sharedom/">Home</a>
+      <a href="https://github.com/Erickgiber/sharedom">GitHub</a>
+      <a href="https://www.npmjs.com/package/sharedom">npm</a>
+    </nav>
+  </main>
+</body>
+</html>

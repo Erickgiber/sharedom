@@ -1,4 +1,4 @@
-import { getT, onLanguageChange, getLanguage, Language } from '../i18n';
+import { getT, getLanguage, Language } from '../i18n';
 import {
   captureConsoleLogs,
   downloadConsoleLogsPDF,
@@ -17,13 +17,9 @@ function toLibraryLanguage(lang: Language): LibraryLanguage {
   return lang === 'es' ? 'es' : 'en';
 }
 
-export function renderTelemetryDemo(container: HTMLElement): void {
+export function initTelemetryDemo(): void {
   startConsoleCapture();
   startNetworkCapture();
-
-  let previewDataUrl = '';
-  let previewMeta = '';
-  let loadingLabel = '';
 
   function emitSampleLogs(): void {
     console.log('[App] Initialized successfully in environment: production');
@@ -48,10 +44,8 @@ export function renderTelemetryDemo(container: HTMLElement): void {
   }
 
   function setLoading(label: string): void {
-    loadingLabel = label;
-
     const section = document.getElementById('telemetryResultSection');
-    const body = container.querySelector('.telemetry-result-body');
+    const body = document.querySelector('.telemetry-result-body');
     const loaderLabel = document.getElementById('telemetryLoaderLabel');
     const metaEl = document.getElementById('telemetryResultMeta');
     if (!section || !body) return;
@@ -70,9 +64,6 @@ export function renderTelemetryDemo(container: HTMLElement): void {
   }
 
   function showResult(dataUrl: string, meta: string): void {
-    previewDataUrl = dataUrl;
-    previewMeta = meta;
-
     const section = document.getElementById('telemetryResultSection');
     const img = document.getElementById('telemetryResultImg') as HTMLImageElement | null;
     const metaEl = document.getElementById('telemetryResultMeta');
@@ -110,132 +101,58 @@ export function renderTelemetryDemo(container: HTMLElement): void {
     }
   }
 
-  function update(): void {
-    const t = getT();
-    const lang = toLibraryLanguage(getLanguage());
+  const btnCapLogs = document.getElementById('btnCapLogs') as HTMLButtonElement;
+  const btnPdfLogs = document.getElementById('btnPdfLogs') as HTMLButtonElement;
+  const btnCapNetwork = document.getElementById('btnCapNetwork') as HTMLButtonElement;
+  const btnPdfNetwork = document.getElementById('btnPdfNetwork') as HTMLButtonElement;
 
-    container.innerHTML = `
-      <section class="playground-section telemetry-section" id="telemetry-demo">
-        <div class="section-header anim-in" data-anim-key="telemetry-header">
-          <h2>${t.telemetryDemo.title}</h2>
-          <p>${t.telemetryDemo.subtitle}</p>
-        </div>
+  btnCapLogs?.addEventListener('click', () =>
+    runAction(btnCapLogs, async () => {
+      const t = getT();
+      emitSampleLogs();
+      setLoading(t.telemetryDemo.loaderConsole);
+      await nextPaint();
+      showResult(
+        await captureConsoleLogs({ language: toLibraryLanguage(getLanguage()), scale: PREVIEW_SCALE }),
+        `${t.telemetryDemo.metaConsole} • PNG • ${PREVIEW_SCALE}x`
+      );
+      showToast(t.telemetryDemo.toastLogsCaptured);
+    })
+  );
 
-        <div class="telemetry-grid">
-          <article class="telemetry-card anim-in" style="transition-delay:0ms" data-anim-key="telemetry-console">
-            <div class="telemetry-card-content">
-              <div class="telemetry-icon">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                  <path d="m6 9 3 3-3 3"></path>
-                  <path d="M12 15h5"></path>
-                </svg>
-              </div>
-              <h3 class="telemetry-card-title">${t.telemetryDemo.consoleCardTitle}</h3>
-              <p class="telemetry-card-desc">${t.telemetryDemo.consoleCardDesc}</p>
-              <div class="telemetry-actions">
-                <button type="button" id="btnCapLogs" class="btn-primary telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label">${t.telemetryDemo.btnCaptureLogs}</span>
-                </button>
-                <button type="button" id="btnPdfLogs" class="btn-outline telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label">${t.telemetryDemo.btnDownloadLogsPdf}</span>
-                </button>
-              </div>
-            </div>
-          </article>
+  btnPdfLogs?.addEventListener('click', () =>
+    runAction(btnPdfLogs, async () => {
+      emitSampleLogs();
+      await downloadConsoleLogsPDF('console-logs.pdf', {
+        language: toLibraryLanguage(getLanguage()),
+        scale: PREVIEW_SCALE,
+      });
+      showToast(getT().telemetryDemo.toastLogsPdf);
+    })
+  );
 
-          <article class="telemetry-card anim-in" style="transition-delay:120ms" data-anim-key="telemetry-network">
-            <div class="telemetry-card-content">
-              <div class="telemetry-icon telemetry-icon--network">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M2 12h20"></path>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path>
-                </svg>
-              </div>
-              <h3 class="telemetry-card-title">${t.telemetryDemo.networkCardTitle}</h3>
-              <p class="telemetry-card-desc">${t.telemetryDemo.networkCardDesc}</p>
-              <div class="telemetry-actions">
-                <button type="button" id="btnCapNetwork" class="btn-primary telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label">${t.telemetryDemo.btnCaptureNetwork}</span>
-                </button>
-                <button type="button" id="btnPdfNetwork" class="btn-outline telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label">${t.telemetryDemo.btnDownloadNetworkPdf}</span>
-                </button>
-              </div>
-            </div>
-          </article>
-        </div>
+  btnCapNetwork?.addEventListener('click', () =>
+    runAction(btnCapNetwork, async () => {
+      const t = getT();
+      await emitSampleRequests();
+      setLoading(t.telemetryDemo.loaderNetwork);
+      await nextPaint();
+      showResult(
+        await captureNetworkRequests({ language: toLibraryLanguage(getLanguage()), scale: PREVIEW_SCALE }),
+        `${t.telemetryDemo.metaNetwork} • PNG • ${PREVIEW_SCALE}x`
+      );
+      showToast(t.telemetryDemo.toastNetworkCaptured);
+    })
+  );
 
-        <div id="telemetryResultSection" class="result-section telemetry-result" style="display: ${previewDataUrl || loadingLabel ? 'block' : 'none'};">
-          <div class="result-header">
-            <h3>${t.telemetryDemo.resultTitle}</h3>
-            <span id="telemetryResultMeta" class="result-meta">${loadingLabel ? '' : previewMeta}</span>
-          </div>
-          <div class="result-body telemetry-result-body ${loadingLabel ? 'is-loading' : ''}">
-            <div class="telemetry-loader">
-              <span class="telemetry-loader-ring" aria-hidden="true"></span>
-              <p id="telemetryLoaderLabel" class="telemetry-loader-label">${loadingLabel}</p>
-              <span class="telemetry-loader-hint">${t.telemetryDemo.loaderQuality}</span>
-            </div>
-            <img id="telemetryResultImg" src="${previewDataUrl}" alt="${t.telemetryDemo.resultAlt}" class="telemetry-result-img" />
-          </div>
-        </div>
-      </section>
-    `;
-
-    const btnCapLogs = document.getElementById('btnCapLogs') as HTMLButtonElement;
-    const btnPdfLogs = document.getElementById('btnPdfLogs') as HTMLButtonElement;
-    const btnCapNetwork = document.getElementById('btnCapNetwork') as HTMLButtonElement;
-    const btnPdfNetwork = document.getElementById('btnPdfNetwork') as HTMLButtonElement;
-
-    btnCapLogs?.addEventListener('click', () =>
-      runAction(btnCapLogs, async () => {
-        emitSampleLogs();
-        setLoading(t.telemetryDemo.loaderConsole);
-        await nextPaint();
-        showResult(
-          await captureConsoleLogs({ language: lang, scale: PREVIEW_SCALE }),
-          `${t.telemetryDemo.metaConsole} • PNG • ${PREVIEW_SCALE}x`
-        );
-        showToast(t.telemetryDemo.toastLogsCaptured);
-      })
-    );
-
-    btnPdfLogs?.addEventListener('click', () =>
-      runAction(btnPdfLogs, async () => {
-        emitSampleLogs();
-        await downloadConsoleLogsPDF('console-logs.pdf', { language: lang, scale: PREVIEW_SCALE });
-        showToast(t.telemetryDemo.toastLogsPdf);
-      })
-    );
-
-    btnCapNetwork?.addEventListener('click', () =>
-      runAction(btnCapNetwork, async () => {
-        await emitSampleRequests();
-        setLoading(t.telemetryDemo.loaderNetwork);
-        await nextPaint();
-        showResult(
-          await captureNetworkRequests({ language: lang, scale: PREVIEW_SCALE }),
-          `${t.telemetryDemo.metaNetwork} • PNG • ${PREVIEW_SCALE}x`
-        );
-        showToast(t.telemetryDemo.toastNetworkCaptured);
-      })
-    );
-
-    btnPdfNetwork?.addEventListener('click', () =>
-      runAction(btnPdfNetwork, async () => {
-        await emitSampleRequests();
-        await downloadNetworkRequestsPDF('network-requests.pdf', { language: lang, scale: PREVIEW_SCALE });
-        showToast(t.telemetryDemo.toastNetworkPdf);
-      })
-    );
-  }
-
-  update();
-  onLanguageChange(update);
+  btnPdfNetwork?.addEventListener('click', () =>
+    runAction(btnPdfNetwork, async () => {
+      await emitSampleRequests();
+      await downloadNetworkRequestsPDF('network-requests.pdf', {
+        language: toLibraryLanguage(getLanguage()),
+        scale: PREVIEW_SCALE,
+      });
+      showToast(getT().telemetryDemo.toastNetworkPdf);
+    })
+  );
 }

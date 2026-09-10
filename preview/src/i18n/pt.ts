@@ -36,7 +36,7 @@ export const pt = {
     cardStat1Label: 'Motor de render',
     cardStat1Val: 'SVG + Canvas',
     cardStat2Label: 'Desempenho',
-    cardStat2Val: '13.2 kB Gzipped',
+    cardStat2Val: '13.5 kB Gzipped',
     cardQuote: 'O sharedom captura elementos do DOM com estilos de forma limpa e fiável.',
     scaleLabel: 'Fator de escala:',
     formatLabel: 'Formato:',

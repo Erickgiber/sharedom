@@ -2906,3 +2906,11 @@ footer {
     font-size: 0.78rem;
   }
 }
+
+/* Content is authored as static HTML, so the scroll-reveal animation must never
+   be what decides whether it is visible: without JS the start state is skipped. */
+.no-js .anim-in {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}

@@ -36,7 +36,7 @@ export const ja = {
     cardStat1Label: 'レンダリングエンジン',
     cardStat1Val: 'SVG + Canvas',
     cardStat2Label: 'パフォーマンス',
-    cardStat2Val: '13.2 kB Gzipped',
+    cardStat2Val: '13.5 kB Gzipped',
     cardQuote: 'sharedom はスタイル付きの DOM 要素をきれいに確実にキャプチャします。',
     scaleLabel: '拡大率:',
     formatLabel: '形式:',

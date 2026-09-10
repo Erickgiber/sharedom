@@ -20,7 +20,11 @@ export interface LanguageOption {
 
 const translations: Record<Language, Translations> = { en, es, zh, ja, pt, de, ko, ru };
 
-export const LANGUAGES: readonly LanguageOption[] = [
+/**
+ * Mirrored by the language menu markup in preview/index.html and
+ * preview/privacy/index.html: adding a language means adding its option there too.
+ */
+const LANGUAGES: readonly LanguageOption[] = [
   { code: 'en', abbr: 'EN', label: 'English', country: 'gb' },
   { code: 'es', abbr: 'ES', label: 'Español', country: 'es' },
   { code: 'zh', abbr: 'ZH', label: '中文', country: 'cn' },
@@ -45,28 +49,79 @@ function readStoredLanguage(): Language {
 
 let currentLang: Language = readStoredLanguage();
 
+/**
+ * Page content is authored as static HTML so crawlers and no-JS visitors get the
+ * real document; switching language rewrites the marked nodes in place instead of
+ * re-rendering. Markers: `data-i18n` (text), `data-i18n-attr="attr:key,..."`,
+ * `data-i18n-value` (form defaults, with optional `data-i18n-value-suffix`).
+ */
+function resolve(t: Translations, path: string): string | undefined {
+  let node: unknown = t;
+  for (const key of path.split('.')) {
+    if (typeof node !== 'object' || node === null) return undefined;
+    node = (node as Record<string, unknown>)[key];
+  }
+  return typeof node === 'string' ? node : undefined;
+}
+
+function setMeta(selector: string, content: string): void {
+  const tag = document.querySelector<HTMLMetaElement>(selector);
+  if (tag) tag.content = content;
+}
+
+function applyTranslations(lang: Language = currentLang): void {
+  if (typeof document === 'undefined') return;
+  const t = translations[lang];
+
+  for (const el of document.querySelectorAll<HTMLElement>('[data-i18n]')) {
+    const path = el.dataset.i18n;
+    const value = path === undefined ? undefined : resolve(t, path);
+    if (value !== undefined) el.textContent = value;
+  }
+
+  for (const el of document.querySelectorAll<HTMLElement>('[data-i18n-attr]')) {
+    for (const pair of (el.dataset.i18nAttr ?? '').split(',')) {
+      const separator = pair.indexOf(':');
+      if (separator === -1) continue;
+      const value = resolve(t, pair.slice(separator + 1));
+      if (value !== undefined) el.setAttribute(pair.slice(0, separator), value);
+    }
+  }
+
+  for (const el of document.querySelectorAll<HTMLInputElement>('[data-i18n-value]')) {
+    const path = el.dataset.i18nValue;
+    const value = path === undefined ? undefined : resolve(t, path);
+    if (value !== undefined) el.value = value + (el.dataset.i18nValueSuffix ?? '');
+  }
+}
+
 function applyMeta(lang: Language): void {
   if (typeof document === 'undefined') return;
   const t = translations[lang];
-  document.title = t.metaTitle;
-  document.documentElement.lang = lang;
+  const root = document.documentElement;
+  const title = resolve(t, root.dataset.metaTitle ?? 'metaTitle') ?? t.metaTitle;
+  const description = resolve(t, root.dataset.metaDescription ?? 'metaDescription') ?? t.metaDescription;
 
-  const metaDesc = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-  if (metaDesc) metaDesc.content = t.metaDescription;
+  document.title = title;
+  root.lang = lang;
 
-  const ogDesc = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
-  if (ogDesc) ogDesc.content = t.metaDescription;
+  setMeta('meta[name="title"]', title);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[name="twitter:title"]', title);
 
-  const twitterDesc = document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]');
-  if (twitterDesc) twitterDesc.content = t.metaDescription;
-}
-
-if (typeof document !== 'undefined') {
-  applyMeta(currentLang);
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[name="twitter:description"]', description);
 }
 
 type Listener = (lang: Language, t: Translations) => void;
 const listeners = new Set<Listener>();
+
+/** English is the statically authored language, so it needs no DOM pass on boot. */
+export function initI18n(): void {
+  applyMeta(currentLang);
+  if (currentLang !== 'en') applyTranslations(currentLang);
+}
 
 export function getLanguage(): Language {
   return currentLang;
@@ -86,6 +141,7 @@ export function setLanguage(lang: Language): void {
     localStorage.setItem(STORAGE_KEY, lang);
   }
   applyMeta(lang);
+  applyTranslations(lang);
   listeners.forEach((listener) => listener(currentLang, translations[currentLang]));
 }
 

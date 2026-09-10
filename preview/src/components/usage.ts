@@ -4,11 +4,10 @@ import { highlightCode } from '../utils/highlighter';
 
 type UsageSection = 'client' | 'ssr';
 
-export function renderUsage(container: HTMLElement): void {
+export function initUsage(container: HTMLElement): void {
   let activeSection: UsageSection = 'client';
   let activeClientTab = 0;
   let activeSsrTab = 0;
-  let isRevealed = false;
 
   const clientSnippets = [
     {
@@ -292,118 +291,42 @@ export async function POST(request: Request) {
     };
   }
 
-  function renderFull(): void {
-    const t = getT();
-    const currentSnippets = activeSection === 'client' ? clientSnippets : ssrSnippets;
-    const currentTab = activeSection === 'client' ? activeClientTab : activeSsrTab;
-    const activeSnippet = getActiveSnippet();
-    const code = activeSnippet.getCode(t);
-    const highlightedRows = highlightCode(code);
+  enableDragScroll(document.getElementById('usageSubTabs'));
+  enableDragScroll(document.getElementById('usageSegmentPill'));
 
-    const visClass = isRevealed ? 'visible' : '';
-
-    container.innerHTML = `
-      <section class="usage" id="usage">
-        <div class="section-header anim-in ${visClass}" data-anim-key="usage-header">
-          <h2>${t.usage.title}</h2>
-          <p class="usage-sub">${t.usage.subtitle}</p>
-        </div>
-
-        <div class="anim-in ${visClass}" style="transition-delay:80ms" data-anim-key="usage-body">
-          <!-- Section Switcher: Client vs SSR -->
-          <div class="usage-segment-row">
-            <div class="segment-pill" id="usageSegmentPill">
-              <button type="button" class="segment-btn ${activeSection === 'client' ? 'active' : ''}" data-section="client">
-                ${t.usage.sectionClient}
-              </button>
-              <button type="button" class="segment-btn ${activeSection === 'ssr' ? 'active' : ''}" data-section="ssr">
-                ${t.usage.sectionSsr}
-              </button>
-            </div>
-          </div>
-
-          <!-- Sub-tabs for current section -->
-          <div class="tabs" id="usageSubTabs">
-            ${currentSnippets
-              .map(
-                (s, i) =>
-                  `<button type="button" class="tab ${i === currentTab ? 'active' : ''}" data-tab="${i}">${s.getLabel(t)}</button>`
-              )
-              .join('')}
-          </div>
-
-          <div class="code-block" id="codeBlock">
-            <div class="code-header">
-              <div class="code-dots">
-                <div class="dot dot-r"></div>
-                <div class="dot dot-y"></div>
-                <div class="dot dot-g"></div>
-              </div>
-              <span class="code-lang">${activeSnippet.filename}</span>
-              <button type="button" class="copy-btn" id="copyCodeBtn">${t.usage.copy}</button>
-            </div>
-            <pre>${highlightedRows}</pre>
-          </div>
-        </div>
-      </section>
-    `;
-
-    // Track intersection to flag revealed
-    const usageEl = container.querySelector('.usage');
-    if (usageEl && !isRevealed) {
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            isRevealed = true;
-            obs.disconnect();
-          }
-        },
-        { threshold: 0.1 }
-      );
-      obs.observe(usageEl);
-    }
-
-    enableDragScroll(document.getElementById('usageSubTabs'));
-    enableDragScroll(document.getElementById('usageSegmentPill'));
-
-    document.querySelectorAll('#usageSegmentPill .segment-btn').forEach((segBtn) => {
-      segBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        activeSection = ((segBtn as HTMLElement).dataset.section || 'client') as UsageSection;
-        updateCodeBlockOnly();
-      });
+  document.querySelectorAll('#usageSegmentPill .segment-btn').forEach((segBtn) => {
+    segBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      activeSection = ((segBtn as HTMLElement).dataset.section || 'client') as UsageSection;
+      updateCodeBlockOnly();
     });
-
-    document.querySelectorAll('#usageSubTabs .tab').forEach((tabBtn) => {
-      tabBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tabIdx = Number((tabBtn as HTMLElement).dataset.tab || 0);
-        if (activeSection === 'client') {
-          activeClientTab = tabIdx;
-        } else {
-          activeSsrTab = tabIdx;
-        }
-        updateCodeBlockOnly();
-        (tabBtn as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-      });
-    });
-
-    document.getElementById('copyCodeBtn')?.addEventListener('click', () => {
-      const current = getActiveSnippet();
-      const code = current.getCode(getT());
-      navigator.clipboard.writeText(code);
-      const btn = document.getElementById('copyCodeBtn');
-      if (btn) btn.textContent = t.usage.copied;
-      showToast(t.usage.copied);
-      setTimeout(() => {
-        if (btn) btn.textContent = t.usage.copy;
-      }, 1800);
-    });
-  }
-
-  renderFull();
-  onLanguageChange(() => {
-    isRevealed = true;
-    renderFull();
   });
+
+  document.querySelectorAll('#usageSubTabs .tab').forEach((tabBtn) => {
+    tabBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tabIdx = Number((tabBtn as HTMLElement).dataset.tab || 0);
+      if (activeSection === 'client') {
+        activeClientTab = tabIdx;
+      } else {
+        activeSsrTab = tabIdx;
+      }
+      updateCodeBlockOnly();
+      (tabBtn as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    });
+  });
+
+  document.getElementById('copyCodeBtn')?.addEventListener('click', () => {
+    const t = getT();
+    navigator.clipboard.writeText(getActiveSnippet().getCode(t));
+    const btn = document.getElementById('copyCodeBtn');
+    if (btn) btn.textContent = t.usage.copied;
+    showToast(t.usage.copied);
+    setTimeout(() => {
+      if (btn) btn.textContent = getT().usage.copy;
+    }, 1800);
+  });
+
+  // Snippet bodies are built in JS, so they need a redraw the static markup cannot do.
+  onLanguageChange(() => updateCodeBlockOnly());
 }

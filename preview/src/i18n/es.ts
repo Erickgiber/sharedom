@@ -36,7 +36,7 @@ export const es = {
     cardStat1Label: 'Motor de Render',
     cardStat1Val: 'SVG + Canvas',
     cardStat2Label: 'Rendimiento',
-    cardStat2Val: '13.2 kB Gzipped',
+    cardStat2Val: '13.5 kB Gzipped',
     cardQuote: 'sharedom captura elementos estilizados del DOM de forma limpia y confiable.',
     scaleLabel: 'Factor de Escala:',
     formatLabel: 'Formato:',

@@ -61,7 +61,7 @@
     
     <!-- Version Pill -->
     <rect x="330" y="24" width="76" height="32" rx="16" fill="rgba(167,139,250,0.15)" stroke="rgba(167,139,250,0.4)" stroke-width="1" />
-    <text x="368" y="45" fill="#c4b5fd" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="600" text-anchor="middle">v1.0.1</text>
+    <text x="368" y="45" fill="#c4b5fd" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="600" text-anchor="middle">v1.2.2</text>
 
     <!-- Main Title -->
     <text x="0" y="165" fill="#ffffff" font-family="'Fraunces', Georgia, serif" font-size="64" font-weight="700" letter-spacing="-0.03em">
@@ -80,7 +80,7 @@
     <g transform="translate(0, 340)">
       <!-- Pill 1 -->
       <rect x="0" y="0" width="160" height="42" rx="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
-      <text x="80" y="26" fill="#f1f5f9" font-family="-apple-system, sans-serif" font-size="15" font-weight="600" text-anchor="middle">⚡ &lt; 4 kB Gzipped</text>
+      <text x="80" y="26" fill="#f1f5f9" font-family="-apple-system, sans-serif" font-size="15" font-weight="600" text-anchor="middle">⚡ 13.5 kB Gzipped</text>
 
       <!-- Pill 2 -->
       <rect x="175" y="0" width="190" height="42" rx="21" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1" />

@@ -1,15 +1,389 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" class="no-js" data-meta-title="privacy.metaTitle" data-meta-description="privacy.metaDescription">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="refresh" content="0; url=./#/privacy" />
-  <title>Redirecting to Privacy Policy — ShareDOM</title>
-  <script>
-    window.location.replace('./#/privacy');
+  <script>document.documentElement.classList.remove('no-js');</script>
+
+  <!-- Primary Meta Tags -->
+  <title>Privacy Policy — ShareDOM</title>
+  <meta name="title" content="Privacy Policy — ShareDOM" />
+  <meta name="description"
+    content="Official Privacy Policy for ShareDOM and the ShareDOM Chrome Extension. Zero telemetry, zero tracking, 100% client-side execution." />
+  <meta name="author" content="Erick Ramirez" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <meta name="theme-color" content="#08090d" />
+  <link rel="canonical" href="https://erickgiber.github.io/sharedom/privacy" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://erickgiber.github.io/sharedom/privacy" />
+  <meta property="og:title" content="Privacy Policy — ShareDOM" />
+  <meta property="og:description"
+    content="Zero telemetry, zero tracking, 100% client-side execution. The official ShareDOM privacy policy." />
+  <meta property="og:image" content="https://erickgiber.github.io/sharedom/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:site_name" content="ShareDOM" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Privacy Policy — ShareDOM" />
+  <meta name="twitter:description"
+    content="Zero telemetry, zero tracking, 100% client-side execution. The official ShareDOM privacy policy." />
+  <meta name="twitter:image" content="https://erickgiber.github.io/sharedom/og-image.png" />
+
+  <!-- Favicons & Manifest -->
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <link rel="manifest" href="./site.webmanifest" />
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+
+  <!-- JSON-LD Structured Data Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://erickgiber.github.io/sharedom/privacy#webpage",
+        "url": "https://erickgiber.github.io/sharedom/privacy",
+        "name": "Privacy Policy — ShareDOM",
+        "description": "Official Privacy Policy for ShareDOM and the ShareDOM Chrome Extension. Zero telemetry, zero tracking, 100% client-side execution.",
+        "isPartOf": {
+          "@id": "https://erickgiber.github.io/sharedom/#website"
+        },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://erickgiber.github.io/sharedom/privacy#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "ShareDOM",
+            "item": "https://erickgiber.github.io/sharedom/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Privacy Policy",
+            "item": "https://erickgiber.github.io/sharedom/privacy"
+          }
+        ]
+      }
+    ]
+  }
   </script>
 </head>
-<body style="background: #080a0e; color: #ffffff; font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0;">
-  <p>Redirecting to <a href="./#/privacy" style="color: #a78bfa;">ShareDOM Privacy Policy</a>...</p>
+
+<body>
+  <div id="navbar-mount">
+      <nav class="nav " id="mainNav">
+        <a href="./" class="nav-logo">
+          <img src="./logo.svg" alt="ShareDOM logo" class="nav-logo-img" width="32" height="32">
+          <span class="nav-logo-text">ShareDOM</span>
+        </a>
+
+        <div class="nav-links">
+          <a href="./#playground" data-i18n="nav.playground">Playground</a>
+          <a href="./#pdf-demo" data-i18n="nav.pdfDemo">PDF Demo</a>
+          <a href="./#telemetry-demo" data-i18n="nav.telemetry">Console &amp; Network</a>
+          <a href="./#features" data-i18n="nav.features">Features</a>
+          <a href="./#usage" data-i18n="nav.usage">Usage</a>
+        </div>
+
+        <div class="nav-right">
+          <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener noreferrer" class="nav-coffee-btn" title="☕ Buy me a coffee" data-i18n="nav.buyCoffee" data-i18n-attr="title:nav.buyCoffee">
+            ☕ Buy me a coffee
+          </a>
+          <div class="lang-select" id="langSelect">
+            <button type="button" class="lang-select-trigger" id="langSelectTrigger" aria-haspopup="menu" aria-expanded="false" title="Switch language" data-i18n-attr="title:nav.switchLanguage">
+              <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#012169"></rect>
+    <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
+    <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
+    <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
+    <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path>
+  </svg></span>
+              <span class="lang-abbr">EN</span>
+              <svg class="lang-caret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+            <div class="lang-select-menu" role="menu" aria-label="Switch language" data-i18n-attr="aria-label:nav.switchLanguage">
+              
+        <button type="button" role="menuitemradio" aria-checked="true" class="lang-option active" data-lang="en">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#012169"></rect>
+    <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
+    <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
+    <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
+    <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path>
+  </svg></span>
+          <span class="lang-abbr">EN</span>
+          <span class="lang-name">English</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="es">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#AA151B"></rect>
+    <rect y="4" width="24" height="8" fill="#F1BF00"></rect>
+  </svg></span>
+          <span class="lang-abbr">ES</span>
+          <span class="lang-name">Español</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="zh">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#EE1C25"></rect>
+    <g fill="#FFDE00">
+      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(4.6,4.4) scale(2.7)"></path>
+      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(9.6,1.9) scale(0.9)"></path>
+      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(11.4,4.1) scale(0.9)"></path>
+      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(11.4,6.8) scale(0.9)"></path>
+      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(9.6,8.8) scale(0.9)"></path>
+    </g>
+  </svg></span>
+          <span class="lang-abbr">ZH</span>
+          <span class="lang-name">中文</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="ja">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#fff"></rect>
+    <circle cx="12" cy="8" r="4.6" fill="#BC002D"></circle>
+  </svg></span>
+          <span class="lang-abbr">JA</span>
+          <span class="lang-name">日本語</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="pt">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#DA291C"></rect>
+    <rect width="9.6" height="16" fill="#046A38"></rect>
+    <circle cx="9.6" cy="8" r="3.4" fill="#FFE800"></circle>
+    <circle cx="9.6" cy="8" r="2.1" fill="#DA291C"></circle>
+    <circle cx="9.6" cy="8" r="1" fill="#fff"></circle>
+  </svg></span>
+          <span class="lang-abbr">PT</span>
+          <span class="lang-name">Português</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="de">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#000"></rect>
+    <rect y="5.34" width="24" height="5.33" fill="#DD0000"></rect>
+    <rect y="10.67" width="24" height="5.33" fill="#FFCE00"></rect>
+  </svg></span>
+          <span class="lang-abbr">DE</span>
+          <span class="lang-name">Deutsch</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="ko">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#fff"></rect>
+    <circle cx="12" cy="8" r="3.5" fill="#0047A0"></circle>
+    <path d="M8.5,8a1.75,1.75 0 0 1 3.5,0a1.75,1.75 0 0 0 3.5,0a3.5,3.5 0 0 0 -7,0Z" fill="#CD2E3A"></path>
+    <g fill="#000">
+      <g transform="translate(4.4,3.4) rotate(-56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
+      <g transform="translate(19.6,3.4) rotate(56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
+      <g transform="translate(4.4,12.6) rotate(56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
+      <g transform="translate(19.6,12.6) rotate(-56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
+    </g>
+  </svg></span>
+          <span class="lang-abbr">KO</span>
+          <span class="lang-name">한국어</span>
+        </button>
+        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="ru">
+          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+    <rect width="24" height="16" fill="#fff"></rect>
+    <rect y="5.34" width="24" height="5.33" fill="#0039A6"></rect>
+    <rect y="10.67" width="24" height="5.33" fill="#D52B1E"></rect>
+  </svg></span>
+          <span class="lang-abbr">RU</span>
+          <span class="lang-name">Русский</span>
+        </button>
+            </div>
+          </div>
+        </div>
+      </nav></div>
+  <main>
+    <div id="privacy-mount">
+      <section class="privacy-section">
+        <div class="privacy-container">
+          <!-- Navigation / Back -->
+          <div class="privacy-nav-bar">
+            <a href="./" class="privacy-back-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span data-i18n="privacy.backHome">Back to Home</span>
+            </a>
+            <div class="privacy-badge">
+              <span class="privacy-badge-dot"></span>
+              <span data-i18n="privacy.badge">100% Client-Side &amp; Private</span>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="privacy-header">
+            <h1 class="privacy-title" data-i18n="privacy.title">Privacy Policy</h1>
+            <p class="privacy-last-updated" data-i18n="privacy.lastUpdated">Last Updated: August 30, 2026</p>
+            <p class="privacy-lead" data-i18n="privacy.introText">ShareDOM is an open-source developer tool and browser extension designed with privacy by default. We firmly believe that developer tools should respect user privacy completely: zero telemetry, zero analytics tracking, zero account requirements, and zero remote data transmission.</p>
+          </div>
+
+          <!-- Card 1: Single Purpose -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">🎯</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.singlePurposeTitle">Single Purpose Declaration</h2>
+            </div>
+            <p class="privacy-card-text" data-i18n="privacy.singlePurposeText">The ShareDOM extension exists solely to allow users to inspect and capture clean, high-resolution screenshots of DOM elements on web pages.</p>
+          </div>
+
+          <!-- Card 2: Zero Data Collection -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">🛡️</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.dataCollectionTitle">Zero Data Collection &amp; Storage</h2>
+            </div>
+            <ul class="privacy-list">
+              
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.dataCollectionPoints.0">No Personal Information: We do not collect names, email addresses, IP addresses, location data, or device identifiers.</span>
+                </li>
+              
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.dataCollectionPoints.1">No Browsing History: We do not record, inspect, log, or transmit any web browsing history, visited URLs, or tab activity.</span>
+                </li>
+              
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.dataCollectionPoints.2">No Telemetry or Analytics: No third-party trackers (such as Google Analytics, Mixpanel, or Sentry) are included or loaded in the extension or library.</span>
+                </li>
+              
+                <li class="privacy-list-item">
+                  <span class="privacy-check-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span data-i18n="privacy.dataCollectionPoints.3">100% Local Execution: All DOM snapshotting, image formatting (PNG, JPEG, WebP), scale rendering, and clipboard operations occur strictly inside your browser runtime.</span>
+                </li>
+              
+            </ul>
+          </div>
+
+          <!-- Card 3: Permissions Justification -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">🔑</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.permissionsTitle">Chrome Extension Permissions Justification</h2>
+            </div>
+            <p class="privacy-card-text" data-i18n="privacy.permissionsIntro">To function correctly as a browser extension, ShareDOM declares the minimal necessary permissions required to inspect elements and generate screenshots:</p>
+            <div class="privacy-permissions-grid">
+              
+                <div class="privacy-perm-box">
+                  <div class="privacy-perm-name">
+                    <code data-i18n="privacy.permissions.0.name">activeTab</code>
+                  </div>
+                  <p class="privacy-perm-desc" data-i18n="privacy.permissions.0.desc">Enables the extension to interact with the currently active browser tab only when you explicitly invoke it (e.g., clicking the toolbar icon, pressing Alt+Shift+S, or selecting the context menu item).</p>
+                </div>
+              
+                <div class="privacy-perm-box">
+                  <div class="privacy-perm-name">
+                    <code data-i18n="privacy.permissions.1.name">scripting</code>
+                  </div>
+                  <p class="privacy-perm-desc" data-i18n="privacy.permissions.1.desc">Allows the extension to inject the DOM inspection content script into the active page upon explicit user trigger, displaying the visual highlight overlay.</p>
+                </div>
+              
+                <div class="privacy-perm-box">
+                  <div class="privacy-perm-name">
+                    <code data-i18n="privacy.permissions.2.name">storage</code>
+                  </div>
+                  <p class="privacy-perm-desc" data-i18n="privacy.permissions.2.desc">Used exclusively to persist your user UI preferences (such as default resolution scale, preferred image export format, and language) locally in your browser storage (`chrome.storage.local`).</p>
+                </div>
+              
+                <div class="privacy-perm-box">
+                  <div class="privacy-perm-name">
+                    <code data-i18n="privacy.permissions.3.name">contextMenus</code>
+                  </div>
+                  <p class="privacy-perm-desc" data-i18n="privacy.permissions.3.desc">Adds the "Inspect &amp; Capture DOM Element" option to your browser right-click context menu for rapid access.</p>
+                </div>
+              
+            </div>
+          </div>
+
+          <!-- Card 4: Third Party & Remote Code -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">🚫</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.thirdPartyTitle">Third-Party Services &amp; Remote Code</h2>
+            </div>
+            <p class="privacy-card-text" data-i18n="privacy.thirdPartyText">ShareDOM does not include any remote code, does not load external scripts dynamically, and does not transmit data to any external API servers or third parties.</p>
+          </div>
+
+          <!-- Card 5: Open Source & Contact -->
+          <div class="privacy-card">
+            <div class="privacy-card-header">
+              <div class="privacy-card-icon">📖</div>
+              <h2 class="privacy-card-title" data-i18n="privacy.openSourceTitle">Open Source Transparency</h2>
+            </div>
+            <p class="privacy-card-text">
+              <span data-i18n="privacy.openSourceText">ShareDOM is free and open-source software released under the MIT License. The entire source code is publicly accessible and auditable on GitHub at</span> 
+              <a href="https://github.com/Erickgiber/sharedom" target="_blank" rel="noopener noreferrer" class="privacy-link">
+                github.com/Erickgiber/sharedom ↗
+              </a>.
+            </p>
+            <div class="privacy-contact-box">
+              <h3 class="privacy-contact-title" data-i18n="privacy.contactTitle">Questions &amp; Support</h3>
+              <p class="privacy-card-text" data-i18n="privacy.contactText">If you have any questions, feedback, or concerns regarding this Privacy Policy or the security of ShareDOM, feel free to open an issue on the official GitHub repository.</p>
+            </div>
+          </div>
+        </div>
+      </section></div>
+  </main>
+  <div id="footer-mount">
+      <footer>
+        <div class="footer-logo">
+          <a href="./" class="footer-logo-link" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit;">
+            <img src="./logo.svg" alt="ShareDOM logo" width="20" height="20">
+            <span class="logo-name">ShareDOM</span>
+          </a>
+        </div>
+        <div class="footer-links">
+          <a href="./privacy" class="footer-privacy-link" data-i18n="footer.privacy">Privacy Policy</a>
+          <a href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm" target="_blank" rel="noopener noreferrer"><span data-i18n="hero.linkExtension">Chrome Extension</span> ↗</a>
+          <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener" class="footer-coffee-link" data-i18n="nav.buyCoffee">☕ Buy me a coffee</a>
+          <a href="https://www.npmjs.com/package/sharedom" target="_blank" rel="noopener"><span data-i18n="hero.linkNpm">npm package</span> ↗</a>
+          <a href="https://github.com/Erickgiber/sharedom" target="_blank" rel="noopener"><span data-i18n="hero.linkGithub">GitHub</span> ↗</a>
+        </div>
+        <span class="footer-license">
+          <span data-i18n="footer.license">MIT License</span> · <span data-i18n="footer.builtWith">Built with</span> <span class="footer-heart" aria-label="love" data-i18n-attr="aria-label:footer.heartLabel"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span> <span data-i18n="footer.by">by</span> Erickgiber · <span id="footerYear">2026</span>
+        </span>
+      </footer></div>
+
+  <script type="module" src="./main.ts"></script>
 </body>
+
 </html>

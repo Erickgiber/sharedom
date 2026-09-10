@@ -1,30 +1,38 @@
-import { renderNavbar } from './src/components/navbar';
-import { renderHero, initHeroAnimation } from './src/components/hero';
-import { renderPlayground } from './src/components/playground';
-import { renderPdfDemo } from './src/components/pdf-demo';
-import { renderTelemetryDemo } from './src/components/telemetry-demo';
-import { renderFeatures } from './src/components/features';
-import { renderUsage } from './src/components/usage';
-import { renderFooter } from './src/components/footer';
-import { renderPrivacy } from './src/components/privacy';
+import { initNavbar } from './src/components/navbar';
+import { initHero, initHeroAnimation } from './src/components/hero';
+import { initPlayground } from './src/components/playground';
+import { initPdfDemo } from './src/components/pdf-demo';
+import { initTelemetryDemo } from './src/components/telemetry-demo';
+import { initFeatures } from './src/components/features';
+import { initUsage } from './src/components/usage';
+import { initFooter } from './src/components/footer';
 
-import { onLanguageChange, getT } from './src/i18n';
+import { initI18n } from './src/i18n';
 import * as sharedom from 'sharedom';
 
 if (typeof window !== 'undefined') {
   (window as any).sharedom = sharedom;
 }
 
-const revealedKeys = new Set<string>();
+/**
+ * The policy used to live on the `#/privacy` hash route. It is a real page at
+ * /privacy now, so old links are swapped for the clean URL without leaving a
+ * history entry.
+ */
+const PRIVACY_HASHES = ['#/privacy', '#privacy'];
 
-export function setupScrollAnimations(): void {
+function redirectLegacyPrivacyHash(): boolean {
+  if (!PRIVACY_HASHES.includes(window.location.hash.toLowerCase())) return false;
+  window.location.replace(new URL('privacy', window.location.href.split('#')[0]).href);
+  return true;
+}
+
+function setupScrollAnimations(): void {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          const key = entry.target.getAttribute('data-anim-key');
-          if (key) revealedKeys.add(key);
           observer.unobserve(entry.target);
         }
       });
@@ -32,18 +40,7 @@ export function setupScrollAnimations(): void {
     { threshold: 0.12 }
   );
 
-  document.querySelectorAll('.anim-in').forEach((el, index) => {
-    const key = el.getAttribute('data-anim-key') || `anim-el-${index}`;
-    if (!el.getAttribute('data-anim-key')) {
-      el.setAttribute('data-anim-key', key);
-    }
-
-    if (revealedKeys.has(key)) {
-      el.classList.add('visible');
-    } else if (!el.classList.contains('visible')) {
-      observer.observe(el);
-    }
-  });
+  document.querySelectorAll('.anim-in').forEach((el) => observer.observe(el));
 
   const heroVisual = document.querySelector('.hero-visual');
   if (heroVisual) {
@@ -60,67 +57,29 @@ export function setupScrollAnimations(): void {
   }
 }
 
-function handleRoute(): void {
-  const hash = window.location.hash.toLowerCase();
-  const isPrivacy = hash === '#/privacy' || hash === '#privacy';
-
-  const landingContainer = document.getElementById('landing-content');
-  const privacyContainer = document.getElementById('privacy-mount');
-
-  if (isPrivacy) {
-    if (landingContainer) landingContainer.style.display = 'none';
-    if (privacyContainer) {
-      privacyContainer.style.display = 'block';
-      renderPrivacy(privacyContainer);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    const t = getT();
-    document.title = t.privacy.metaTitle;
-  } else {
-    if (privacyContainer) privacyContainer.style.display = 'none';
-    if (landingContainer) landingContainer.style.display = 'block';
-    const t = getT();
-    document.title = t.metaTitle;
-    setupScrollAnimations();
-
-    if (hash && hash !== '#' && hash !== '#/' && !hash.startsWith('#/privacy')) {
-      const targetId = hash.replace(/^#\/?/, '');
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) {
-        setTimeout(() => {
-          targetEl.scrollIntoView({ behavior: 'smooth' });
-        }, 50);
-      }
-    }
-  }
-}
-
 function initApp(): void {
-  const navMount        = document.getElementById('navbar-mount');
-  const heroMount       = document.getElementById('hero-mount');
+  if (redirectLegacyPrivacyHash()) return;
+  window.addEventListener('hashchange', redirectLegacyPrivacyHash);
+
+  initI18n();
+
+  const navMount = document.getElementById('navbar-mount');
   const playgroundMount = document.getElementById('playground-mount');
-  const pdfDemoMount    = document.getElementById('pdf-demo-mount');
-  const telemetryMount  = document.getElementById('telemetry-demo-mount');
-  const featuresMount   = document.getElementById('features-mount');
-  const usageMount      = document.getElementById('usage-mount');
-  const footerMount     = document.getElementById('footer-mount');
+  const pdfDemoMount = document.getElementById('pdf-demo-mount');
+  const featuresMount = document.getElementById('features-mount');
+  const usageMount = document.getElementById('usage-mount');
+  const footerMount = document.getElementById('footer-mount');
 
-  if (navMount)        renderNavbar(navMount);
-  if (heroMount)       renderHero(heroMount);
-  if (playgroundMount) renderPlayground(playgroundMount);
-  if (pdfDemoMount)    renderPdfDemo(pdfDemoMount);
-  if (telemetryMount)  renderTelemetryDemo(telemetryMount);
-  if (featuresMount)   renderFeatures(featuresMount);
-  if (usageMount)      renderUsage(usageMount);
-  if (footerMount)     renderFooter(footerMount);
+  if (navMount) initNavbar(navMount);
+  if (document.getElementById('hero-mount')) initHero();
+  if (playgroundMount) initPlayground(playgroundMount);
+  if (pdfDemoMount) initPdfDemo(pdfDemoMount);
+  if (document.getElementById('telemetry-demo-mount')) initTelemetryDemo();
+  if (featuresMount) initFeatures(featuresMount);
+  if (usageMount) initUsage(usageMount);
+  if (footerMount) initFooter(footerMount);
 
-
-  handleRoute();
-  window.addEventListener('hashchange', handleRoute);
-
-  onLanguageChange(() => {
-    handleRoute();
-  });
+  setupScrollAnimations();
 }
 
 if (document.readyState === 'loading') {
@@ -128,4 +87,3 @@ if (document.readyState === 'loading') {
 } else {
   initApp();
 }
-

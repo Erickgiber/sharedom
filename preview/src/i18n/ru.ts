@@ -36,7 +36,7 @@ export const ru = {
     cardStat1Label: 'Движок рендеринга',
     cardStat1Val: 'SVG + Canvas',
     cardStat2Label: 'Производительность',
-    cardStat2Val: '13.2 kB Gzipped',
+    cardStat2Val: '13.5 kB Gzipped',
     cardQuote: 'sharedom аккуратно и надёжно снимает стилизованные элементы DOM.',
     scaleLabel: 'Масштаб:',
     formatLabel: 'Формат:',

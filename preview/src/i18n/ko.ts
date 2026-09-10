@@ -36,7 +36,7 @@ export const ko = {
     cardStat1Label: '렌더링 엔진',
     cardStat1Val: 'SVG + Canvas',
     cardStat2Label: '성능',
-    cardStat2Val: '13.2 kB Gzipped',
+    cardStat2Val: '13.5 kB Gzipped',
     cardQuote: 'sharedom은 스타일이 적용된 DOM 요소를 깔끔하고 안정적으로 캡처합니다.',
     scaleLabel: '배율:',
     formatLabel: '형식:',

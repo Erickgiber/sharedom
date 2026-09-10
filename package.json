@@ -35,7 +35,8 @@
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "assets:store": "node store-assets/scripts/capture-store-assets.mjs"
+    "assets:store": "node store-assets/scripts/capture-store-assets.mjs",
+    "assets:seo": "npm run build && node preview/scripts/generate-seo-assets.mjs"
   },
   "keywords": [
     "sharedom",
@@ -62,6 +63,7 @@
   "devDependencies": {
     "@playwright/test": "^1.50.1",
     "@types/chrome": "^0.2.7",
+    "esbuild": "^0.28.2",
     "tsup": "^8.3.6",
     "typescript": "^5.7.3",
     "vite": "^6.2.0"

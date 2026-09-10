@@ -1,103 +1,12 @@
 import { capturePDF, PdfPageSize, PdfOptions } from 'sharedom';
 import { showToast } from './toast';
-import { getT, onLanguageChange } from '../i18n';
+import { getT } from '../i18n';
 import { trackPointerGlow } from '../utils/pointer-glow';
 
-type T = ReturnType<typeof getT>;
+/** The invoice itself is static markup; only its number is needed at runtime. */
+const INVOICE_NUMBER = 'INV-2026-0042';
 
-const INVOICE = {
-  number: 'INV-2026-0042',
-  from: { name: 'sharedom Studio', email: 'hello@sharedom.dev', address: '123 Dev Lane, San Francisco, CA 94107' },
-  to:   { name: 'Acme Corporation', email: 'billing@acme.io',   address: '456 Business Ave, New York, NY 10001' },
-  items: [
-    { qty: 1, unit: 299.00 },
-    { qty: 1, unit: 149.00 },
-    { qty: 3, unit:  59.00 },
-    { qty: 4, unit:  95.00 },
-  ],
-};
-
-function calcInvoice() {
-  const subtotal = INVOICE.items.reduce((s, i) => s + i.qty * i.unit, 0);
-  const tax = subtotal * 0.08;
-  return { subtotal, tax, total: subtotal + tax };
-}
-
-function fmt(n: number) {
-  return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-}
-
-function buildInvoiceHTML(logoUrl: string, t: T): string {
-  const { subtotal, tax, total } = calcInvoice();
-  const rows = INVOICE.items.map((item, i) => `
-    <tr class="${i % 2 === 0 ? 'row-even' : 'row-odd'}">
-      <td class="td-desc">${t.pdfDemo.invItems[i]}</td>
-      <td class="td-num">${item.qty}</td>
-      <td class="td-num">${fmt(item.unit)}</td>
-      <td class="td-num td-total">${fmt(item.qty * item.unit)}</td>
-    </tr>`).join('');
-
-  return `
-    <div class="inv-header">
-      <div class="inv-brand">
-        <img src="${logoUrl}" alt="sharedom" class="inv-logo" />
-        <span class="inv-brand-name">sharedom</span>
-      </div>
-      <div class="inv-meta">
-        <h2 class="inv-title">${t.pdfDemo.invTitle}</h2>
-        <p class="inv-number">${INVOICE.number}</p>
-      </div>
-    </div>
-    <div class="inv-parties">
-      <div class="inv-party">
-        <p class="party-label">${t.pdfDemo.invFrom}</p>
-        <p class="party-name">${INVOICE.from.name}</p>
-        <p class="party-detail">${INVOICE.from.email}</p>
-        <p class="party-detail">${INVOICE.from.address}</p>
-      </div>
-      <div class="inv-party">
-        <p class="party-label">${t.pdfDemo.invBillTo}</p>
-        <p class="party-name">${INVOICE.to.name}</p>
-        <p class="party-detail">${INVOICE.to.email}</p>
-        <p class="party-detail">${INVOICE.to.address}</p>
-      </div>
-      <div class="inv-party">
-        <div>
-          <p class="party-label">${t.pdfDemo.invIssueDate}</p>
-          <p class="party-name">${t.pdfDemo.invIssueDateValue}</p>
-        </div>
-        <div style="margin-top:12px">
-          <p class="party-label">${t.pdfDemo.invDueDate}</p>
-          <p class="party-name inv-due">${t.pdfDemo.invDueDateValue}</p>
-        </div>
-      </div>
-    </div>
-    <table class="inv-table">
-      <thead>
-        <tr>
-          <th class="th-desc">${t.pdfDemo.invColDesc}</th>
-          <th class="th-num">${t.pdfDemo.invColQty}</th>
-          <th class="th-num">${t.pdfDemo.invColUnit}</th>
-          <th class="th-num">${t.pdfDemo.invColAmount}</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="inv-summary">
-      <div class="inv-summary-rows">
-        <div class="summary-row"><span>${t.pdfDemo.invSubtotal}</span><span>${fmt(subtotal)}</span></div>
-        <div class="summary-row"><span>${t.pdfDemo.invTax}</span><span>${fmt(tax)}</span></div>
-        <div class="summary-row summary-total"><span>${t.pdfDemo.invTotalDue}</span><span>${fmt(total)}</span></div>
-      </div>
-    </div>
-    <div class="inv-footer">
-      <p>${t.pdfDemo.invThanks}</p>
-      <p class="inv-footer-sub">${t.pdfDemo.invContact}</p>
-    </div>
-  `;
-}
-
-export function renderPdfDemo(container: HTMLElement): void {
+export function initPdfDemo(container: HTMLElement): void {
   let pageSize: PdfPageSize = 'auto';
   let orientation: 'portrait' | 'landscape' = 'portrait';
   let margin = 0;
@@ -105,8 +14,6 @@ export function renderPdfDemo(container: HTMLElement): void {
   let isGenerating = false;
   let isPreviewing = false;
   let lastBlobUrl = '';
-
-  const logoUrl = new URL('../../public/logo.svg', import.meta.url).href;
 
   function setGenerating(v: boolean) {
     isGenerating = v;
@@ -139,224 +46,132 @@ export function renderPdfDemo(container: HTMLElement): void {
     if (el) el.textContent = msg;
   }
 
-  function render() {
-    const t = getT();
+  trackPointerGlow(container.querySelector<HTMLElement>('.pdf-ctrl-card'));
 
-    container.innerHTML = `
-      <section class="pdf-section" id="pdf-demo">
-        <div class="section-header anim-in" data-anim-key="pdf-header">
-          <h2>${t.pdfDemo.title}</h2>
-          <p>${t.pdfDemo.subtitle}</p>
-        </div>
-        <div class="pdf-demo-layout anim-in" style="transition-delay:150ms" data-anim-key="pdf-body">
-          <div class="pdf-preview-col">
-            <div class="pdf-invoice-wrapper">
-              <div id="invoice-card" class="invoice-card">
-                ${buildInvoiceHTML(logoUrl, t)}
-              </div>
-            </div>
-          </div>
-          <div class="pdf-controls-col">
-            <div class="pdf-ctrl-card">
-              <h3 class="pdf-ctrl-title">${t.pdfDemo.exportOptions}</h3>
-              <div class="pdf-form-group">
-                <label class="pdf-label">${t.pdfDemo.pageSizeLabel}</label>
-                <div class="btn-group" id="pageSizeGroup">
-                  <button type="button" class="btn-opt ${pageSize === 'auto'   ? 'active' : ''}" data-size="auto">${t.pdfDemo.pageSizeAuto}</button>
-                  <button type="button" class="btn-opt ${pageSize === 'A4'     ? 'active' : ''}" data-size="A4">A4</button>
-                  <button type="button" class="btn-opt ${pageSize === 'Letter' ? 'active' : ''}" data-size="Letter">Letter</button>
-                  <button type="button" class="btn-opt ${pageSize === 'A3'     ? 'active' : ''}" data-size="A3">A3</button>
-                </div>
-              </div>
-              <div class="pdf-form-group" id="orientGroup" style="display:${pageSize !== 'auto' ? 'block' : 'none'}">
-                <label class="pdf-label">${t.pdfDemo.orientationLabel}</label>
-                <div class="btn-group" id="orientBtnGroup">
-                  <button type="button" class="btn-opt ${orientation === 'portrait'  ? 'active' : ''}" data-orient="portrait">${t.pdfDemo.portrait}</button>
-                  <button type="button" class="btn-opt ${orientation === 'landscape' ? 'active' : ''}" data-orient="landscape">${t.pdfDemo.landscape}</button>
-                </div>
-              </div>
-              <div class="pdf-form-group" id="marginGroup" style="display:${pageSize !== 'auto' ? 'block' : 'none'}">
-                <label class="pdf-label">${t.pdfDemo.marginLabel} — <span id="marginVal">${margin}</span> ${t.pdfDemo.marginUnit}</label>
-                <input type="range" id="marginSlider" min="0" max="56" step="4" value="${margin}" class="form-range" />
-              </div>
-              <div class="pdf-form-group">
-                <label class="pdf-label">${t.pdfDemo.scaleLabel}</label>
-                <div class="btn-group" id="scaleGroup">
-                  <button type="button" class="btn-opt ${scale === 1 ? 'active' : ''}" data-sc="1">1x</button>
-                  <button type="button" class="btn-opt ${scale === 2 ? 'active' : ''}" data-sc="2">2x (${t.pdfDemo.scaleRetina})</button>
-                  <button type="button" class="btn-opt ${scale === 3 ? 'active' : ''}" data-sc="3">3x</button>
-                </div>
-              </div>
-              <div class="pdf-form-group">
-                <label class="pdf-label">${t.pdfDemo.metadataLabel}</label>
-                <input type="text" id="pdfTitle"   class="pdf-input" placeholder="${t.pdfDemo.titlePlaceholder}"   value="${t.pdfDemo.invoiceLabel} ${INVOICE.number}" />
-                <input type="text" id="pdfAuthor"  class="pdf-input" placeholder="${t.pdfDemo.authorPlaceholder}"  value="sharedom Studio" style="margin-top:8px" />
-                <input type="text" id="pdfSubject" class="pdf-input" placeholder="${t.pdfDemo.subjectPlaceholder}" value="${t.pdfDemo.metaSubjectValue}" style="margin-top:8px" />
-              </div>
-              <div class="pdf-actions">
-                <button type="button" id="btnPreviewPDF" class="pdf-btn-outline">
-                  <span id="pdfPreviewSpinner" class="pdf-spinner" style="display:none"></span>
-                  <span class="pdf-btn-preview-label">${t.pdfDemo.btnPreview}</span>
-                </button>
-                <button type="button" id="btnGenPDF" class="btn-primary pdf-btn-main">
-                  <span id="pdfSpinner" class="pdf-spinner" style="display:none"></span>
-                  <span class="pdf-btn-label">${t.pdfDemo.btnDownload}</span>
-                </button>
-              </div>
-              <p id="pdfStatus" class="pdf-status"></p>
-            </div>
-          </div>
-        </div>
+  document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      pageSize = (btn as HTMLElement).dataset.size as PdfPageSize;
+      const show = pageSize !== 'auto';
+      const orientGroup = document.getElementById('orientGroup');
+      const marginGroup = document.getElementById('marginGroup');
+      if (orientGroup) orientGroup.style.display = show ? 'block' : 'none';
+      if (marginGroup) marginGroup.style.display  = show ? 'block' : 'none';
+    });
+  });
 
-        <div id="pdfPreviewBox" class="result-section pdf-preview-box" style="display:none">
-          <div class="result-header">
-            <h3>${t.pdfDemo.lastPdf}</h3>
-            <button type="button" id="btnClosePreviewPDF" class="pdf-preview-close" title="${t.pdfDemo.previewClose}">✕</button>
-          </div>
-          <iframe id="pdfPreviewFrame" class="pdf-preview-iframe" title="${t.pdfDemo.previewFrameTitle}"></iframe>
-          <div class="pdf-preview-actions">
-            <button type="button" id="btnOpenPDF" class="btn-ghost">${t.pdfDemo.openNewTab}</button>
-          </div>
-        </div>
-      </section>
-    `;
+  document.querySelectorAll('#orientBtnGroup .btn-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#orientBtnGroup .btn-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      orientation = (btn as HTMLElement).dataset.orient as 'portrait' | 'landscape';
+    });
+  });
 
-    bindEvents();
+  const marginSlider = document.getElementById('marginSlider') as HTMLInputElement | null;
+  marginSlider?.addEventListener('input', () => {
+    margin = Number(marginSlider.value);
+    const display = document.getElementById('marginVal');
+    if (display) display.textContent = String(margin);
+  });
+
+  document.querySelectorAll('#scaleGroup .btn-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#scaleGroup .btn-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      scale = Number((btn as HTMLElement).dataset.sc ?? 2);
+    });
+  });
+
+  function getOptions(): PdfOptions {
+    return {
+      pageSize,
+      orientation,
+      margin,
+      scale,
+      backgroundColor: '#ffffff',
+      title:   (document.getElementById('pdfTitle')   as HTMLInputElement)?.value || undefined,
+      author:  (document.getElementById('pdfAuthor')  as HTMLInputElement)?.value || undefined,
+      subject: (document.getElementById('pdfSubject') as HTMLInputElement)?.value || undefined,
+    };
   }
 
-  function bindEvents() {
-    const t = getT();
+  // ── Preview PDF button ──────────────────────────────────────────────────
+  document.getElementById('btnPreviewPDF')?.addEventListener('click', async () => {
+    if (isPreviewing || isGenerating) return;
+    setPreviewing(true);
+    setStatus('');
 
-    trackPointerGlow(container.querySelector<HTMLElement>('.pdf-ctrl-card'));
+    if (lastBlobUrl) { URL.revokeObjectURL(lastBlobUrl); lastBlobUrl = ''; }
 
-    document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        pageSize = (btn as HTMLElement).dataset.size as PdfPageSize;
-        const show = pageSize !== 'auto';
-        const orientGroup = document.getElementById('orientGroup');
-        const marginGroup = document.getElementById('marginGroup');
-        if (orientGroup) orientGroup.style.display = show ? 'block' : 'none';
-        if (marginGroup) marginGroup.style.display  = show ? 'block' : 'none';
-      });
-    });
+    try {
+      const opts = getOptions();
+      const blob = await capturePDF('#invoice-card', opts);
+      lastBlobUrl = URL.createObjectURL(blob);
 
-    document.querySelectorAll('#orientBtnGroup .btn-opt').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#orientBtnGroup .btn-opt').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        orientation = (btn as HTMLElement).dataset.orient as 'portrait' | 'landscape';
-      });
-    });
+      const previewBox   = document.getElementById('pdfPreviewBox');
+      const previewFrame = document.getElementById('pdfPreviewFrame') as HTMLIFrameElement | null;
+      if (previewBox && previewFrame) {
+        previewBox.style.display = 'block';
+        previewFrame.src = lastBlobUrl;
+        // The blob is already complete and the frame has a fixed height, so the box will not
+        // shift once the PDF paints — scrolling now is safe and does not depend on the
+        // iframe 'load' event, which never fires where no PDF viewer is available.
+        requestAnimationFrame(() => {
+          previewBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
 
-    const marginSlider = document.getElementById('marginSlider') as HTMLInputElement | null;
-    marginSlider?.addEventListener('input', () => {
-      margin = Number(marginSlider.value);
-      const display = document.getElementById('marginVal');
-      if (display) display.textContent = String(margin);
-    });
-
-    document.querySelectorAll('#scaleGroup .btn-opt').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#scaleGroup .btn-opt').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        scale = Number((btn as HTMLElement).dataset.sc ?? 2);
-      });
-    });
-
-    function getOptions(): PdfOptions {
-      return {
-        pageSize,
-        orientation,
-        margin,
-        scale,
-        backgroundColor: '#ffffff',
-        title:   (document.getElementById('pdfTitle')   as HTMLInputElement)?.value || undefined,
-        author:  (document.getElementById('pdfAuthor')  as HTMLInputElement)?.value || undefined,
-        subject: (document.getElementById('pdfSubject') as HTMLInputElement)?.value || undefined,
-      };
+      setStatus(`✓ ${(blob.size / 1024).toFixed(1)} KB · ${pageSize} · ${scale}x`);
+      showToast(getT().pdfDemo.previewReady);
+    } catch (err) {
+      const msg = (err as Error).message;
+      showToast(`${getT().pdfDemo.toastError}: ${msg}`);
+      setStatus(`✕ ${msg}`);
+    } finally {
+      setPreviewing(false);
     }
+  });
 
-    // ── Preview PDF button ──────────────────────────────────────────────────
-    document.getElementById('btnPreviewPDF')?.addEventListener('click', async () => {
-      if (isPreviewing || isGenerating) return;
-      setPreviewing(true);
-      setStatus('');
+  // ── Close preview button ───────────────────────────────────────────────
+  document.getElementById('btnClosePreviewPDF')?.addEventListener('click', () => {
+    const previewBox = document.getElementById('pdfPreviewBox');
+    if (previewBox) previewBox.style.display = 'none';
+  });
 
-      if (lastBlobUrl) { URL.revokeObjectURL(lastBlobUrl); lastBlobUrl = ''; }
+  // ── Open in new tab button ──────────────────────────────────────────────
+  document.getElementById('btnOpenPDF')?.addEventListener('click', () => {
+    if (lastBlobUrl) {
+      window.open(lastBlobUrl, '_blank');
+    }
+  });
 
-      try {
-        const opts = getOptions();
-        const blob = await capturePDF('#invoice-card', opts);
-        lastBlobUrl = URL.createObjectURL(blob);
+  // ── Download PDF button (does NOT open preview box) ─────────────────────
+  document.getElementById('btnGenPDF')?.addEventListener('click', async () => {
+    if (isGenerating || isPreviewing) return;
+    setGenerating(true);
+    setStatus('');
 
-        const previewBox   = document.getElementById('pdfPreviewBox');
-        const previewFrame = document.getElementById('pdfPreviewFrame') as HTMLIFrameElement | null;
-        if (previewBox && previewFrame) {
-          previewBox.style.display = 'block';
-          previewFrame.src = lastBlobUrl;
-          // The blob is already complete and the frame has a fixed height, so the box will not
-          // shift once the PDF paints — scrolling now is safe and does not depend on the
-          // iframe 'load' event, which never fires where no PDF viewer is available.
-          requestAnimationFrame(() => {
-            previewBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          });
-        }
+    try {
+      const opts = getOptions();
+      const blob = await capturePDF('#invoice-card', opts);
+      const downloadUrl = URL.createObjectURL(blob);
 
-        setStatus(`✓ ${(blob.size / 1024).toFixed(1)} KB · ${pageSize} · ${scale}x`);
-        showToast(t.pdfDemo.previewReady);
-      } catch (err) {
-        const msg = (err as Error).message;
-        showToast(`${t.pdfDemo.toastError}: ${msg}`);
-        setStatus(`✕ ${msg}`);
-      } finally {
-        setPreviewing(false);
-      }
-    });
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `invoice-${INVOICE_NUMBER}.pdf`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1500);
 
-    // ── Close preview button ───────────────────────────────────────────────
-    document.getElementById('btnClosePreviewPDF')?.addEventListener('click', () => {
-      const previewBox = document.getElementById('pdfPreviewBox');
-      if (previewBox) previewBox.style.display = 'none';
-    });
-
-    // ── Open in new tab button ──────────────────────────────────────────────
-    document.getElementById('btnOpenPDF')?.addEventListener('click', () => {
-      if (lastBlobUrl) {
-        window.open(lastBlobUrl, '_blank');
-      }
-    });
-
-    // ── Download PDF button (does NOT open preview box) ─────────────────────
-    document.getElementById('btnGenPDF')?.addEventListener('click', async () => {
-      if (isGenerating || isPreviewing) return;
-      setGenerating(true);
-      setStatus('');
-
-      try {
-        const opts = getOptions();
-        const blob = await capturePDF('#invoice-card', opts);
-        const downloadUrl = URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = `invoice-${INVOICE.number}.pdf`;
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(downloadUrl), 1500);
-
-        setStatus(`✓ ${(blob.size / 1024).toFixed(1)} KB · ${pageSize} · ${scale}x`);
-        showToast(t.pdfDemo.toastSuccess);
-      } catch (err) {
-        const msg = (err as Error).message;
-        showToast(`${t.pdfDemo.toastError}: ${msg}`);
-        setStatus(`✕ ${msg}`);
-      } finally {
-        setGenerating(false);
-      }
-    });
-  }
-
-  render();
-  onLanguageChange(() => render());
+      setStatus(`✓ ${(blob.size / 1024).toFixed(1)} KB · ${pageSize} · ${scale}x`);
+      showToast(getT().pdfDemo.toastSuccess);
+    } catch (err) {
+      const msg = (err as Error).message;
+      showToast(`${getT().pdfDemo.toastError}: ${msg}`);
+      setStatus(`✕ ${msg}`);
+    } finally {
+      setGenerating(false);
+    }
+  });
 }
