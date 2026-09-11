@@ -1,3 +1,4 @@
+import { snapshotMediaElement } from './media';
 import { DomTarget } from './types';
 
 export function resolveElement(target: DomTarget): HTMLElement {
@@ -89,18 +90,11 @@ export function syncDynamicStates(source: Element, target: Element): void {
         if (selectedIndex >= 0 && targetOptions[selectedIndex]) {
             targetOptions[selectedIndex].setAttribute('selected', 'true');
         }
-    } else if (
-        typeof HTMLCanvasElement !== 'undefined' &&
-        source instanceof HTMLCanvasElement &&
-        target instanceof HTMLCanvasElement
-    ) {
-        try {
-            const dataUrl = source.toDataURL();
-            const image = new Image();
-            image.src = dataUrl;
-            target.replaceWith(image);
-        } catch {
-            // Keep target canvas as-is if tainted
+    } else if (target.parentNode) {
+        const snapshot = snapshotMediaElement(source);
+        if (snapshot) {
+            target.replaceWith(snapshot);
+            return;
         }
     }
 

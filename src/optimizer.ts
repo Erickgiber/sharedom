@@ -1,20 +1,34 @@
+/** Reading a whole large canvas at once allocates width x height x 4 bytes, so it is read in bands. */
+const MAX_BAND_PIXELS = 2_000_000;
+
 export function optimizeCanvasPixels(context: CanvasRenderingContext2D, width: number, height: number): void {
-    const imageData = context.getImageData(0, 0, width, height);
-    const data = imageData.data;
-    const pixelView = new Uint32Array(data.buffer);
-    const length = pixelView.length;
+    if (width <= 0 || height <= 0) return;
 
-    let hasModifications = false;
+    const bandHeight = Math.max(1, Math.min(height, Math.floor(MAX_BAND_PIXELS / width)));
 
-    for (let i = 0; i < length; i++) {
-        if ((pixelView[i] & 0xff000000) === 0 && pixelView[i] !== 0) {
-            pixelView[i] = 0;
-            hasModifications = true;
+    for (let top = 0; top < height; top += bandHeight) {
+        const rows = Math.min(bandHeight, height - top);
+
+        let imageData: ImageData;
+        try {
+            imageData = context.getImageData(0, top, width, rows);
+        } catch {
+            return;
         }
-    }
 
-    if (hasModifications) {
-        context.putImageData(imageData, 0, 0);
+        const pixelView = new Uint32Array(imageData.data.buffer);
+        let hasModifications = false;
+
+        for (let i = 0; i < pixelView.length; i++) {
+            if ((pixelView[i] & 0xff000000) === 0 && pixelView[i] !== 0) {
+                pixelView[i] = 0;
+                hasModifications = true;
+            }
+        }
+
+        if (hasModifications) {
+            context.putImageData(imageData, 0, top);
+        }
     }
 }
 

@@ -68,6 +68,21 @@ const imageElement = document.querySelector('img');
 if (imageElement) imageElement.src = dataUrl;
 ```
 
+### 1.1 What ends up in the image
+
+`capture()` serializes a styled clone of the element, so a few things need explicit handling and are done for you:
+
+| Content                             | Behaviour                                                                                                                                                                                                              |
+| :---------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<canvas>`                          | The current bitmap is snapshotted into the capture, including when the canvas is the captured element itself. A tainted canvas, or WebGL without `preserveDrawingBuffer: true`, cannot be read back and is left blank. |
+| `<video>`                           | The frame on screen is drawn into the capture.                                                                                                                                                                         |
+| Same-origin and CORS-enabled images | Inlined as data URLs.                                                                                                                                                                                                  |
+| Images blocked by CORS              | Not readable from the page. Install a `setImageResolver()` fallback (see the API reference) to let a privileged host fetch them.                                                                                       |
+| Form state                          | `input`, `textarea` and `select` values, checked state and selection are carried over.                                                                                                                                 |
+| Very large elements                 | Browsers silently fail past ~32k pixels per side. The scale is reduced to fit and a warning explains the new scale, instead of returning an empty image.                                                               |
+
+---
+
 ### 2. Direct Download
 
 ```typescript
@@ -114,6 +129,21 @@ await printElement('#invoice-card', { title: 'Invoice Print' });
 Browsers cannot natively capture screenshots of the developer console or network tab. `sharedom` solves this by listening to telemetry events internally and rendering them into pixel-perfect, dark-themed, rounded cards ready for PNG, JPEG, WebP, multi-page PDF, or `.zip` export.
 
 > 💡 **Both the `sharedom` NPM library and the Chrome Extension support full Console and Network captures!**
+
+**What the trackers record:**
+
+| Source                                                 | Recorded as                                                        |
+| :----------------------------------------------------- | :----------------------------------------------------------------- |
+| `console.log/info/warn/error/debug/trace/dir/table`    | A console entry with its level, repeat count and timestamp.        |
+| Uncaught exceptions and unhandled rejections           | A console entry with level `error` and the original stack.         |
+| `fetch()` and `XMLHttpRequest`                         | A network entry with method, status, type, duration and timestamp. |
+| Responses with status `>= 400` or that never connected | An extra console `error`, rebuilt the way DevTools prints it.      |
+| Images, scripts, stylesheets and the document itself   | A network entry built from Resource Timing.                        |
+| Failed resources (`<img>`, `<script>`, `<link>`)       | A console `error` (`Failed to load resource: …`).                  |
+
+> ⚠️ Chrome prints failed requests (`GET /api/x 404 (Not Found)`) from the browser itself, **not** through `console.error`, so no JavaScript hook can ever observe them. `sharedom` rebuilds those lines from the network layer, which is why they appear in the captured console table.
+>
+> Because Resource Timing entries are replayed when capture starts, calling `startNetworkCapture()` after the page loaded still recovers the requests that already happened. Console output, on the other hand, only exists from the moment `startConsoleCapture()` runs.
 
 ```typescript
 import {
@@ -200,6 +230,77 @@ downloadZip(
   'all-captures.zip'
 );
 ```
+
+### 5. Automated QA with Playwright & Puppeteer (`sharedom/testing`)
+
+`sharedom/testing` installs the console and network trackers in the page **before it loads**, and gives the test process a small session API to read, render or assert on everything the browser did. It works with Playwright and Puppeteer without any extra dependency, and needs no build step in your project.
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { attachShareDOM, dataUrlToBytes } from 'sharedom/testing';
+import { writeFileSync } from 'node:fs';
+
+test('checkout flow is clean', async ({ page }) => {
+  // Attach BEFORE navigating so the very first byte is recorded.
+  const sharedom = await attachShareDOM(page);
+
+  await page.goto('https://example.com/checkout');
+  await page.getByRole('button', { name: 'Pay' }).click();
+
+  // Fails with a full report listing every console error and failed request.
+  await sharedom.assertNoErrors();
+  await sharedom.assertNoFailedRequests();
+});
+```
+
+With Puppeteer the only difference is where the page comes from:
+
+```typescript
+import puppeteer from 'puppeteer';
+import { attachShareDOM } from 'sharedom/testing';
+
+const browser = await puppeteer.launch();
+const page = await browser.newPage();
+
+const sharedom = await attachShareDOM(page);
+await page.goto('https://example.com');
+
+console.log(await sharedom.report());
+await browser.close();
+```
+
+**Attaching agents and CI artifacts.** `report()` returns a compact text summary designed to be pasted into an issue or handed to an AI agent, and the capture helpers return the same PNG cards the extension produces:
+
+```typescript
+const sharedom = await attachShareDOM(page);
+await page.goto('https://example.com');
+
+// Plain text summary: counts, console errors and failed requests.
+const summary = await sharedom.report();
+
+// Pixel-perfect PNG cards (one data URL per page of entries).
+const [consoleCard] = await sharedom.captureConsoleImages({ scale: 2, language: 'en' });
+const [networkCard] = await sharedom.captureNetworkImages({ entriesPerPage: 12 });
+
+writeFileSync('console.png', dataUrlToBytes(consoleCard));
+writeFileSync('network.png', dataUrlToBytes(networkCard));
+
+// Raw structured data, e.g. to assert on a single request.
+const requests = await sharedom.getRequests();
+expect(requests.find((req) => req.url.includes('/api/cart'))?.status).toBe(200);
+```
+
+In a Playwright reporter or fixture, the same cards can be attached to the HTML report:
+
+```typescript
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status === 'passed') return;
+  const [card] = await sharedom.captureNetworkImages();
+  await testInfo.attach('network.png', { body: Buffer.from(dataUrlToBytes(card)), contentType: 'image/png' });
+});
+```
+
+> `attachShareDOM()` also installs the tracker in the document that is already open, so attaching after `goto()` still recovers the network history through Resource Timing. Console entries, however, require attaching first.
 
 ---
 
@@ -408,7 +509,24 @@ Captures HTTP requests and exports as a PDF document.
 
 #### `setLanguage(lang)` / `getLanguage()`
 
-Configures global library language (`'en'` or `'es'`) for generated tables and metadata.
+Configures the global library language for generated tables and metadata. Supported codes: `'en'`, `'es'`, `'zh'`, `'ja'`, `'pt'`, `'de'`, `'ko'`, `'ru'`.
+
+#### `setImageResolver(resolver)`
+
+Installs a fallback used when the page itself is not allowed to read an image (CORS without `Access-Control-Allow-Origin`). The resolver receives the image URL and returns a data URL, or `null` to give up. A browser extension or a proxy can fetch what the page cannot:
+
+```typescript
+import { setImageResolver } from 'sharedom';
+
+setImageResolver(async (url) => {
+  const response = await myPrivilegedFetch(url);
+  return response ?? null;
+});
+```
+
+#### `snapshotMediaElement(element)`
+
+Returns an `<img>` reproducing the current frame of a `<canvas>` or `<video>`, or `null` when the browser will not expose those pixels (a tainted canvas, or WebGL without `preserveDrawingBuffer`). Called automatically by `capture()`.
 
 ---
 
@@ -453,6 +571,41 @@ Parses JPEG SOF (Start of Frame) segment markers according to ISO/IEC 10918-1 an
 
 ---
 
+### Testing: `sharedom/testing`
+
+#### `attachShareDOM(page)`
+
+Installs the tracker in a Playwright or Puppeteer `Page` at document start and resolves to a `ShareDOMTestSession`. Call it **before** `page.goto()` to record console output from the first byte.
+
+- **`page`** (`AutomationPage`): Any object exposing `evaluate()` plus `addInitScript()` (Playwright) or `evaluateOnNewDocument()` (Puppeteer).
+
+#### `ShareDOMTestSession`
+
+| Method                           | Returns                          | Description                                                          |
+| :------------------------------- | :------------------------------- | :------------------------------------------------------------------- |
+| `getLogs()`                      | `Promise<ConsoleLogEntry[]>`     | Every console entry, ordered by timestamp.                           |
+| `getErrors()`                    | `Promise<ConsoleLogEntry[]>`     | Only entries with level `error`, including rebuilt request failures. |
+| `getRequests()`                  | `Promise<NetworkRequestEntry[]>` | Every request seen through fetch, XHR and Resource Timing.           |
+| `getFailedRequests()`            | `Promise<NetworkRequestEntry[]>` | Requests with status `0` or `>= 400`.                                |
+| `clear()`                        | `Promise<void>`                  | Drops everything recorded so far, e.g. between test steps.           |
+| `captureConsoleImages(options?)` | `Promise<string[]>`              | Console cards as PNG data URLs (`ConsoleCaptureOptions`).            |
+| `captureNetworkImages(options?)` | `Promise<string[]>`              | Network cards as PNG data URLs (`NetworkCaptureOptions`).            |
+| `report()`                       | `Promise<string>`                | Text summary with counts, console errors and failed requests.        |
+| `assertNoErrors()`               | `Promise<void>`                  | Throws with the full report when any console error was recorded.     |
+| `assertNoFailedRequests()`       | `Promise<void>`                  | Throws with the full report when any request failed.                 |
+
+#### `dataUrlToBytes(dataUrl)`
+
+Decodes a `data:` URL returned by the capture helpers into a `Uint8Array`, ready for `writeFileSync()` or `testInfo.attach()`.
+
+#### `formatReport(logs, requests)`
+
+Pure function building the same text summary as `report()` from entries you already have.
+
+> A cross-origin response that does not send `Timing-Allow-Origin` hides its status and HTTP verb from the page. Those entries are reported with `—` and are counted as neither successful nor failed.
+
+---
+
 ## Development & Live Preview
 
 The repository includes an interactive playground to test all options in real time.
@@ -472,6 +625,9 @@ npm run build:extension
 
 # Build static preview for GitHub Pages
 npm run build:preview
+
+# Run the Playwright suite (library, sharedom/testing and extension bundle)
+npm test
 ```
 
 ---
@@ -484,6 +640,12 @@ npm run build:preview
 - **Copy & Download**: Copy PNG images directly to the clipboard or download in high resolution (1x, 2x, 3x).
 - **Keyboard Navigation**: Use `↑` for parent element, `↓` for child, `Esc` to cancel.
 - **Shortcuts**: Press `Alt + Shift + S` (`Cmd + Shift + S` on macOS) to activate.
+- **Console & Network Capture**: Export the console and the HTTP request table as images, PDF or ZIP.
+- **Capture From Page Load** (per-site opt-in): The extension normally injects its tracker when you open the popup, so console output produced while the page was loading is already gone. Enabling the toggle for a site grants an optional host permission and registers the tracker as a `document_start` script for that origin only. Network history is recovered from Resource Timing either way.
+- **Watching Indicator**: While the active tab belongs to a site with early capture enabled, the toolbar icon shows a green dot in its corner, and the popup explains the color in the selected language.
+- **Screen Recorder**: Records a tab, a window or the whole screen from inside the popup — no separate window. Frame rate up to unlimited, quality presets, WebM (default, live size and disk streaming) or MP4, optional microphone, and a small ShareDOM badge burned into the corner of every frame. The recording keeps going while the popup is closed (the toolbar icon shows `REC`), and reopening the popup returns to the recorder with the elapsed time and file size. Chunks are buffered on disk, so a one hour session uses the same memory as a ten second one. Shortcut: `Alt + Shift + R`.
+- **Eight Languages**: English, Spanish, Chinese, Japanese, Portuguese, German, Korean and Russian, switchable from a flag picker in the popup.
+- **Release Notes**: After an update, the first popup shows what changed in that version, translated, once.
 
 See the [Extension README](file:///Users/erickgiber/Documents/Repositories/sharedom/extension/README.md) for step-by-step installation instructions in `chrome://extensions`.
 

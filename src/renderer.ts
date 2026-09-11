@@ -384,6 +384,8 @@ export function createNetworkRequestsElement(
 
     sliced.forEach((r) => {
         const numStatus = Number(r.status);
+        // Cross-origin timings hide the real status: they count as neither success nor failure.
+        if (!Number.isFinite(numStatus)) return;
         if (numStatus >= 200 && numStatus < 400) {
             successCount++;
         } else {

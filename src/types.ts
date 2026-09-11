@@ -1,4 +1,4 @@
-export type Language = 'en' | 'es';
+export type Language = 'en' | 'es' | 'zh' | 'ja' | 'pt' | 'de' | 'ko' | 'ru';
 
 export interface CaptureOptions {
     scale?: number;

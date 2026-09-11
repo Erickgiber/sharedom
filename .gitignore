@@ -20,3 +20,6 @@ extension/
 # E2E Tests
 e2e/
 playwright.config.ts
+
+# Generated build artifacts
+src/tracker-source.generated.ts

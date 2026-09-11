@@ -25,6 +25,8 @@ html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: rgba(139, 92, 246, 0.4) #080a0e;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* Global Custom Scrollbars */

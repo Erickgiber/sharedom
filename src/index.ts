@@ -7,6 +7,7 @@ import {
     Language,
 } from './types';
 import { resolveElement, validateElementDimensions, validateOptions, syncDynamicStates } from './dom';
+import { snapshotMediaElement } from './media';
 import { cloneComputedStyles } from './styles';
 import { inlineImages } from './images';
 import { createSvgDataUrl } from './svg';
@@ -56,6 +57,9 @@ export {
     clearNetworkRequests,
 } from './tracker';
 export { setLanguage, getLanguage } from './i18n';
+export { setImageResolver } from './images';
+export type { ImageResolver } from './images';
+export { snapshotMediaElement } from './media';
 
 export async function capture(target: DomTarget, options: CaptureOptions = {}): Promise<string> {
     validateOptions(options);
@@ -66,8 +70,11 @@ export async function capture(target: DomTarget, options: CaptureOptions = {}): 
     const targetWidth = options.width ?? width;
     const targetHeight = options.height ?? height;
 
-    const clone = element.cloneNode(true) as HTMLElement;
-    syncDynamicStates(element, clone);
+    const cloned = element.cloneNode(true) as HTMLElement;
+    syncDynamicStates(element, cloned);
+
+    // A canvas or video as the capture root has no parent to replace itself in.
+    const clone = snapshotMediaElement(element) ?? cloned;
     cloneComputedStyles(element, clone);
 
     clone.style.width = `${targetWidth}px`;
