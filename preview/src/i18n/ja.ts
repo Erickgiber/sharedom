@@ -71,6 +71,11 @@ export const ja = {
     f6Title: 'TypeScript ファースト',
     f6Desc: 'sharedom と sharedom/ssr の完全な型定義を同梱しています。',
   },
+  clients: {
+    title: 'クライアントとパートナー',
+    subtitle:
+      'これらの組織は、デジタルトランスフォーメーションを進めるために当社の技術ソリューションを信頼しています。',
+  },
   usage: {
     title: '使い方ガイド',
     subtitle: 'ブラウザ、Next.js、SvelteKit SSR 向けのシンプルなスニペット。',

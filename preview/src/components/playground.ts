@@ -1,7 +1,6 @@
 import { getT } from '../i18n';
 import { capture, downloadCapture, CaptureOptions } from 'sharedom';
 import { showToast } from './toast';
-import { playCameraShutterSound } from '../utils/audio';
 import { trackPointerGlow } from '../utils/pointer-glow';
 
 export function initPlayground(container: HTMLElement): void {
@@ -54,7 +53,6 @@ export function initPlayground(container: HTMLElement): void {
 
   btnCapture?.addEventListener('click', async () => {
     btnCapture.disabled = true;
-    playCameraShutterSound();
 
     try {
       const dataUrl = await capture(targetElement, getOptions());

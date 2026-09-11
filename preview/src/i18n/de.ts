@@ -71,6 +71,11 @@ export const de = {
     f6Title: 'TypeScript zuerst',
     f6Desc: 'Vollständige Typdefinitionen für sharedom und sharedom/ssr sind enthalten.',
   },
+  clients: {
+    title: 'Kunden & Partner',
+    subtitle:
+      'Diese Organisationen vertrauen unseren Technologielösungen, um ihre digitale Transformation voranzutreiben.',
+  },
   usage: {
     title: 'Anleitung',
     subtitle: 'Klare Snippets für Browser, Next.js und SvelteKit-SSR.',
