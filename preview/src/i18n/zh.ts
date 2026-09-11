@@ -69,6 +69,10 @@ export const zh = {
     f6Title: 'TypeScript 优先',
     f6Desc: '为 sharedom 与 sharedom/ssr 提供完整的类型定义。',
   },
+  clients: {
+    title: '客户与合作伙伴',
+    subtitle: '这些机构信赖我们的技术方案，持续推进各自的数字化转型。',
+  },
   usage: {
     title: '使用指南',
     subtitle: '面向浏览器、Next.js 与 SvelteKit SSR 的简洁代码片段。',

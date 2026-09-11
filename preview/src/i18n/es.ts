@@ -70,6 +70,11 @@ export const es = {
     f6Title: 'TypeScript Nativo',
     f6Desc: 'Tipado completo para sharedom y sharedom/ssr sin dependencias externas.',
   },
+  clients: {
+    title: 'Clientes y Alianzas',
+    subtitle:
+      'Estas organizaciones han confiado en nuestras soluciones tecnológicas para impulsar su transformación digital.',
+  },
   usage: {
     title: 'Guía de Uso y Ejemplos',
     subtitle: 'Ejemplos listos para el Navegador, Next.js y SvelteKit en SSR.',

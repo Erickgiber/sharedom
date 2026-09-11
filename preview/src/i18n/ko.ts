@@ -70,6 +70,10 @@ export const ko = {
     f6Title: 'TypeScript 우선',
     f6Desc: 'sharedom과 sharedom/ssr을 위한 완전한 타입 정의가 포함되어 있습니다.',
   },
+  clients: {
+    title: '고객 및 파트너',
+    subtitle: '이 조직들은 디지털 전환을 추진하기 위해 당사의 기술 솔루션을 신뢰하고 있습니다.',
+  },
   usage: {
     title: '사용 가이드',
     subtitle: '브라우저, Next.js, SvelteKit SSR을 위한 간결한 예제.',

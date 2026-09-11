@@ -71,6 +71,11 @@ export const pt = {
     f6Title: 'TypeScript em primeiro lugar',
     f6Desc: 'Definições de tipos completas incluídas para sharedom e sharedom/ssr.',
   },
+  clients: {
+    title: 'Clientes e Parcerias',
+    subtitle:
+      'Estas organizações confiam nas nossas soluções tecnológicas para impulsionar a sua transformação digital.',
+  },
   usage: {
     title: 'Guia de utilização',
     subtitle: 'Exemplos claros para browser, Next.js e SvelteKit em SSR.',

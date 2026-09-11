@@ -70,6 +70,11 @@ export const en = {
     f6Title: 'TypeScript First',
     f6Desc: 'Complete type definitions included for sharedom and sharedom/ssr.',
   },
+  clients: {
+    title: 'Clients & Partners',
+    subtitle:
+      'These organizations trust our technology solutions to drive their digital transformation forward.',
+  },
   usage: {
     title: 'Usage Guide',
     subtitle: 'Clean snippets for Browser, Next.js, and SvelteKit SSR.',
