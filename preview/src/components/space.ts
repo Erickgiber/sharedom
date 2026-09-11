@@ -302,6 +302,7 @@ export function initSpace(): () => void {
   };
 
   let disposed = false;
+  let askingPermission = false;
   let baseBeta = 0;
   let baseGamma = 0;
   let baseAngle = -1;
@@ -345,27 +346,34 @@ export function initSpace(): () => void {
     window.addEventListener('deviceorientation', onOrientation, { passive: true });
   }
 
-  function onPermissionGesture(): void {
+  function stopGestureWatch(): void {
+    window.removeEventListener('touchend', onPermissionGesture);
     window.removeEventListener('click', onPermissionGesture);
+  }
+
+  function onPermissionGesture(): void {
     const motion = DeviceOrientationEvent as DeviceOrientationEventClass;
-    if (typeof motion.requestPermission !== 'function') return;
+    if (askingPermission || typeof motion.requestPermission !== 'function') return;
+    askingPermission = true;
     motion.requestPermission().then(
       (state) => {
+        askingPermission = false;
+        stopGestureWatch();
         if (state === 'granted') enableTiltSensor();
       },
-      // Prompt dismissed or blocked by policy: the page stays on the pointer path.
-      () => {}
+      () => {
+        askingPermission = false;
+      }
     );
   }
 
   const hasTiltSensor =
-    !reduceMotion &&
     typeof DeviceOrientationEvent !== 'undefined' &&
     window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   if (hasTiltSensor) {
-    // iOS only hands out orientation data when asked from inside a user gesture.
     if (typeof (DeviceOrientationEvent as DeviceOrientationEventClass).requestPermission === 'function') {
+      window.addEventListener('touchend', onPermissionGesture);
       window.addEventListener('click', onPermissionGesture);
     } else {
       enableTiltSensor();
@@ -432,7 +440,7 @@ export function initSpace(): () => void {
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onUp);
     window.removeEventListener('pointercancel', onUp);
-    window.removeEventListener('click', onPermissionGesture);
+    stopGestureWatch();
     window.removeEventListener('deviceorientation', onOrientation);
     document.removeEventListener('visibilitychange', onVisibility);
     document.body.classList.remove('scene-on');
