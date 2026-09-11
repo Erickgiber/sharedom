@@ -16,7 +16,10 @@ export const zh = {
     titleMain: '截取',
     titleEm: '任意内容',
     titleEnd: '在浏览器与服务端。',
-    subtitle: '零依赖库，可在浏览器中捕获像素级精确的 DOM 快照，或在 Next.js 与 SvelteKit 的 SSR 服务端渲染超高清截图。',
+    subtitle:
+      '零依赖库，可在浏览器中捕获像素级精确的 DOM 快照，或在 Next.js 与 SvelteKit 的 SSR 服务端渲染超高清截图。',
+    funButton: '404?',
+    funButtonAria: '打开可交互的 3D 行星',
     readDocs: '查看文档',
     copyCommand: 'npm i sharedom',
     copyCommandAria: '复制 npm 安装命令',
@@ -137,17 +140,11 @@ export const zh = {
     invSubtotal: '小计',
     invTax: '税费 (8%)',
     invTotalDue: '应付总额',
-    invItems: [
-      'UI 组件库授权',
-      '年度支持与维护',
-      '自定义主题集成',
-      '开发顾问服务工时',
-    ],
+    invItems: ['UI 组件库授权', '年度支持与维护', '自定义主题集成', '开发顾问服务工时'],
     invThanks: '感谢您的惠顾！请在 14 天内完成付款。',
     invContact: '有疑问？请联系 hello@sharedom.dev · sharedom.dev',
   },
   footer: {
-
     license: 'MIT 许可证',
     builtWith: '用',
     by: '构建者',
@@ -157,6 +154,14 @@ export const zh = {
   toast: {
     copiedNpm: '已复制：npm i sharedom',
   },
+  notFound: {
+    metaTitle: '迷失在太空 — ShareDOM',
+    metaDescription: '这个页面不存在。转动行星，然后回到 ShareDOM。',
+    heading: '这个页面漂出了地图',
+    text: '这个地址上什么也不绕行。不过这颗行星是真实的——转动它试试。',
+    home: '返回首页',
+    hint: '在任意位置拖动即可旋转行星',
+  },
   privacy: {
     metaTitle: '隐私政策 — ShareDOM',
     metaDescription: 'ShareDOM 及 ShareDOM Chrome 扩展的官方隐私政策。零遥测、零追踪、100% 客户端执行。',
@@ -164,57 +169,63 @@ export const zh = {
     lastUpdated: '最后更新：2026年9月10日',
     backHome: '返回首页',
     introTitle: '我们对隐私的承诺',
-    introText: 'ShareDOM 是以两种形式发布的开源软件：一个供你加入自己项目的库，以及一个 Chrome 扩展。两者都以隐私为默认设计，本政策同时适用于二者：无遥测、无分析追踪、无需账号、不向外部服务器传输数据。',
+    introText:
+      'ShareDOM 是以两种形式发布的开源软件：一个供你加入自己项目的库，以及一个 Chrome 扩展。两者都以隐私为默认设计，本政策同时适用于二者：无遥测、无分析追踪、无需账号、不向外部服务器传输数据。',
     productsTitle: '同一套代码，两个产品',
-    productsText: 'ShareDOM 以 npm 库的形式供你安装到自己的项目中，也以 Chrome 扩展的形式供你在浏览时捕获页面。它们并非彼此独立的程序：扩展在构建时把库的源码打包进自己的安装包，并通过可视化界面来驱动它。除非某一节点名其中之一，以下内容对二者均适用。',
+    productsText:
+      'ShareDOM 以 npm 库的形式供你安装到自己的项目中，也以 Chrome 扩展的形式供你在浏览时捕获页面。它们并非彼此独立的程序：扩展在构建时把库的源码打包进自己的安装包，并通过可视化界面来驱动它。除非某一节点名其中之一，以下内容对二者均适用。',
     libraryTitle: 'ShareDOM 库（npm）',
     libraryPoints: [
       '只有你的代码调用时才会动作：该库没有后台活动，也没有自己的生命周期。在你的应用调用它的函数之前，什么都不会发生。',
       '结果留在你的项目里：快照、图片、PDF 和 ZIP 在访问者的浏览器或你自己的 Node.js、Next.js、SvelteKit 服务器上生成，然后交还给你的代码。ShareDOM 绝不会把它们上传到任何地方。',
       '不存储、不生成标识符：该库不向 localStorage、Cookie 或磁盘写入任何内容，也不创建任何设备或用户标识符。',
-      '控制台与网络记录需主动开启：记录控制台输出和 HTTP 请求的功能，在你的代码调用 startConsoleCapture() 或 startNetworkCapture() 之前始终处于休眠状态。所记录的内容保存在内存中供你呈现，绝不会离开页面或服务器。'
+      '控制台与网络记录需主动开启：记录控制台输出和 HTTP 请求的功能，在你的代码调用 startConsoleCapture() 或 startNetworkCapture() 之前始终处于休眠状态。所记录的内容保存在内存中供你呈现，绝不会离开页面或服务器。',
     ],
     extensionTitle: 'ShareDOM Chrome 扩展',
     extensionPoints: [
       '只有你启动时才会动作：该扩展未声明任何内容脚本，也绝不会自行在页面上运行。只有当你点击工具栏图标、按下 Alt+Shift+S 或选择其右键菜单项之后，它才会作用于标签页。',
       '控制台与网络记录只留在页面内：当你在标签页启动检查器后，ShareDOM 会把该页面的控制台输出和网络请求（方法、地址、状态和耗时，各最多 100 条）保存在页面自身的内存中，供你捕获为图片或 PDF。这些内容不会写入磁盘，也不会发送到任何地方，刷新或关闭标签页后即消失。',
-      '仅保存本地设置：扩展唯一保存的是你自己的界面偏好（默认缩放倍率、导出格式和语言），存放在你本机的 chrome.storage.local 中。'
+      '仅保存本地设置：扩展唯一保存的是你自己的界面偏好（默认缩放倍率、导出格式和语言），存放在你本机的 chrome.storage.local 中。',
     ],
     singlePurposeTitle: 'Chrome 扩展：单一用途声明',
-    singlePurposeText: 'ShareDOM 扩展的唯一用途，是让你检查并以高分辨率捕获你主动选择的页面上的 DOM 元素、控制台输出和网络请求。',
+    singlePurposeText:
+      'ShareDOM 扩展的唯一用途，是让你检查并以高分辨率捕获你主动选择的页面上的 DOM 元素、控制台输出和网络请求。',
     dataCollectionTitle: '两者都不会收集的内容',
     dataCollectionPoints: [
       '无个人信息：我们不收集姓名、电子邮箱、IP 地址、位置数据或设备标识符。',
       '不记录浏览历史：无论是库还是扩展，都不会追踪你访问的页面、标签页活动或任何跨站点信息。扩展从不在后台运行，只有你亲自启动时才会作用于页面。',
       '无遥测或分析：扩展与库中均未包含或加载任何第三方追踪工具（如 Google Analytics、Mixpanel 或 Sentry）。',
-      '本地执行：DOM 快照、图像处理（PNG、JPEG、WebP）、PDF 生成和剪贴板操作全部在你的浏览器内完成。为了嵌入页面本就显示的图片，捕获时会向其原始地址重新请求，但不会附带任何关于你的信息。'
+      '本地执行：DOM 快照、图像处理（PNG、JPEG、WebP）、PDF 生成和剪贴板操作全部在你的浏览器内完成。为了嵌入页面本就显示的图片，捕获时会向其原始地址重新请求，但不会附带任何关于你的信息。',
     ],
     permissionsTitle: 'Chrome 扩展权限说明',
     permissionsIntro: '为了作为浏览器扩展正常工作，ShareDOM 仅声明检查元素并生成截图所必需的最小权限：',
     permissions: [
       {
         name: 'activeTab',
-        desc: '仅在你主动调用时（例如点击工具栏图标、按下 Alt+Shift+S 或选择右键菜单项），允许扩展与当前活动标签页交互。'
+        desc: '仅在你主动调用时（例如点击工具栏图标、按下 Alt+Shift+S 或选择右键菜单项），允许扩展与当前活动标签页交互。',
       },
       {
         name: 'scripting',
-        desc: '允许扩展在用户明确触发时，将 DOM 检查内容脚本注入当前页面，并显示可视化高亮遮罩。'
+        desc: '允许扩展在用户明确触发时，将 DOM 检查内容脚本注入当前页面，并显示可视化高亮遮罩。',
       },
       {
         name: 'storage',
-        desc: '仅用于把你的界面偏好（例如默认分辨率倍数、首选图片导出格式与语言）保存在本地浏览器存储（`chrome.storage.local`）中。'
+        desc: '仅用于把你的界面偏好（例如默认分辨率倍数、首选图片导出格式与语言）保存在本地浏览器存储（`chrome.storage.local`）中。',
       },
       {
         name: 'contextMenus',
-        desc: '在浏览器右键菜单中添加“检查并捕获 DOM 元素”选项，以便快速访问。'
-      }
+        desc: '在浏览器右键菜单中添加“检查并捕获 DOM 元素”选项，以便快速访问。',
+      },
     ],
     thirdPartyTitle: '第三方服务与远程代码',
-    thirdPartyText: '库和扩展都不包含远程代码，也不加载外部脚本：扩展在构建时已把库打包进来，因此它运行的一切都随你安装的包一同交付。不会向任何 API 服务器或第三方发送数据。二者发出的唯一网络请求，是为了把正在捕获的页面上已有的图片嵌入结果之中。',
+    thirdPartyText:
+      '库和扩展都不包含远程代码，也不加载外部脚本：扩展在构建时已把库打包进来，因此它运行的一切都随你安装的包一同交付。不会向任何 API 服务器或第三方发送数据。二者发出的唯一网络请求，是为了把正在捕获的页面上已有的图片嵌入结果之中。',
     openSourceTitle: '开源透明',
-    openSourceText: 'ShareDOM 是依据 MIT 许可证发布的自由开源软件。库与扩展位于同一个公开仓库，因此本页面的每一项说明都可以对照源码核实：',
+    openSourceText:
+      'ShareDOM 是依据 MIT 许可证发布的自由开源软件。库与扩展位于同一个公开仓库，因此本页面的每一项说明都可以对照源码核实：',
     contactTitle: '问题与支持',
-    contactText: '如果你对本隐私政策或 ShareDOM 的安全性有任何疑问、反馈或顾虑，欢迎在官方 GitHub 仓库中提交 issue。'
+    contactText:
+      '如果你对本隐私政策或 ShareDOM 的安全性有任何疑问、反馈或顾虑，欢迎在官方 GitHub 仓库中提交 issue。',
   },
   telemetryDemo: {
     title: '控制台与网络截图',
@@ -239,5 +250,5 @@ export const zh = {
     toastNetworkCaptured: '网络请求已捕获！',
     toastNetworkPdf: '网络请求 PDF 已下载！',
     toastError: '捕获失败',
-  }
+  },
 };

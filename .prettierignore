@@ -1,0 +1,8 @@
+node_modules
+dist
+dist-preview
+dist-demo
+playwright-report
+test-results
+package-lock.json
+*.svg

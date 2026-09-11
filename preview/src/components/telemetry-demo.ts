@@ -10,7 +10,6 @@ import {
 } from 'sharedom';
 import { showToast } from './toast';
 
-/** Demo captures run at the highest quality tier so the output is shown at full sharpness. */
 const PREVIEW_SCALE = 3;
 
 function toLibraryLanguage(lang: Language): LibraryLanguage {
@@ -36,7 +35,6 @@ export function initTelemetryDemo(): void {
     ]);
   }
 
-  /** Lets the loader paint before the capture starts, since cloning styles blocks the main thread. */
   function nextPaint(): Promise<void> {
     return new Promise((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));

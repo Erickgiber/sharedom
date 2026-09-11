@@ -1,5 +1,6 @@
 import { getT, onLanguageChange } from '../i18n';
 import { showToast } from './toast';
+import { onCleanup } from '../lifecycle';
 import { highlightCode } from '../utils/highlighter';
 
 type UsageSection = 'client' | 'ssr';
@@ -191,7 +192,6 @@ export async function POST(request: Request) {
     const code = activeSnippet.getCode(t);
     const highlightedRows = highlightCode(code);
 
-    // Update segment buttons
     document.querySelectorAll('#usageSegmentPill .segment-btn').forEach((btn) => {
       const sec = (btn as HTMLElement).dataset.section;
       if (sec === activeSection) {
@@ -201,7 +201,6 @@ export async function POST(request: Request) {
       }
     });
 
-    // Update tabs container
     const tabsContainer = document.getElementById('usageSubTabs');
     if (tabsContainer) {
       tabsContainer.innerHTML = currentSnippets
@@ -226,7 +225,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Update code block content
     const codeLang = container.querySelector('.code-lang');
     if (codeLang) codeLang.textContent = activeSnippet.filename;
 
@@ -291,8 +289,8 @@ export async function POST(request: Request) {
     };
   }
 
-  enableDragScroll(document.getElementById('usageSubTabs'));
-  enableDragScroll(document.getElementById('usageSegmentPill'));
+  onCleanup(enableDragScroll(document.getElementById('usageSubTabs')));
+  onCleanup(enableDragScroll(document.getElementById('usageSegmentPill')));
 
   document.querySelectorAll('#usageSegmentPill .segment-btn').forEach((segBtn) => {
     segBtn.addEventListener('click', (e) => {
@@ -327,6 +325,5 @@ export async function POST(request: Request) {
     }, 1800);
   });
 
-  // Snippet bodies are built in JS, so they need a redraw the static markup cannot do.
-  onLanguageChange(() => updateCodeBlockOnly());
+  onCleanup(onLanguageChange(() => updateCodeBlockOnly()));
 }

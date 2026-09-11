@@ -1,7 +1,3 @@
-# Crawlers only read robots.txt from the domain root, and this is a GitHub Pages
-# project site, so https://erickgiber.github.io/robots.txt is the file that
-# actually applies. This copy takes effect only behind a custom domain; until
-# then, submit the sitemap directly in Google Search Console / Bing Webmaster.
 User-agent: *
 Allow: /
 

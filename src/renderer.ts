@@ -263,9 +263,9 @@ export function createConsoleLogsElement(
     let infoCount = 0;
 
     sliced.forEach((l) => {
-        if (l.level === 'error') errorCount += (l.count || 1);
-        else if (l.level === 'warn') warnCount += (l.count || 1);
-        else infoCount += (l.count || 1);
+        if (l.level === 'error') errorCount += l.count || 1;
+        else if (l.level === 'warn') warnCount += l.count || 1;
+        else infoCount += l.count || 1;
     });
 
     const totalLogs = errorCount + warnCount + infoCount;
@@ -331,9 +331,8 @@ export function createConsoleLogsElement(
         else if (log.level === 'warn') pillClass = 'sharedom-badge-warning';
         else if (log.level === 'info') pillClass = 'sharedom-badge-info';
 
-        const countBubble = (log.count && log.count > 1)
-            ? `<span class="sharedom-count-bubble">×${log.count}</span>`
-            : '';
+        const countBubble =
+            log.count && log.count > 1 ? `<span class="sharedom-count-bubble">×${log.count}</span>` : '';
 
         const rowNum = (options?.startIndex || 0) + index + 1;
         rowsHtml += `
@@ -469,9 +468,8 @@ export function createNetworkRequestsElement(
         else if (numStatus >= 400 && numStatus < 500) statusClass = 'sharedom-badge-warning';
         else if (numStatus >= 500 || numStatus === 0) statusClass = 'sharedom-badge-danger';
 
-        const statusDisplay = numStatus > 0
-            ? `${numStatus} ${req.statusText || ''}`.trim()
-            : (req.statusText || 'Failed');
+        const statusDisplay =
+            numStatus > 0 ? `${numStatus} ${req.statusText || ''}`.trim() : req.statusText || 'Failed';
 
         const durationStr = req.duration !== undefined ? `${req.duration} ms` : '-';
 

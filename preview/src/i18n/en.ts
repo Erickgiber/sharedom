@@ -1,6 +1,7 @@
 export const en = {
   metaTitle: 'ShareDOM — Screenshot anything in the browser & server',
-  metaDescription: 'Official Privacy Policy for the ShareDOM library and the ShareDOM Chrome extension. Zero telemetry, zero tracking, 100% client-side execution.',
+  metaDescription:
+    'Official Privacy Policy for the ShareDOM library and the ShareDOM Chrome extension. Zero telemetry, zero tracking, 100% client-side execution.',
   nav: {
     features: 'Features',
     playground: 'Playground',
@@ -16,7 +17,10 @@ export const en = {
     titleMain: 'Screenshot',
     titleEm: 'anything',
     titleEnd: 'in the browser & server.',
-    subtitle: 'Zero-dependency library to capture pixel-perfect DOM snapshots in the browser or render ultra-high-definition screenshots in Next.js & SvelteKit SSR servers.',
+    subtitle:
+      'Zero-dependency library to capture pixel-perfect DOM snapshots in the browser or render ultra-high-definition screenshots in Next.js & SvelteKit SSR servers.',
+    funButton: '404?',
+    funButtonAria: 'Open the interactive 3D planet',
     readDocs: 'Read Docs',
     copyCommand: 'npm i sharedom',
     copyCommandAria: 'Copy the npm install command',
@@ -147,7 +151,6 @@ export const en = {
     invContact: 'Questions? Contact us at hello@sharedom.dev · sharedom.dev',
   },
   footer: {
-
     license: 'MIT License',
     builtWith: 'Built with',
     by: 'by',
@@ -157,64 +160,80 @@ export const en = {
   toast: {
     copiedNpm: 'Copied: npm i sharedom',
   },
+  notFound: {
+    metaTitle: 'Lost in space — ShareDOM',
+    metaDescription: 'This page does not exist. Spin the planet, then head back to ShareDOM.',
+    heading: 'This page drifted off the map',
+    text: 'Nothing orbits this address. The planet, on the other hand, is entirely real — give it a spin.',
+    home: 'Back to Home',
+    hint: 'Drag anywhere to rotate the planet',
+  },
   privacy: {
     metaTitle: 'Privacy Policy — ShareDOM',
-    metaDescription: 'Official Privacy Policy for ShareDOM and the ShareDOM Chrome Extension. Zero telemetry, zero tracking, 100% client-side execution.',
+    metaDescription:
+      'Official Privacy Policy for ShareDOM and the ShareDOM Chrome Extension. Zero telemetry, zero tracking, 100% client-side execution.',
     title: 'Privacy Policy',
     lastUpdated: 'Last Updated: September 10, 2026',
     backHome: 'Back to Home',
     introTitle: 'Our Commitment to Privacy',
-    introText: 'ShareDOM is open-source software published in two forms: a library you add to your own project, and a Chrome extension. Both are designed with privacy by default, and this policy covers them both: zero telemetry, zero analytics tracking, zero account requirements, and zero remote data transmission.',
+    introText:
+      'ShareDOM is open-source software published in two forms: a library you add to your own project, and a Chrome extension. Both are designed with privacy by default, and this policy covers them both: zero telemetry, zero analytics tracking, zero account requirements, and zero remote data transmission.',
     productsTitle: 'One Codebase, Two Products',
-    productsText: 'ShareDOM is distributed as an npm library that you install into your own project, and as a Chrome extension for capturing pages while you browse. They are not separate programs: the extension bundles the library\'s own source into its package at build time and drives it through a visual interface. Everything below applies to both, except where a section names one of them.',
+    productsText:
+      "ShareDOM is distributed as an npm library that you install into your own project, and as a Chrome extension for capturing pages while you browse. They are not separate programs: the extension bundles the library's own source into its package at build time and drives it through a visual interface. Everything below applies to both, except where a section names one of them.",
     libraryTitle: 'The ShareDOM Library (npm)',
     libraryPoints: [
       'It acts only when your code calls it: The library has no background activity and no lifecycle of its own. Nothing happens until your application invokes one of its functions.',
-      'Results stay in your project: Snapshots, images, PDFs and ZIP archives are produced in the visitor\'s browser or on your own Node.js, Next.js or SvelteKit server, then handed back to your code. ShareDOM never uploads them anywhere.',
+      "Results stay in your project: Snapshots, images, PDFs and ZIP archives are produced in the visitor's browser or on your own Node.js, Next.js or SvelteKit server, then handed back to your code. ShareDOM never uploads them anywhere.",
       'No storage, no identifiers: The library writes nothing to localStorage, cookies or disk, and creates no device or user identifier.',
-      'Console and network capture is opt-in: The helpers that record console output and HTTP requests stay dormant until your code calls startConsoleCapture() or startNetworkCapture(). What they record is held in memory so you can render it, and never leaves the page or server.'
+      'Console and network capture is opt-in: The helpers that record console output and HTTP requests stay dormant until your code calls startConsoleCapture() or startNetworkCapture(). What they record is held in memory so you can render it, and never leaves the page or server.',
     ],
     extensionTitle: 'The ShareDOM Chrome Extension',
     extensionPoints: [
       'It acts only when you start it: The extension declares no content scripts and never runs on pages by itself. It touches a tab only after you click the toolbar icon, press Alt+Shift+S, or choose its context menu item.',
-      'Console and network capture stays in the page: Once you start the inspector on a tab, ShareDOM keeps that page\'s console output and network requests (method, address, status and duration, up to 100 of each) in the page\'s own memory so you can capture them as an image or PDF. It is never written to disk, never sent anywhere, and it is gone when you reload or close the tab.',
-      'Local settings only: The one thing the extension stores is your own interface preferences (default scale, export format and language) in chrome.storage.local on your own machine.'
+      "Console and network capture stays in the page: Once you start the inspector on a tab, ShareDOM keeps that page's console output and network requests (method, address, status and duration, up to 100 of each) in the page's own memory so you can capture them as an image or PDF. It is never written to disk, never sent anywhere, and it is gone when you reload or close the tab.",
+      'Local settings only: The one thing the extension stores is your own interface preferences (default scale, export format and language) in chrome.storage.local on your own machine.',
     ],
     singlePurposeTitle: 'Chrome Extension: Single Purpose Declaration',
-    singlePurposeText: 'The ShareDOM extension exists solely to let you inspect and capture high-resolution images of DOM elements, console output, and network requests on a page you explicitly choose to inspect.',
+    singlePurposeText:
+      'The ShareDOM extension exists solely to let you inspect and capture high-resolution images of DOM elements, console output, and network requests on a page you explicitly choose to inspect.',
     dataCollectionTitle: 'What Neither of Them Collects',
     dataCollectionPoints: [
       'No Personal Information: We do not collect names, email addresses, IP addresses, location data, or device identifiers.',
       'No Browsing History: Neither the library nor the extension tracks the pages you visit, your tab activity, or anything across sites. The extension never runs in the background; it acts on a page only when you start it yourself.',
       'No Telemetry or Analytics: No third-party trackers (such as Google Analytics, Mixpanel, or Sentry) are included or loaded in the extension or library.',
-      'Local Execution: DOM snapshotting, image formatting (PNG, JPEG, WebP), PDF generation and clipboard operations all run inside your browser. To embed pictures the page already displays, a capture re-requests them from their original addresses, without adding any information about you.'
+      'Local Execution: DOM snapshotting, image formatting (PNG, JPEG, WebP), PDF generation and clipboard operations all run inside your browser. To embed pictures the page already displays, a capture re-requests them from their original addresses, without adding any information about you.',
     ],
     permissionsTitle: 'Chrome Extension Permissions Justification',
-    permissionsIntro: 'To function correctly as a browser extension, ShareDOM declares the minimal necessary permissions required to inspect elements and generate screenshots:',
+    permissionsIntro:
+      'To function correctly as a browser extension, ShareDOM declares the minimal necessary permissions required to inspect elements and generate screenshots:',
     permissions: [
       {
         name: 'activeTab',
-        desc: 'Enables the extension to interact with the currently active browser tab only when you explicitly invoke it (e.g., clicking the toolbar icon, pressing Alt+Shift+S, or selecting the context menu item).'
+        desc: 'Enables the extension to interact with the currently active browser tab only when you explicitly invoke it (e.g., clicking the toolbar icon, pressing Alt+Shift+S, or selecting the context menu item).',
       },
       {
         name: 'scripting',
-        desc: 'Allows the extension to inject the DOM inspection content script into the active page upon explicit user trigger, displaying the visual highlight overlay.'
+        desc: 'Allows the extension to inject the DOM inspection content script into the active page upon explicit user trigger, displaying the visual highlight overlay.',
       },
       {
         name: 'storage',
-        desc: 'Used exclusively to persist your user UI preferences (such as default resolution scale, preferred image export format, and language) locally in your browser storage (`chrome.storage.local`).'
+        desc: 'Used exclusively to persist your user UI preferences (such as default resolution scale, preferred image export format, and language) locally in your browser storage (`chrome.storage.local`).',
       },
       {
         name: 'contextMenus',
-        desc: 'Adds the "Inspect & Capture DOM Element" option to your browser right-click context menu for rapid access.'
-      }
+        desc: 'Adds the "Inspect & Capture DOM Element" option to your browser right-click context menu for rapid access.',
+      },
     ],
     thirdPartyTitle: 'Third-Party Services & Remote Code',
-    thirdPartyText: 'Neither the library nor the extension contains remote code or loads external scripts: the extension bundles the library at build time, so everything it runs ships inside the package you install. Nothing is sent to any API server or third party. The only network requests either one makes are for images already present on the page being captured, so they can be embedded in the result.',
+    thirdPartyText:
+      'Neither the library nor the extension contains remote code or loads external scripts: the extension bundles the library at build time, so everything it runs ships inside the package you install. Nothing is sent to any API server or third party. The only network requests either one makes are for images already present on the page being captured, so they can be embedded in the result.',
     openSourceTitle: 'Open Source Transparency',
-    openSourceText: 'ShareDOM is free and open-source software released under the MIT License. The library and the extension live in the same public repository, so every claim on this page can be checked against the source at',
+    openSourceText:
+      'ShareDOM is free and open-source software released under the MIT License. The library and the extension live in the same public repository, so every claim on this page can be checked against the source at',
     contactTitle: 'Questions & Support',
-    contactText: 'If you have any questions, feedback, or concerns regarding this Privacy Policy or the security of ShareDOM, feel free to open an issue on the official GitHub repository.'
+    contactText:
+      'If you have any questions, feedback, or concerns regarding this Privacy Policy or the security of ShareDOM, feel free to open an issue on the official GitHub repository.',
   },
   telemetryDemo: {
     title: 'Console & Network Screenshot',
@@ -239,5 +258,5 @@ export const en = {
     toastNetworkCaptured: 'Network requests captured!',
     toastNetworkPdf: 'Network requests PDF downloaded!',
     toastError: 'Capture failed',
-  }
+  },
 };

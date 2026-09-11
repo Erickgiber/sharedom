@@ -1,15 +1,3 @@
-/**
- * Regenerates every SEO artifact that quotes a fact about the release, so none of
- * them can drift behind the source: the social card, the PWA raster icons, the
- * softwareVersion in the landing page JSON-LD, and the bundle size shown on the
- * card and the playground (which lives in all eight translations).
- *
- * Social crawlers (Facebook, X, LinkedIn, Slack, Discord, WhatsApp) ignore SVG
- * previews, so the card must ship as PNG; rendering happens here and the results
- * are committed, so the Pages workflow never needs a browser.
- *
- * Run after every version bump or library change: `npm run assets:seo`.
- */
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
@@ -26,11 +14,6 @@ const { version } = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'
 const FONTS =
   'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=JetBrains+Mono:wght@600&display=block';
 
-/**
- * What a consumer actually ships: the published entry bundled and minified in one
- * pass, the way an app's bundler treats it, then gzipped. Measuring the built
- * `dist/` rather than `src/` keeps the number tied to what npm serves.
- */
 async function measureLibrary() {
   const entry = path.join(rootDir, 'dist/index.js');
   if (!fs.existsSync(entry)) {
@@ -47,7 +30,6 @@ async function measureLibrary() {
   return `${(gzipped / 1000).toFixed(1)} kB Gzipped`;
 }
 
-/** Every hand-edited copy of a release fact is a copy that silently goes stale. */
 function stamp(file, pattern, replacement) {
   const before = fs.readFileSync(file, 'utf8');
   const after = before.replace(pattern, replacement);
@@ -81,7 +63,6 @@ ${fonts ? `<link rel="stylesheet" href="${FONTS}" />` : ''}
 </head><body>${svg}</body></html>`;
 }
 
-/** PNG stores width and height as big-endian uint32 at the start of the IHDR chunk. */
 function pngSize(buffer) {
   if (buffer.readUInt32BE(0) !== 0x89504e47) throw new Error('not a PNG');
   return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };

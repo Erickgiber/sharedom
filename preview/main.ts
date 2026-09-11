@@ -1,4 +1,5 @@
 import { initNavbar } from './src/components/navbar';
+import { initLangSelect } from './src/components/lang-select';
 import { initHero, initHeroAnimation } from './src/components/hero';
 import { initPlayground } from './src/components/playground';
 import { initPdfDemo } from './src/components/pdf-demo';
@@ -8,17 +9,14 @@ import { initUsage } from './src/components/usage';
 import { initFooter } from './src/components/footer';
 
 import { initI18n } from './src/i18n';
+import { initRouter } from './src/router';
+import { observe, onCleanup } from './src/lifecycle';
 import * as sharedom from 'sharedom';
 
 if (typeof window !== 'undefined') {
   (window as any).sharedom = sharedom;
 }
 
-/**
- * The policy used to live on the `#/privacy` hash route. It is a real page at
- * /privacy now, so old links are swapped for the clean URL without leaving a
- * history entry.
- */
 const PRIVACY_HASHES = ['#/privacy', '#privacy'];
 
 function redirectLegacyPrivacyHash(): boolean {
@@ -39,31 +37,43 @@ function setupScrollAnimations(): void {
     },
     { threshold: 0.12 }
   );
+  observe(observer);
 
-  document.querySelectorAll('.anim-in').forEach((el) => observer.observe(el));
+  let cancelled = false;
+  onCleanup(() => {
+    cancelled = true;
+  });
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (cancelled) return;
+      document.querySelectorAll('.anim-in').forEach((el) => observer.observe(el));
+    });
+  });
 
   const heroVisual = document.querySelector('.hero-visual');
-  if (heroVisual) {
-    const heroObs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          initHeroAnimation();
-          heroObs.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-    heroObs.observe(heroVisual);
-  }
+  if (!heroVisual) return;
+  const heroObs = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        initHeroAnimation();
+        heroObs.disconnect();
+      }
+    },
+    { threshold: 0.2 }
+  );
+  observe(heroObs);
+  heroObs.observe(heroVisual);
 }
 
-function initApp(): void {
-  if (redirectLegacyPrivacyHash()) return;
-  window.addEventListener('hashchange', redirectLegacyPrivacyHash);
+let generation = 0;
 
+function mountPage(): void {
+  const current = ++generation;
   initI18n();
 
   const navMount = document.getElementById('navbar-mount');
+  const langBar = document.getElementById('langbar');
   const playgroundMount = document.getElementById('playground-mount');
   const pdfDemoMount = document.getElementById('pdf-demo-mount');
   const featuresMount = document.getElementById('features-mount');
@@ -71,6 +81,7 @@ function initApp(): void {
   const footerMount = document.getElementById('footer-mount');
 
   if (navMount) initNavbar(navMount);
+  if (langBar) initLangSelect(langBar);
   if (document.getElementById('hero-mount')) initHero();
   if (playgroundMount) initPlayground(playgroundMount);
   if (pdfDemoMount) initPdfDemo(pdfDemoMount);
@@ -79,7 +90,22 @@ function initApp(): void {
   if (usageMount) initUsage(usageMount);
   if (footerMount) initFooter(footerMount);
 
+  if (document.getElementById('scene')) {
+    void import('./src/components/space').then(({ initSpace }) => {
+      if (current !== generation) return;
+      onCleanup(initSpace());
+    });
+  }
+
   setupScrollAnimations();
+}
+
+function initApp(): void {
+  if (redirectLegacyPrivacyHash()) return;
+  window.addEventListener('hashchange', redirectLegacyPrivacyHash);
+
+  initRouter(mountPage);
+  mountPage();
 }
 
 if (document.readyState === 'loading') {

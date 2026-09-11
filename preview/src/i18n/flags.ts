@@ -1,8 +1,10 @@
 export type CountryCode = 'gb' | 'es' | 'cn' | 'jp' | 'pt' | 'de' | 'kr' | 'ru';
 
-const STAR = 'M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z';
+const STAR =
+  'M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z';
 
-const TRIGRAM = '<rect x="-2.6" y="-1.5" width="5.2" height="0.85"/><rect x="-2.6" y="-0.42" width="5.2" height="0.85"/><rect x="-2.6" y="0.65" width="5.2" height="0.85"/>';
+const TRIGRAM =
+  '<rect x="-2.6" y="-1.5" width="5.2" height="0.85"/><rect x="-2.6" y="-0.42" width="5.2" height="0.85"/><rect x="-2.6" y="0.65" width="5.2" height="0.85"/>';
 
 export const FLAGS: Record<CountryCode, string> = {
   gb: `<svg viewBox="0 0 24 16" role="presentation" focusable="false">

@@ -1,6 +1,7 @@
 export const es = {
   metaTitle: 'ShareDOM — Captura cualquier elemento en el navegador y servidor',
-  metaDescription: 'Política de Privacidad oficial de la librería ShareDOM y la extensión ShareDOM para Chrome. Cero telemetría, cero rastreo, ejecución 100% en el cliente.',
+  metaDescription:
+    'Política de Privacidad oficial de la librería ShareDOM y la extensión ShareDOM para Chrome. Cero telemetría, cero rastreo, ejecución 100% en el cliente.',
   nav: {
     features: 'Características',
     playground: 'Playground',
@@ -16,7 +17,10 @@ export const es = {
     titleMain: 'Captura',
     titleEm: 'cualquier elemento',
     titleEnd: 'en el navegador y servidor.',
-    subtitle: 'Librería ligera para capturar snapshots del DOM en el navegador o renderizar capturas de ultra alta fidelidad en servidores SSR con Next.js y SvelteKit.',
+    subtitle:
+      'Librería ligera para capturar snapshots del DOM en el navegador o renderizar capturas de ultra alta fidelidad en servidores SSR con Next.js y SvelteKit.',
+    funButton: '404?',
+    funButtonAria: 'Abrir el planeta 3D interactivo',
     readDocs: 'Ver Documentación',
     copyCommand: 'npm i sharedom',
     copyCommandAria: 'Copiar el comando de instalación de npm',
@@ -147,7 +151,6 @@ export const es = {
     invContact: '¿Dudas? Escríbenos a hello@sharedom.dev · sharedom.dev',
   },
   footer: {
-
     license: 'Licencia MIT',
     builtWith: 'Creado con',
     by: 'por',
@@ -157,64 +160,80 @@ export const es = {
   toast: {
     copiedNpm: 'Copiado: npm i sharedom',
   },
+  notFound: {
+    metaTitle: 'Perdido en el espacio — ShareDOM',
+    metaDescription: 'Esta página no existe. Haz girar el planeta y vuelve a ShareDOM.',
+    heading: 'Esta página se salió del mapa',
+    text: 'Nada orbita esta dirección. El planeta, en cambio, es del todo real: hazlo girar.',
+    home: 'Volver al inicio',
+    hint: 'Arrastra en cualquier parte para girar el planeta',
+  },
   privacy: {
     metaTitle: 'Política de Privacidad — ShareDOM',
-    metaDescription: 'Política de Privacidad oficial de ShareDOM y la extensión para Chrome. Cero telemetría, cero rastreo, ejecución 100% en el cliente.',
+    metaDescription:
+      'Política de Privacidad oficial de ShareDOM y la extensión para Chrome. Cero telemetría, cero rastreo, ejecución 100% en el cliente.',
     title: 'Política de Privacidad',
     lastUpdated: 'Última actualización: 10 de septiembre de 2026',
     backHome: 'Volver al Inicio',
     introTitle: 'Nuestro Compromiso con la Privacidad',
-    introText: 'ShareDOM es software de código abierto publicado en dos formas: una librería que añades a tu propio proyecto y una extensión de Chrome. Ambas están diseñadas con la privacidad por defecto, y esta política cubre las dos: cero telemetría, cero analíticas, sin necesidad de cuentas y cero transmisión de datos a servidores externos.',
+    introText:
+      'ShareDOM es software de código abierto publicado en dos formas: una librería que añades a tu propio proyecto y una extensión de Chrome. Ambas están diseñadas con la privacidad por defecto, y esta política cubre las dos: cero telemetría, cero analíticas, sin necesidad de cuentas y cero transmisión de datos a servidores externos.',
     productsTitle: 'Un Mismo Código, Dos Productos',
-    productsText: 'ShareDOM se distribuye como una librería de npm que instalas en tu propio proyecto y como una extensión de Chrome para capturar páginas mientras navegas. No son programas distintos: la extensión empaqueta el propio código fuente de la librería dentro de su paquete al compilar, y lo maneja mediante una interfaz visual. Todo lo que sigue se aplica a ambas, salvo donde una sección nombre a una en concreto.',
+    productsText:
+      'ShareDOM se distribuye como una librería de npm que instalas en tu propio proyecto y como una extensión de Chrome para capturar páginas mientras navegas. No son programas distintos: la extensión empaqueta el propio código fuente de la librería dentro de su paquete al compilar, y lo maneja mediante una interfaz visual. Todo lo que sigue se aplica a ambas, salvo donde una sección nombre a una en concreto.',
     libraryTitle: 'La Librería ShareDOM (npm)',
     libraryPoints: [
       'Sólo actúa cuando tu código la llama: La librería no tiene actividad en segundo plano ni ciclo de vida propio. No ocurre nada hasta que tu aplicación invoca una de sus funciones.',
       'Los resultados se quedan en tu proyecto: Las capturas, imágenes, PDF y archivos ZIP se generan en el navegador del visitante o en tu propio servidor Node.js, Next.js o SvelteKit, y se devuelven a tu código. ShareDOM nunca los sube a ningún sitio.',
       'Sin almacenamiento ni identificadores: La librería no escribe nada en localStorage, cookies ni disco, y no crea ningún identificador de usuario o dispositivo.',
-      'La captura de consola y red es opcional: Las funciones que registran la salida de consola y las peticiones HTTP permanecen inactivas hasta que tu código llama a startConsoleCapture() o startNetworkCapture(). Lo que registran se mantiene en memoria para que puedas representarlo, y nunca sale de la página ni del servidor.'
+      'La captura de consola y red es opcional: Las funciones que registran la salida de consola y las peticiones HTTP permanecen inactivas hasta que tu código llama a startConsoleCapture() o startNetworkCapture(). Lo que registran se mantiene en memoria para que puedas representarlo, y nunca sale de la página ni del servidor.',
     ],
     extensionTitle: 'La Extensión ShareDOM para Chrome',
     extensionPoints: [
       'Sólo actúa cuando tú la inicias: La extensión no declara content scripts y nunca se ejecuta sola en las páginas. Actúa sobre una pestaña únicamente después de que pulses el icono de la barra, uses Alt+Shift+S o elijas su opción del menú contextual.',
       'La captura de consola y red no sale de la página: Cuando inicias el inspector en una pestaña, ShareDOM guarda la salida de consola y las peticiones de red de esa página (método, dirección, estado y duración, hasta 100 de cada) en la memoria de la propia página para que puedas capturarlas como imagen o PDF. Nunca se escribe en disco ni se envía a ningún sitio, y desaparece al recargar o cerrar la pestaña.',
-      'Sólo ajustes locales: Lo único que la extensión almacena son tus preferencias de interfaz (escala por defecto, formato de exportación e idioma) en chrome.storage.local, en tu propia máquina.'
+      'Sólo ajustes locales: Lo único que la extensión almacena son tus preferencias de interfaz (escala por defecto, formato de exportación e idioma) en chrome.storage.local, en tu propia máquina.',
     ],
     singlePurposeTitle: 'Extensión de Chrome: Declaración de Propósito Único',
-    singlePurposeText: 'La extensión ShareDOM existe únicamente para permitirte inspeccionar y capturar imágenes de alta resolución de elementos del DOM, la salida de consola y las peticiones de red de una página que tú eliges inspeccionar.',
+    singlePurposeText:
+      'La extensión ShareDOM existe únicamente para permitirte inspeccionar y capturar imágenes de alta resolución de elementos del DOM, la salida de consola y las peticiones de red de una página que tú eliges inspeccionar.',
     dataCollectionTitle: 'Lo Que Ninguna de las Dos Recopila',
     dataCollectionPoints: [
       'Sin información personal: No recopilamos nombres, correos electrónicos, direcciones IP, ubicación ni identificadores de dispositivos.',
       'Sin historial de navegación: Ni la librería ni la extensión rastrean las páginas que visitas, tu actividad de pestañas ni nada entre sitios. La extensión nunca se ejecuta en segundo plano; actúa sobre una página sólo cuando tú la inicias.',
       'Sin telemetría ni analíticas: No se incluye ningún rastreador de terceros (como Google Analytics, Mixpanel, Sentry ni similares).',
-      'Ejecución local: La captura del DOM, el procesamiento de imágenes (PNG, JPEG, WebP), la generación de PDF y el portapapeles se ejecutan dentro de tu navegador. Para incrustar las imágenes que la página ya muestra, la captura vuelve a pedirlas a sus direcciones originales, sin añadir ninguna información sobre ti.'
+      'Ejecución local: La captura del DOM, el procesamiento de imágenes (PNG, JPEG, WebP), la generación de PDF y el portapapeles se ejecutan dentro de tu navegador. Para incrustar las imágenes que la página ya muestra, la captura vuelve a pedirlas a sus direcciones originales, sin añadir ninguna información sobre ti.',
     ],
     permissionsTitle: 'Justificación de Permisos en la Extensión de Chrome',
-    permissionsIntro: 'Para funcionar adecuadamente como extensión de navegador, ShareDOM solicita los permisos mínimos e indispensables para inspeccionar elementos y generar capturas:',
+    permissionsIntro:
+      'Para funcionar adecuadamente como extensión de navegador, ShareDOM solicita los permisos mínimos e indispensables para inspeccionar elementos y generar capturas:',
     permissions: [
       {
         name: 'activeTab',
-        desc: 'Permite interactuar con la pestaña activa únicamente cuando el usuario la ejecuta explícitamente (al hacer clic en el ícono de la barra, presionar Alt+Shift+S o desde el menú contextual).'
+        desc: 'Permite interactuar con la pestaña activa únicamente cuando el usuario la ejecuta explícitamente (al hacer clic en el ícono de la barra, presionar Alt+Shift+S o desde el menú contextual).',
       },
       {
         name: 'scripting',
-        desc: 'Permite inyectar el script de inspección en la página activa a petición del usuario para mostrar el marco de selección interactivo.'
+        desc: 'Permite inyectar el script de inspección en la página activa a petición del usuario para mostrar el marco de selección interactivo.',
       },
       {
         name: 'storage',
-        desc: 'Se utiliza exclusivamente para guardar tus preferencias de interfaz (como escala de resolución por defecto, formato de imagen y lenguaje) de manera local en tu navegador (`chrome.storage.local`).'
+        desc: 'Se utiliza exclusivamente para guardar tus preferencias de interfaz (como escala de resolución por defecto, formato de imagen y lenguaje) de manera local en tu navegador (`chrome.storage.local`).',
       },
       {
         name: 'contextMenus',
-        desc: 'Agrega la opción "Inspeccionar y Capturar Elemento DOM" al menú contextual del clic derecho para un acceso rápido.'
-      }
+        desc: 'Agrega la opción "Inspeccionar y Capturar Elemento DOM" al menú contextual del clic derecho para un acceso rápido.',
+      },
     ],
     thirdPartyTitle: 'Servicios de Terceros y Código Remoto',
-    thirdPartyText: 'Ni la librería ni la extensión contienen código remoto ni cargan scripts externos: la extensión empaqueta la librería al compilar, así que todo lo que ejecuta viaja dentro del paquete que instalas. No se envía nada a ningún servidor de API ni a terceros. Las únicas peticiones de red que realiza cualquiera de las dos son a las imágenes ya presentes en la página que se está capturando, para poder incrustarlas en el resultado.',
+    thirdPartyText:
+      'Ni la librería ni la extensión contienen código remoto ni cargan scripts externos: la extensión empaqueta la librería al compilar, así que todo lo que ejecuta viaja dentro del paquete que instalas. No se envía nada a ningún servidor de API ni a terceros. Las únicas peticiones de red que realiza cualquiera de las dos son a las imágenes ya presentes en la página que se está capturando, para poder incrustarlas en el resultado.',
     openSourceTitle: 'Transparencia y Código Abierto',
-    openSourceText: 'ShareDOM es software libre y de código abierto bajo la Licencia MIT. La librería y la extensión viven en el mismo repositorio público, así que cada afirmación de esta página puede contrastarse con el código fuente en',
+    openSourceText:
+      'ShareDOM es software libre y de código abierto bajo la Licencia MIT. La librería y la extensión viven en el mismo repositorio público, así que cada afirmación de esta página puede contrastarse con el código fuente en',
     contactTitle: 'Contacto y Soporte',
-    contactText: 'Si tienes preguntas, sugerencias o inquietudes sobre esta Política de Privacidad o la seguridad de ShareDOM, puedes abrir un issue o discusión en el repositorio oficial de GitHub.'
+    contactText:
+      'Si tienes preguntas, sugerencias o inquietudes sobre esta Política de Privacidad o la seguridad de ShareDOM, puedes abrir un issue o discusión en el repositorio oficial de GitHub.',
   },
   telemetryDemo: {
     title: 'Captura de Consola y Red',
@@ -239,5 +258,5 @@ export const es = {
     toastNetworkCaptured: '¡Peticiones de red capturadas!',
     toastNetworkPdf: '¡PDF de peticiones de red descargado!',
     toastError: 'Error en la captura',
-  }
+  },
 };

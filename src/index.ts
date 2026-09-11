@@ -44,11 +44,7 @@ export {
 } from './pdf';
 export { buildPdf, buildMultiPagePdf } from './pdf-writer';
 export { buildZip, downloadZip, crc32, normalizeZipData } from './zip-writer';
-export {
-    createConsoleLogsElement,
-    createNetworkRequestsElement,
-    chunkItems,
-} from './renderer';
+export { createConsoleLogsElement, createNetworkRequestsElement, chunkItems } from './renderer';
 export {
     startConsoleCapture,
     stopConsoleCapture,
@@ -97,7 +93,7 @@ export async function downloadCapture(
     if (typeof document === 'undefined') {
         throw new Error(
             '[sharedom]: downloadCapture() requires a browser environment. ' +
-            'For SSR environments, use "captureSSR" from "sharedom/ssr".'
+                'For SSR environments, use "captureSSR" from "sharedom/ssr".'
         );
     }
     const dataUrl = await capture(target, options);

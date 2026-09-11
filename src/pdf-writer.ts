@@ -1,12 +1,12 @@
 import { PdfPageSize } from './types';
 
 const PAGE_PRESETS: Record<Exclude<PdfPageSize, 'auto'>, { width: number; height: number }> = {
-    A4:      { width: 595.28,  height: 841.89  },
-    A3:      { width: 841.89,  height: 1190.55 },
-    A5:      { width: 419.53,  height: 595.28  },
-    Letter:  { width: 612,     height: 792     },
-    Legal:   { width: 612,     height: 1008    },
-    Tabloid: { width: 792,     height: 1224    },
+    A4: { width: 595.28, height: 841.89 },
+    A3: { width: 841.89, height: 1190.55 },
+    A5: { width: 419.53, height: 595.28 },
+    Letter: { width: 612, height: 792 },
+    Legal: { width: 612, height: 1008 },
+    Tabloid: { width: 792, height: 1224 },
 };
 
 const _encoder = new TextEncoder();
@@ -109,14 +109,14 @@ export function buildPdf(jpegBytes: Uint8Array, opts: PdfBuildOptions): Uint8Arr
     } = opts;
 
     const pxToPt = 72 / dpi;
-    const imgWidthPt  = imageWidthPx  * pxToPt;
+    const imgWidthPt = imageWidthPx * pxToPt;
     const imgHeightPt = imageHeightPx * pxToPt;
 
     let pageWidthPt: number;
     let pageHeightPt: number;
 
     if (pageSize === 'auto') {
-        pageWidthPt  = imgWidthPt  + margin * 2;
+        pageWidthPt = imgWidthPt + margin * 2;
         pageHeightPt = imgHeightPt + margin * 2;
     } else {
         let preset = { ...PAGE_PRESETS[pageSize] };
@@ -125,30 +125,30 @@ export function buildPdf(jpegBytes: Uint8Array, opts: PdfBuildOptions): Uint8Arr
         } else if (orientation === 'portrait' && preset.width > preset.height) {
             preset = { width: preset.height, height: preset.width };
         }
-        pageWidthPt  = preset.width;
+        pageWidthPt = preset.width;
         pageHeightPt = preset.height;
     }
 
-    const availableWidth  = pageWidthPt  - margin * 2;
+    const availableWidth = pageWidthPt - margin * 2;
     const availableHeight = pageHeightPt - margin * 2;
 
-    let drawWidthPt  = imgWidthPt;
+    let drawWidthPt = imgWidthPt;
     let drawHeightPt = imgHeightPt;
 
     if (pageSize !== 'auto') {
-        const scaleX = availableWidth  / imgWidthPt;
+        const scaleX = availableWidth / imgWidthPt;
         const scaleY = availableHeight / imgHeightPt;
         const fitScale = Math.min(scaleX, scaleY, 1);
-        drawWidthPt  = imgWidthPt  * fitScale;
+        drawWidthPt = imgWidthPt * fitScale;
         drawHeightPt = imgHeightPt * fitScale;
     }
 
-    const xOff = margin + (availableWidth  - drawWidthPt)  / 2;
+    const xOff = margin + (availableWidth - drawWidthPt) / 2;
     const yOff = margin + (availableHeight - drawHeightPt) / 2;
 
     const now = new Date();
     const dateStr = pdfDate(now);
-    const creator  = 'sharedom';
+    const creator = 'sharedom';
     const producer = 'sharedom (https://github.com/Erickgiber/sharedom)';
 
     const offsets: number[] = new Array(7).fill(0);
@@ -169,27 +169,25 @@ export function buildPdf(jpegBytes: Uint8Array, opts: PdfBuildOptions): Uint8Arr
     addObject(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
 
     const mediaBox = `[0 0 ${num(pageWidthPt)} ${num(pageHeightPt)}]`;
-    addObject(3,
+    addObject(
+        3,
         `<< /Type /Page /Parent 2 0 R /MediaBox ${mediaBox} ` +
-        `/Contents 4 0 R /Resources << /XObject << /Img 5 0 R >> >> >>`
+            `/Contents 4 0 R /Resources << /XObject << /Img 5 0 R >> >> >>`
     );
 
-    const contentInner =
-        `${num(drawWidthPt)} 0 0 ${num(drawHeightPt)} ${num(xOff)} ${num(yOff)} cm /Img Do`;
+    const contentInner = `${num(drawWidthPt)} 0 0 ${num(drawHeightPt)} ${num(xOff)} ${num(yOff)} cm /Img Do`;
     const contentBody = `q\n${contentInner}\nQ`;
-    addObject(4,
-        `<< /Length ${contentBody.length} >>\nstream\n${contentBody}\nendstream`
-    );
+    addObject(4, `<< /Length ${contentBody.length} >>\nstream\n${contentBody}\nendstream`);
 
     {
         offsets[5] = pos;
         const imgDictAndStream = str(
             `5 0 obj\n` +
-            `<< /Type /XObject /Subtype /Image ` +
-            `/Width ${imageWidthPx} /Height ${imageHeightPx} ` +
-            `/ColorSpace /DeviceRGB /BitsPerComponent 8 ` +
-            `/Filter /DCTDecode /Length ${jpegBytes.length} >>\n` +
-            `stream\n`
+                `<< /Type /XObject /Subtype /Image ` +
+                `/Width ${imageWidthPx} /Height ${imageHeightPx} ` +
+                `/ColorSpace /DeviceRGB /BitsPerComponent 8 ` +
+                `/Filter /DCTDecode /Length ${jpegBytes.length} >>\n` +
+                `stream\n`
         );
         const imgFooter = str(`\nendstream\nendobj\n`);
         const imageObj = concat(imgDictAndStream, jpegBytes, imgFooter);
@@ -197,14 +195,19 @@ export function buildPdf(jpegBytes: Uint8Array, opts: PdfBuildOptions): Uint8Arr
         pos += imageObj.length;
     }
 
-    const hasMetadata = Boolean(title || author || subject || (keywords && (Array.isArray(keywords) ? keywords.length > 0 : Boolean(keywords))));
+    const hasMetadata = Boolean(
+        title ||
+        author ||
+        subject ||
+        (keywords && (Array.isArray(keywords) ? keywords.length > 0 : Boolean(keywords)))
+    );
 
     let infoObjId: number | null = null;
     if (hasMetadata) {
         infoObjId = 6;
         const entries: string[] = [];
-        if (title)   entries.push(`/Title ${encodePdfString(title)}`);
-        if (author)  entries.push(`/Author ${encodePdfString(author)}`);
+        if (title) entries.push(`/Title ${encodePdfString(title)}`);
+        if (author) entries.push(`/Author ${encodePdfString(author)}`);
         if (subject) entries.push(`/Subject ${encodePdfString(subject)}`);
         if (keywords) {
             const kwStr = Array.isArray(keywords) ? keywords.join(', ') : keywords;
@@ -226,15 +229,17 @@ export function buildPdf(jpegBytes: Uint8Array, opts: PdfBuildOptions): Uint8Arr
     }
     const trailerInfo = infoObjId ? ` /Info ${infoObjId} 0 R` : '';
     xref +=
-        `trailer\n<< /Size ${objCount} /Root 1 0 R${trailerInfo} >>\n` +
-        `startxref\n${xrefOffset}\n%%EOF\n`;
+        `trailer\n<< /Size ${objCount} /Root 1 0 R${trailerInfo} >>\n` + `startxref\n${xrefOffset}\n%%EOF\n`;
 
     parts.push(str(xref));
 
     return concat(...parts);
 }
 
-export interface MultiPagePdfBuildOptions extends Omit<PdfBuildOptions, 'jpegBytes' | 'imageWidthPx' | 'imageHeightPx'> {
+export interface MultiPagePdfBuildOptions extends Omit<
+    PdfBuildOptions,
+    'jpegBytes' | 'imageWidthPx' | 'imageHeightPx'
+> {
     pages: {
         jpegBytes: Uint8Array;
         imageWidthPx: number;
@@ -275,7 +280,12 @@ export function buildMultiPagePdf(opts: MultiPagePdfBuildOptions): Uint8Array {
     const now = new Date();
     const dateStr = pdfDate(now);
 
-    const hasMetadata = Boolean(title || author || subject || (keywords && (Array.isArray(keywords) ? keywords.length > 0 : Boolean(keywords))));
+    const hasMetadata = Boolean(
+        title ||
+        author ||
+        subject ||
+        (keywords && (Array.isArray(keywords) ? keywords.length > 0 : Boolean(keywords)))
+    );
     const infoObjId = hasMetadata ? 3 + pages.length * 3 : null;
     const totalObjects = infoObjId ? infoObjId + 1 : 3 + pages.length * 3;
 
@@ -346,26 +356,24 @@ export function buildMultiPagePdf(opts: MultiPagePdfBuildOptions): Uint8Array {
         const yOff = margin + (availableHeight - drawHeightPt) / 2;
 
         const mediaBox = `[0 0 ${num(pageWidthPt)} ${num(pageHeightPt)}]`;
-        addObject(pageId,
+        addObject(
+            pageId,
             `<< /Type /Page /Parent 2 0 R /MediaBox ${mediaBox} ` +
-            `/Contents ${contentId} 0 R /Resources << /XObject << /Img ${imgId} 0 R >> >> >>`
+                `/Contents ${contentId} 0 R /Resources << /XObject << /Img ${imgId} 0 R >> >> >>`
         );
 
-        const contentInner =
-            `${num(drawWidthPt)} 0 0 ${num(drawHeightPt)} ${num(xOff)} ${num(yOff)} cm /Img Do`;
+        const contentInner = `${num(drawWidthPt)} 0 0 ${num(drawHeightPt)} ${num(xOff)} ${num(yOff)} cm /Img Do`;
         const contentBody = `q\n${contentInner}\nQ`;
-        addObject(contentId,
-            `<< /Length ${contentBody.length} >>\nstream\n${contentBody}\nendstream`
-        );
+        addObject(contentId, `<< /Length ${contentBody.length} >>\nstream\n${contentBody}\nendstream`);
 
         offsets[imgId] = pos;
         const imgDictAndStream = str(
             `${imgId} 0 obj\n` +
-            `<< /Type /XObject /Subtype /Image ` +
-            `/Width ${page.imageWidthPx} /Height ${page.imageHeightPx} ` +
-            `/ColorSpace /DeviceRGB /BitsPerComponent 8 ` +
-            `/Filter /DCTDecode /Length ${page.jpegBytes.length} >>\n` +
-            `stream\n`
+                `<< /Type /XObject /Subtype /Image ` +
+                `/Width ${page.imageWidthPx} /Height ${page.imageHeightPx} ` +
+                `/ColorSpace /DeviceRGB /BitsPerComponent 8 ` +
+                `/Filter /DCTDecode /Length ${page.jpegBytes.length} >>\n` +
+                `stream\n`
         );
         const imgFooter = str(`\nendstream\nendobj\n`);
         const imageObj = concat(imgDictAndStream, page.jpegBytes, imgFooter);

@@ -3,7 +3,6 @@ import { showToast } from './toast';
 import { getT } from '../i18n';
 import { trackPointerGlow } from '../utils/pointer-glow';
 
-/** The invoice itself is static markup; only its number is needed at runtime. */
 const INVOICE_NUMBER = 'INV-2026-0042';
 
 export function initPdfDemo(container: HTMLElement): void {
@@ -48,22 +47,22 @@ export function initPdfDemo(container: HTMLElement): void {
 
   trackPointerGlow(container.querySelector<HTMLElement>('.pdf-ctrl-card'));
 
-  document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(btn => {
+  document.querySelectorAll('#pageSizeGroup .btn-opt').forEach((btn) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#pageSizeGroup .btn-opt').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#pageSizeGroup .btn-opt').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       pageSize = (btn as HTMLElement).dataset.size as PdfPageSize;
       const show = pageSize !== 'auto';
       const orientGroup = document.getElementById('orientGroup');
       const marginGroup = document.getElementById('marginGroup');
       if (orientGroup) orientGroup.style.display = show ? 'block' : 'none';
-      if (marginGroup) marginGroup.style.display  = show ? 'block' : 'none';
+      if (marginGroup) marginGroup.style.display = show ? 'block' : 'none';
     });
   });
 
-  document.querySelectorAll('#orientBtnGroup .btn-opt').forEach(btn => {
+  document.querySelectorAll('#orientBtnGroup .btn-opt').forEach((btn) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#orientBtnGroup .btn-opt').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#orientBtnGroup .btn-opt').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       orientation = (btn as HTMLElement).dataset.orient as 'portrait' | 'landscape';
     });
@@ -76,9 +75,9 @@ export function initPdfDemo(container: HTMLElement): void {
     if (display) display.textContent = String(margin);
   });
 
-  document.querySelectorAll('#scaleGroup .btn-opt').forEach(btn => {
+  document.querySelectorAll('#scaleGroup .btn-opt').forEach((btn) => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#scaleGroup .btn-opt').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#scaleGroup .btn-opt').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       scale = Number((btn as HTMLElement).dataset.sc ?? 2);
     });
@@ -91,33 +90,32 @@ export function initPdfDemo(container: HTMLElement): void {
       margin,
       scale,
       backgroundColor: '#ffffff',
-      title:   (document.getElementById('pdfTitle')   as HTMLInputElement)?.value || undefined,
-      author:  (document.getElementById('pdfAuthor')  as HTMLInputElement)?.value || undefined,
+      title: (document.getElementById('pdfTitle') as HTMLInputElement)?.value || undefined,
+      author: (document.getElementById('pdfAuthor') as HTMLInputElement)?.value || undefined,
       subject: (document.getElementById('pdfSubject') as HTMLInputElement)?.value || undefined,
     };
   }
 
-  // ── Preview PDF button ──────────────────────────────────────────────────
   document.getElementById('btnPreviewPDF')?.addEventListener('click', async () => {
     if (isPreviewing || isGenerating) return;
     setPreviewing(true);
     setStatus('');
 
-    if (lastBlobUrl) { URL.revokeObjectURL(lastBlobUrl); lastBlobUrl = ''; }
+    if (lastBlobUrl) {
+      URL.revokeObjectURL(lastBlobUrl);
+      lastBlobUrl = '';
+    }
 
     try {
       const opts = getOptions();
       const blob = await capturePDF('#invoice-card', opts);
       lastBlobUrl = URL.createObjectURL(blob);
 
-      const previewBox   = document.getElementById('pdfPreviewBox');
+      const previewBox = document.getElementById('pdfPreviewBox');
       const previewFrame = document.getElementById('pdfPreviewFrame') as HTMLIFrameElement | null;
       if (previewBox && previewFrame) {
         previewBox.style.display = 'block';
         previewFrame.src = lastBlobUrl;
-        // The blob is already complete and the frame has a fixed height, so the box will not
-        // shift once the PDF paints — scrolling now is safe and does not depend on the
-        // iframe 'load' event, which never fires where no PDF viewer is available.
         requestAnimationFrame(() => {
           previewBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
@@ -134,20 +132,17 @@ export function initPdfDemo(container: HTMLElement): void {
     }
   });
 
-  // ── Close preview button ───────────────────────────────────────────────
   document.getElementById('btnClosePreviewPDF')?.addEventListener('click', () => {
     const previewBox = document.getElementById('pdfPreviewBox');
     if (previewBox) previewBox.style.display = 'none';
   });
 
-  // ── Open in new tab button ──────────────────────────────────────────────
   document.getElementById('btnOpenPDF')?.addEventListener('click', () => {
     if (lastBlobUrl) {
       window.open(lastBlobUrl, '_blank');
     }
   });
 
-  // ── Download PDF button (does NOT open preview box) ─────────────────────
   document.getElementById('btnGenPDF')?.addEventListener('click', async () => {
     if (isGenerating || isPreviewing) return;
     setGenerating(true);

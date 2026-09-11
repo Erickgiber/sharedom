@@ -20,10 +20,6 @@ export interface LanguageOption {
 
 const translations: Record<Language, Translations> = { en, es, zh, ja, pt, de, ko, ru };
 
-/**
- * Mirrored by the language menu markup in preview/index.html and
- * preview/privacy/index.html: adding a language means adding its option there too.
- */
 const LANGUAGES: readonly LanguageOption[] = [
   { code: 'en', abbr: 'EN', label: 'English', country: 'gb' },
   { code: 'es', abbr: 'ES', label: 'Español', country: 'es' },
@@ -49,12 +45,6 @@ function readStoredLanguage(): Language {
 
 let currentLang: Language = readStoredLanguage();
 
-/**
- * Page content is authored as static HTML so crawlers and no-JS visitors get the
- * real document; switching language rewrites the marked nodes in place instead of
- * re-rendering. Markers: `data-i18n` (text), `data-i18n-attr="attr:key,..."`,
- * `data-i18n-value` (form defaults, with optional `data-i18n-value-suffix`).
- */
 function resolve(t: Translations, path: string): string | undefined {
   let node: unknown = t;
   for (const key of path.split('.')) {
@@ -117,7 +107,6 @@ function applyMeta(lang: Language): void {
 type Listener = (lang: Language, t: Translations) => void;
 const listeners = new Set<Listener>();
 
-/** English is the statically authored language, so it needs no DOM pass on boot. */
 export function initI18n(): void {
   applyMeta(currentLang);
   if (currentLang !== 'en') applyTranslations(currentLang);

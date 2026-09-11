@@ -1,0 +1,243 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="space-page"
+  data-meta-title="notFound.metaTitle"
+  data-meta-description="notFound.metaDescription"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#05060a" />
+
+    <title>Lost in space — ShareDOM</title>
+    <meta name="title" content="Lost in space — ShareDOM" />
+    <meta name="description" content="This page does not exist. Spin the planet, then head back to ShareDOM." />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+
+  <body>
+    <div id="sky"></div>
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <div class="space-lang" id="langbar">
+      <div class="lang-select" id="langSelect">
+        <button
+          type="button"
+          class="lang-select-trigger"
+          id="langSelectTrigger"
+          aria-haspopup="menu"
+          aria-expanded="false"
+          title="Switch language"
+          data-i18n-attr="title:nav.switchLanguage"
+        >
+          <span class="lang-flag"
+            ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+              <rect width="24" height="16" fill="#012169"></rect>
+              <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
+              <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
+              <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
+              <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path></svg
+          ></span>
+          <span class="lang-abbr">EN</span>
+          <svg
+            class="lang-caret"
+            viewBox="0 0 24 24"
+            width="12"
+            height="12"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </button>
+        <div
+          class="lang-select-menu"
+          role="menu"
+          aria-label="Switch language"
+          data-i18n-attr="aria-label:nav.switchLanguage"
+        >
+          <button type="button" role="menuitemradio" aria-checked="true" class="lang-option active" data-lang="en">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#012169"></rect>
+                <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
+                <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
+                <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
+                <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path></svg
+            ></span>
+            <span class="lang-abbr">EN</span>
+            <span class="lang-name">English</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="es">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#AA151B"></rect>
+                <rect y="4" width="24" height="8" fill="#F1BF00"></rect></svg
+            ></span>
+            <span class="lang-abbr">ES</span>
+            <span class="lang-name">Español</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="zh">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#EE1C25"></rect>
+                <g fill="#FFDE00">
+                  <path
+                    d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                    transform="translate(4.6,4.4) scale(2.7)"
+                  ></path>
+                  <path
+                    d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                    transform="translate(9.6,1.9) scale(0.9)"
+                  ></path>
+                  <path
+                    d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                    transform="translate(11.4,4.1) scale(0.9)"
+                  ></path>
+                  <path
+                    d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                    transform="translate(11.4,6.8) scale(0.9)"
+                  ></path>
+                  <path
+                    d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                    transform="translate(9.6,8.8) scale(0.9)"
+                  ></path>
+                </g></svg
+            ></span>
+            <span class="lang-abbr">ZH</span>
+            <span class="lang-name">中文</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="ja">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#fff"></rect>
+                <circle cx="12" cy="8" r="4.6" fill="#BC002D"></circle></svg
+            ></span>
+            <span class="lang-abbr">JA</span>
+            <span class="lang-name">日本語</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="pt">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#DA291C"></rect>
+                <rect width="9.6" height="16" fill="#046A38"></rect>
+                <circle cx="9.6" cy="8" r="3.4" fill="#FFE800"></circle>
+                <circle cx="9.6" cy="8" r="2.1" fill="#DA291C"></circle>
+                <circle cx="9.6" cy="8" r="1" fill="#fff"></circle></svg
+            ></span>
+            <span class="lang-abbr">PT</span>
+            <span class="lang-name">Português</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="de">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#000"></rect>
+                <rect y="5.34" width="24" height="5.33" fill="#DD0000"></rect>
+                <rect y="10.67" width="24" height="5.33" fill="#FFCE00"></rect></svg
+            ></span>
+            <span class="lang-abbr">DE</span>
+            <span class="lang-name">Deutsch</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="ko">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#fff"></rect>
+                <circle cx="12" cy="8" r="3.5" fill="#0047A0"></circle>
+                <path d="M8.5,8a1.75,1.75 0 0 1 3.5,0a1.75,1.75 0 0 0 3.5,0a3.5,3.5 0 0 0 -7,0Z" fill="#CD2E3A"></path>
+                <g fill="#000">
+                  <g transform="translate(4.4,3.4) rotate(-56)">
+                    <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                  </g>
+                  <g transform="translate(19.6,3.4) rotate(56)">
+                    <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                  </g>
+                  <g transform="translate(4.4,12.6) rotate(56)">
+                    <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                  </g>
+                  <g transform="translate(19.6,12.6) rotate(-56)">
+                    <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                    <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                  </g>
+                </g></svg
+            ></span>
+            <span class="lang-abbr">KO</span>
+            <span class="lang-name">한국어</span>
+          </button>
+          <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="ru">
+            <span class="lang-flag"
+              ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                <rect width="24" height="16" fill="#fff"></rect>
+                <rect y="5.34" width="24" height="5.33" fill="#0039A6"></rect>
+                <rect y="10.67" width="24" height="5.33" fill="#D52B1E"></rect></svg
+            ></span>
+            <span class="lang-abbr">RU</span>
+            <span class="lang-name">Русский</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <main class="panel" id="panel">
+        <h1 class="rise d2">404</h1>
+        <h2 class="rise d3" data-i18n="notFound.heading">This page drifted off the map</h2>
+        <p class="rise d4" data-i18n="notFound.text"
+          >Nothing orbits this address. The planet, on the other hand, is entirely real — give it a spin.</p
+        >
+        <div class="actions rise d5">
+          <a class="space-btn space-btn-primary" href="%BASE%" data-i18n="notFound.home">Back to Home</a>
+          <a
+            class="space-btn space-btn-ghost"
+            href="https://github.com/Erickgiber/sharedom"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div>
+        <div class="hint rise d6">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"></path>
+            <path d="M2 12h20"></path>
+            <path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"></path>
+          </svg>
+          <span data-i18n="notFound.hint">Drag anywhere to rotate the planet</span>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>

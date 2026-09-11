@@ -5,7 +5,7 @@ const CRC_TABLE = new Uint32Array(256);
 for (let i = 0; i < 256; i++) {
     let c = i;
     for (let j = 0; j < 8; j++) {
-        c = (c & 1) ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+        c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
     }
     CRC_TABLE[i] = c;
 }
@@ -62,7 +62,9 @@ export function normalizeZipData(data: Uint8Array | ArrayBuffer | string): Uint8
             }
             return bytes;
         } else {
-            const maybeBuffer = (globalThis as unknown as { Buffer?: { from(s: string, e: string): Uint8Array } }).Buffer;
+            const maybeBuffer = (
+                globalThis as unknown as { Buffer?: { from(s: string, e: string): Uint8Array } }
+            ).Buffer;
             if (maybeBuffer) {
                 return new Uint8Array(maybeBuffer.from(base64, 'base64'));
             }
@@ -123,16 +125,16 @@ export function buildZip(files: ZipFileInput[]): Uint8Array {
     for (const entry of processed) {
         // Local file header signature: 0x04034b50 ("PK\x03\x04")
         view.setUint32(offset, 0x04034b50, true);
-        view.setUint16(offset + 4, 20, true);       // Version needed: 2.0
-        view.setUint16(offset + 6, 0x0800, true);   // Flags: UTF-8 filename (bit 11)
-        view.setUint16(offset + 8, 0, true);        // Compression: 0 (Store)
+        view.setUint16(offset + 4, 20, true); // Version needed: 2.0
+        view.setUint16(offset + 6, 0x0800, true); // Flags: UTF-8 filename (bit 11)
+        view.setUint16(offset + 8, 0, true); // Compression: 0 (Store)
         view.setUint16(offset + 10, dosTime, true); // Mod time
         view.setUint16(offset + 12, dosDate, true); // Mod date
-        view.setUint32(offset + 14, entry.crc, true);                // CRC-32
-        view.setUint32(offset + 18, entry.dataBytes.length, true);   // Compressed size
-        view.setUint32(offset + 22, entry.dataBytes.length, true);   // Uncompressed size
-        view.setUint16(offset + 26, entry.nameBytes.length, true);   // Filename length
-        view.setUint16(offset + 28, 0, true);                        // Extra field length
+        view.setUint32(offset + 14, entry.crc, true); // CRC-32
+        view.setUint32(offset + 18, entry.dataBytes.length, true); // Compressed size
+        view.setUint32(offset + 22, entry.dataBytes.length, true); // Uncompressed size
+        view.setUint16(offset + 26, entry.nameBytes.length, true); // Filename length
+        view.setUint16(offset + 28, 0, true); // Extra field length
         offset += 30;
 
         buffer.set(entry.nameBytes, offset);
@@ -148,21 +150,21 @@ export function buildZip(files: ZipFileInput[]): Uint8Array {
     for (const entry of processed) {
         // Central directory file header signature: 0x02014b50 ("PK\x01\x02")
         view.setUint32(offset, 0x02014b50, true);
-        view.setUint16(offset + 4, 20, true);       // Version made by: 2.0
-        view.setUint16(offset + 6, 20, true);       // Version needed: 2.0
-        view.setUint16(offset + 8, 0x0800, true);   // Flags: UTF-8 filename (bit 11)
-        view.setUint16(offset + 10, 0, true);       // Compression: 0 (Store)
+        view.setUint16(offset + 4, 20, true); // Version made by: 2.0
+        view.setUint16(offset + 6, 20, true); // Version needed: 2.0
+        view.setUint16(offset + 8, 0x0800, true); // Flags: UTF-8 filename (bit 11)
+        view.setUint16(offset + 10, 0, true); // Compression: 0 (Store)
         view.setUint16(offset + 12, dosTime, true); // Mod time
         view.setUint16(offset + 14, dosDate, true); // Mod date
-        view.setUint32(offset + 16, entry.crc, true);                // CRC-32
-        view.setUint32(offset + 20, entry.dataBytes.length, true);   // Compressed size
-        view.setUint32(offset + 24, entry.dataBytes.length, true);   // Uncompressed size
-        view.setUint16(offset + 28, entry.nameBytes.length, true);   // Filename length
-        view.setUint16(offset + 30, 0, true);       // Extra field length
-        view.setUint16(offset + 32, 0, true);       // File comment length
-        view.setUint16(offset + 34, 0, true);       // Disk number start
-        view.setUint16(offset + 36, 0, true);       // Internal file attributes
-        view.setUint32(offset + 38, 0, true);       // External file attributes
+        view.setUint32(offset + 16, entry.crc, true); // CRC-32
+        view.setUint32(offset + 20, entry.dataBytes.length, true); // Compressed size
+        view.setUint32(offset + 24, entry.dataBytes.length, true); // Uncompressed size
+        view.setUint16(offset + 28, entry.nameBytes.length, true); // Filename length
+        view.setUint16(offset + 30, 0, true); // Extra field length
+        view.setUint16(offset + 32, 0, true); // File comment length
+        view.setUint16(offset + 34, 0, true); // Disk number start
+        view.setUint16(offset + 36, 0, true); // Internal file attributes
+        view.setUint32(offset + 38, 0, true); // External file attributes
         view.setUint32(offset + 42, entry.localHeaderOffset, true); // Relative offset of local header
         offset += 46;
 
@@ -173,13 +175,13 @@ export function buildZip(files: ZipFileInput[]): Uint8Array {
     // 3. Write End of Central Directory Record (EOCD)
     // EOCD signature: 0x06054b50 ("PK\x05\x06")
     view.setUint32(offset, 0x06054b50, true);
-    view.setUint16(offset + 4, 0, true);                    // Number of this disk
-    view.setUint16(offset + 6, 0, true);                    // Disk where CD starts
-    view.setUint16(offset + 8, processed.length, true);     // Total CD records on this disk
-    view.setUint16(offset + 10, processed.length, true);    // Total CD records
-    view.setUint32(offset + 12, centralDirSize, true);       // Size of central directory
-    view.setUint32(offset + 16, centralDirStartOffset, true);// Offset of start of CD
-    view.setUint16(offset + 20, 0, true);                   // ZIP comment length
+    view.setUint16(offset + 4, 0, true); // Number of this disk
+    view.setUint16(offset + 6, 0, true); // Disk where CD starts
+    view.setUint16(offset + 8, processed.length, true); // Total CD records on this disk
+    view.setUint16(offset + 10, processed.length, true); // Total CD records
+    view.setUint32(offset + 12, centralDirSize, true); // Size of central directory
+    view.setUint32(offset + 16, centralDirStartOffset, true); // Offset of start of CD
+    view.setUint16(offset + 20, 0, true); // ZIP comment length
 
     return buffer;
 }

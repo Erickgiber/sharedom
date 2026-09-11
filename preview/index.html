@@ -1,157 +1,156 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      document.documentElement.classList.remove('no-js');
+    </script>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>document.documentElement.classList.remove('no-js');</script>
+    <!-- Primary Meta Tags -->
+    <title>ShareDOM — Screenshot anything in the browser &amp; server</title>
+    <meta name="title" content="ShareDOM — Screenshot anything in the browser &amp; server" />
+    <meta
+      name="description"
+      content="Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js). Export high-DPI Retina images to PNG, JPEG, and WebP."
+    />
+    <meta name="author" content="Erick Ramirez" />
+    <meta name="application-name" content="ShareDOM" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#08090d" />
+    <link rel="canonical" href="https://erickgiber.github.io/sharedom/" />
 
-  <!-- Primary Meta Tags -->
-  <title>ShareDOM — Screenshot anything in the browser &amp; server</title>
-  <meta name="title" content="ShareDOM — Screenshot anything in the browser &amp; server" />
-  <meta name="description"
-    content="Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js). Export high-DPI Retina images to PNG, JPEG, and WebP." />
-  <meta name="author" content="Erick Ramirez" />
-  <meta name="application-name" content="ShareDOM" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="theme-color" content="#08090d" />
-  <link rel="canonical" href="https://erickgiber.github.io/sharedom/" />
+    <!-- Open Graph / Facebook / LinkedIn / Discord -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://erickgiber.github.io/sharedom/" />
+    <meta property="og:title" content="ShareDOM — Screenshot anything in the browser &amp; server" />
+    <meta
+      property="og:description"
+      content="Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js)."
+    />
+    <meta property="og:image" content="https://erickgiber.github.io/sharedom/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="ShareDOM — Fast DOM Screenshot and Snapshot Library" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="ShareDOM" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="es_ES" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+    <meta property="og:locale:alternate" content="ja_JP" />
+    <meta property="og:locale:alternate" content="pt_PT" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="ko_KR" />
+    <meta property="og:locale:alternate" content="ru_RU" />
 
-  <!-- Open Graph / Facebook / LinkedIn / Discord -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://erickgiber.github.io/sharedom/" />
-  <meta property="og:title" content="ShareDOM — Screenshot anything in the browser &amp; server" />
-  <meta property="og:description"
-    content="Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js)." />
-  <meta property="og:image" content="https://erickgiber.github.io/sharedom/og-image.png" />
-  <meta property="og:image:type" content="image/png" />
-  <meta property="og:image:alt" content="ShareDOM — Fast DOM Screenshot and Snapshot Library" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name" content="ShareDOM" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="es_ES" />
-  <meta property="og:locale:alternate" content="zh_CN" />
-  <meta property="og:locale:alternate" content="ja_JP" />
-  <meta property="og:locale:alternate" content="pt_PT" />
-  <meta property="og:locale:alternate" content="de_DE" />
-  <meta property="og:locale:alternate" content="ko_KR" />
-  <meta property="og:locale:alternate" content="ru_RU" />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://erickgiber.github.io/sharedom/" />
+    <meta name="twitter:title" content="ShareDOM — Screenshot anything in the browser &amp; server" />
+    <meta
+      name="twitter:description"
+      content="Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js)."
+    />
+    <meta name="twitter:image" content="https://erickgiber.github.io/sharedom/og-image.png" />
+    <meta name="twitter:image:alt" content="ShareDOM — Fast DOM Screenshot Library" />
 
-  <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://erickgiber.github.io/sharedom/" />
-  <meta name="twitter:title" content="ShareDOM — Screenshot anything in the browser &amp; server" />
-  <meta name="twitter:description"
-    content="Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js)." />
-  <meta name="twitter:image" content="https://erickgiber.github.io/sharedom/og-image.png" />
-  <meta name="twitter:image:alt" content="ShareDOM — Fast DOM Screenshot Library" />
+    <!-- Favicons & Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
-  <!-- Favicons & Manifest -->
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
-  <link rel="apple-touch-icon" href="./icon-192.png" />
-  <link rel="manifest" href="./site.webmanifest" />
+    <!-- Fonts & Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
 
-  <!-- Fonts & Styles -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css" />
-
-  <!-- JSON-LD Structured Data Schema.org -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
+    <!-- JSON-LD Structured Data Schema.org -->
+    <script type="application/ld+json">
       {
-        "@type": "Person",
-        "@id": "https://erickgiber.github.io/sharedom/#author",
-        "name": "Erick Ramirez",
-        "alternateName": "Erickgiber",
-        "url": "https://github.com/Erickgiber"
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://erickgiber.github.io/sharedom/#website",
-        "url": "https://erickgiber.github.io/sharedom/",
-        "name": "ShareDOM",
-        "description": "Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR.",
-        "inLanguage": [
-          "en",
-          "es",
-          "zh",
-          "ja",
-          "pt",
-          "de",
-          "ko",
-          "ru"
-        ],
-        "publisher": {
-          "@id": "https://erickgiber.github.io/sharedom/#author"
-        }
-      },
-      {
-        "@type": "WebPage",
-        "@id": "https://erickgiber.github.io/sharedom/#webpage",
-        "url": "https://erickgiber.github.io/sharedom/",
-        "name": "ShareDOM — Screenshot anything in the browser & server",
-        "description": "Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js).",
-        "isPartOf": {
-          "@id": "https://erickgiber.github.io/sharedom/#website"
-        },
-        "about": {
-          "@id": "https://erickgiber.github.io/sharedom/#software"
-        },
-        "primaryImageOfPage": "https://erickgiber.github.io/sharedom/og-image.png",
-        "inLanguage": "en"
-      },
-      {
-        "@type": "SoftwareApplication",
-        "@id": "https://erickgiber.github.io/sharedom/#software",
-        "name": "sharedom",
-        "alternateName": "ShareDOM",
-        "applicationCategory": "DeveloperApplication",
-        "applicationSubCategory": "JavaScript Library",
-        "operatingSystem": "Web Browser, Node.js, Next.js, SvelteKit",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "url": "https://erickgiber.github.io/sharedom/",
-        "image": "https://erickgiber.github.io/sharedom/og-image.png",
-        "downloadUrl": "https://www.npmjs.com/package/sharedom",
-        "installUrl": "https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm",
-        "codeRepository": "https://github.com/Erickgiber/sharedom",
-        "programmingLanguage": "TypeScript",
-        "license": "https://opensource.org/licenses/MIT",
-        "softwareVersion": "1.2.2",
-        "author": {
-          "@id": "https://erickgiber.github.io/sharedom/#author"
-        },
-        "featureList": [
-          "Capture any DOM element or CSS selector as an image",
-          "Export to PNG, JPEG, WebP, PDF and ZIP",
-          "High-DPI Retina and 4K scale factors",
-          "Server-side rendering support for Next.js, SvelteKit and Node.js",
-          "Console log and network request telemetry capture",
-          "Zero runtime dependencies, TypeScript first"
-        ],
-        "description": "Fast and lightweight DOM snapshot, screenshot and PDF capture library for browser and SSR."
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://erickgiber.github.io/sharedom/#author",
+            "name": "Erick Ramirez",
+            "alternateName": "Erickgiber",
+            "url": "https://github.com/Erickgiber"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://erickgiber.github.io/sharedom/#website",
+            "url": "https://erickgiber.github.io/sharedom/",
+            "name": "ShareDOM",
+            "description": "Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR.",
+            "inLanguage": ["en", "es", "zh", "ja", "pt", "de", "ko", "ru"],
+            "publisher": {
+              "@id": "https://erickgiber.github.io/sharedom/#author"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://erickgiber.github.io/sharedom/#webpage",
+            "url": "https://erickgiber.github.io/sharedom/",
+            "name": "ShareDOM — Screenshot anything in the browser & server",
+            "description": "Fast, zero-dependency DOM snapshot and screenshot capture library for the browser and SSR (Next.js, SvelteKit, Node.js).",
+            "isPartOf": {
+              "@id": "https://erickgiber.github.io/sharedom/#website"
+            },
+            "about": {
+              "@id": "https://erickgiber.github.io/sharedom/#software"
+            },
+            "primaryImageOfPage": "https://erickgiber.github.io/sharedom/og-image.png",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://erickgiber.github.io/sharedom/#software",
+            "name": "sharedom",
+            "alternateName": "ShareDOM",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "JavaScript Library",
+            "operatingSystem": "Web Browser, Node.js, Next.js, SvelteKit",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "url": "https://erickgiber.github.io/sharedom/",
+            "image": "https://erickgiber.github.io/sharedom/og-image.png",
+            "downloadUrl": "https://www.npmjs.com/package/sharedom",
+            "installUrl": "https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm",
+            "codeRepository": "https://github.com/Erickgiber/sharedom",
+            "programmingLanguage": "TypeScript",
+            "license": "https://opensource.org/licenses/MIT",
+            "softwareVersion": "1.2.2",
+            "author": {
+              "@id": "https://erickgiber.github.io/sharedom/#author"
+            },
+            "featureList": [
+              "Capture any DOM element or CSS selector as an image",
+              "Export to PNG, JPEG, WebP, PDF and ZIP",
+              "High-DPI Retina and 4K scale factors",
+              "Server-side rendering support for Next.js, SvelteKit and Node.js",
+              "Console log and network request telemetry capture",
+              "Zero runtime dependencies, TypeScript first"
+            ],
+            "description": "Fast and lightweight DOM snapshot, screenshot and PDF capture library for browser and SSR."
+          }
+        ]
       }
-    ]
-  }
-  </script>
-</head>
+    </script>
+  </head>
 
-<body>
-  <div id="navbar-mount">
-      <nav class="nav " id="mainNav">
-        <a href="./" class="nav-logo">
-          <img src="./logo.svg" alt="ShareDOM logo" class="nav-logo-img" width="32" height="32">
+  <body>
+    <div id="navbar-mount">
+      <nav class="nav" id="mainNav">
+        <a href="%BASE%" class="nav-logo">
+          <img src="/logo.svg" alt="ShareDOM logo" class="nav-logo-img" width="32" height="32" />
           <span class="nav-logo-text">ShareDOM</span>
         </a>
 
@@ -164,684 +163,1054 @@
         </div>
 
         <div class="nav-right">
-          <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener noreferrer" class="nav-coffee-btn" title="☕ Buy me a coffee" data-i18n="nav.buyCoffee" data-i18n-attr="title:nav.buyCoffee">
+          <a
+            href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-coffee-btn"
+            title="☕ Buy me a coffee"
+            data-i18n="nav.buyCoffee"
+            data-i18n-attr="title:nav.buyCoffee"
+          >
             ☕ Buy me a coffee
           </a>
           <div class="lang-select" id="langSelect">
-            <button type="button" class="lang-select-trigger" id="langSelectTrigger" aria-haspopup="menu" aria-expanded="false" title="Switch language" data-i18n-attr="title:nav.switchLanguage">
-              <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#012169"></rect>
-    <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
-    <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
-    <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
-    <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path>
-  </svg></span>
+            <button
+              type="button"
+              class="lang-select-trigger"
+              id="langSelectTrigger"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              title="Switch language"
+              data-i18n-attr="title:nav.switchLanguage"
+            >
+              <span class="lang-flag"
+                ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                  <rect width="24" height="16" fill="#012169"></rect>
+                  <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
+                  <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
+                  <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
+                  <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path></svg
+              ></span>
               <span class="lang-abbr">EN</span>
-              <svg class="lang-caret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                class="lang-caret"
+                viewBox="0 0 24 24"
+                width="12"
+                height="12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="m6 9 6 6 6-6"></path>
               </svg>
             </button>
-            <div class="lang-select-menu" role="menu" aria-label="Switch language" data-i18n-attr="aria-label:nav.switchLanguage">
-              
-        <button type="button" role="menuitemradio" aria-checked="true" class="lang-option active" data-lang="en">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#012169"></rect>
-    <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
-    <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
-    <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
-    <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path>
-  </svg></span>
-          <span class="lang-abbr">EN</span>
-          <span class="lang-name">English</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="es">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#AA151B"></rect>
-    <rect y="4" width="24" height="8" fill="#F1BF00"></rect>
-  </svg></span>
-          <span class="lang-abbr">ES</span>
-          <span class="lang-name">Español</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="zh">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#EE1C25"></rect>
-    <g fill="#FFDE00">
-      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(4.6,4.4) scale(2.7)"></path>
-      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(9.6,1.9) scale(0.9)"></path>
-      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(11.4,4.1) scale(0.9)"></path>
-      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(11.4,6.8) scale(0.9)"></path>
-      <path d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z" transform="translate(9.6,8.8) scale(0.9)"></path>
-    </g>
-  </svg></span>
-          <span class="lang-abbr">ZH</span>
-          <span class="lang-name">中文</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="ja">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#fff"></rect>
-    <circle cx="12" cy="8" r="4.6" fill="#BC002D"></circle>
-  </svg></span>
-          <span class="lang-abbr">JA</span>
-          <span class="lang-name">日本語</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="pt">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#DA291C"></rect>
-    <rect width="9.6" height="16" fill="#046A38"></rect>
-    <circle cx="9.6" cy="8" r="3.4" fill="#FFE800"></circle>
-    <circle cx="9.6" cy="8" r="2.1" fill="#DA291C"></circle>
-    <circle cx="9.6" cy="8" r="1" fill="#fff"></circle>
-  </svg></span>
-          <span class="lang-abbr">PT</span>
-          <span class="lang-name">Português</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="de">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#000"></rect>
-    <rect y="5.34" width="24" height="5.33" fill="#DD0000"></rect>
-    <rect y="10.67" width="24" height="5.33" fill="#FFCE00"></rect>
-  </svg></span>
-          <span class="lang-abbr">DE</span>
-          <span class="lang-name">Deutsch</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="ko">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#fff"></rect>
-    <circle cx="12" cy="8" r="3.5" fill="#0047A0"></circle>
-    <path d="M8.5,8a1.75,1.75 0 0 1 3.5,0a1.75,1.75 0 0 0 3.5,0a3.5,3.5 0 0 0 -7,0Z" fill="#CD2E3A"></path>
-    <g fill="#000">
-      <g transform="translate(4.4,3.4) rotate(-56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
-      <g transform="translate(19.6,3.4) rotate(56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
-      <g transform="translate(4.4,12.6) rotate(56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
-      <g transform="translate(19.6,12.6) rotate(-56)"><rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect><rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect><rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect></g>
-    </g>
-  </svg></span>
-          <span class="lang-abbr">KO</span>
-          <span class="lang-name">한국어</span>
-        </button>
-        <button type="button" role="menuitemradio" aria-checked="false" class="lang-option " data-lang="ru">
-          <span class="lang-flag"><svg viewBox="0 0 24 16" role="presentation" focusable="false">
-    <rect width="24" height="16" fill="#fff"></rect>
-    <rect y="5.34" width="24" height="5.33" fill="#0039A6"></rect>
-    <rect y="10.67" width="24" height="5.33" fill="#D52B1E"></rect>
-  </svg></span>
-          <span class="lang-abbr">RU</span>
-          <span class="lang-name">Русский</span>
-        </button>
-            </div>
-          </div>
-        </div>
-      </nav></div>
-  <main>
-    <div id="hero-mount">
-      <section class="hero">
-        <div class="hero-glow"></div>
-        <div class="hero-inner anim-in" data-anim-key="hero-inner">
-          <a href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm" target="_blank" rel="noopener noreferrer" class="hero-extension-pill" title="Also available as a Chrome Extension" data-i18n-attr="title:hero.extensionAvailable">
-            <span class="pill-badge" data-i18n="hero.extensionPill">Now on Chrome Web Store</span>
-            <span class="pill-text" data-i18n="hero.extensionAvailable">Also available as a Chrome Extension</span>
-            <svg class="pill-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
-          </a>
-          <h1><span data-i18n="hero.titleMain">Screenshot</span> <em data-i18n="hero.titleEm">anything</em><br><span data-i18n="hero.titleEnd">in the browser &amp; server.</span></h1>
-          <p class="hero-sub" data-i18n="hero.subtitle">Zero-dependency library to capture pixel-perfect DOM snapshots in the browser or render ultra-high-definition screenshots in Next.js &amp; SvelteKit SSR servers.</p>
-          <div class="hero-actions">
-            <a href="#usage" class="btn-primary" data-i18n="hero.readDocs">Read Docs</a>
-            <button type="button" class="btn-ghost" id="copyNpmBtn" aria-label="Copy the npm install command" data-i18n-attr="aria-label:hero.copyCommandAria">
-              <span data-i18n="hero.copyCommand">npm i sharedom</span>
-              <svg class="copy-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </button>
-          </div>
-
-          <div class="hero-links">
-            <a href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm" target="_blank" rel="noopener noreferrer" class="hero-link">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 8h8.5"></path>
-                <path d="M8.5 14 4.2 6.9"></path>
-                <path d="M15.5 14 11.2 21.9"></path>
-              </svg>
-              <span data-i18n="hero.linkExtension">Chrome Extension</span>
-            </a>
-            <a href="https://www.npmjs.com/package/sharedom" target="_blank" rel="noopener noreferrer" class="hero-link">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-                <path d="M2 4.5h20v13h-10v2.5H7.5v-2.5H2v-13Zm2.2 10.8h2.2V8.7h2.2v6.6h2.2V6.7H4.2v8.6Zm8.6-8.6v10.8h2.2v-2.2h4.4V6.7h-6.6Zm2.2 2.2h2.2v4.4h-2.2V8.9Z"></path>
-              </svg>
-              <span data-i18n="hero.linkNpm">npm package</span>
-            </a>
-            <a href="https://github.com/Erickgiber/sharedom" target="_blank" rel="noopener noreferrer" class="hero-link">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.02-2.75-.1-.26-.44-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.54 1.41.2 2.45.1 2.71.64.72 1.02 1.63 1.02 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"></path>
-              </svg>
-              <span data-i18n="hero.linkGithub">GitHub</span>
-            </a>
-          </div>
-        </div>
-
-        <div class="hero-visual anim-in" style="transition-delay:200ms" data-anim-key="hero-visual">
-          <div class="browser-glow" id="browserGlow"></div>
-          <div class="browser" id="heroBrowser">
-            <div class="browser-bar">
-              <div class="dot dot-r"></div>
-              <div class="dot dot-y"></div>
-              <div class="dot dot-g"></div>
-              <div class="url-bar"><span data-i18n="mockup.url">localhost:5173</span></div>
-            </div>
-            <div class="browser-body">
-              <div class="fake-line" style="width: 80%; transition-delay: 0.5s;" id="l1"></div>
-              <div class="fake-line" style="width: 60%; transition-delay: 0.6s;" id="l2"></div>
-              <div class="fake-line" style="width: 90%; transition-delay: 0.7s;" id="l3"></div>
-              <div class="fake-line" style="width: 45%; transition-delay: 0.8s;" id="l4"></div>
-              <div class="fake-line" style="width: 70%; transition-delay: 0.9s;" id="l5"></div>
-              <div class="fake-btns">
-                <div class="fake-btn fake-btn-1" style="transition-delay: 1s;" id="b1"></div>
-                <div class="fake-btn fake-btn-2" style="transition-delay: 1.1s;" id="b2"></div>
-              </div>
-            </div>
-            <div class="flash-overlay" id="flashOverlay" style="transition: opacity 0.4s; opacity: 1;"></div>
-          </div>
-
-          <div class="screenshot-badge" id="screenshotBadge">
-            <div class="badge-title" id="badgeTitle" data-i18n="mockup.outputFile">output.png</div>
-            <div class="badge-lines" id="badgePreviewContainer">
-              <div class="badge-line" style="width:80%"></div>
-              <div class="badge-line" style="width:60%"></div>
-              <div class="badge-line" style="width:90%"></div>
-              <div class="badge-line" style="width:45%"></div>
-            </div>
-          </div>
-        </div>
-      </section></div>
-    <div id="playground-mount">
-      <section class="playground-section" id="playground">
-        <div class="section-header anim-in" data-anim-key="playground-header">
-          <h2 data-i18n="playground.title">Interactive Playground</h2>
-          <p data-i18n="playground.subtitle">Test snapshot capture on the card below with real-time options.</p>
-        </div>
-
-        <div class="playground-layout anim-in" style="transition-delay:150ms" data-anim-key="playground-body">
-          <!-- Left: Simple Clean Sample Card -->
-          <div class="sample-container">
-            <div id="playground-card" class="sample-metric-card">
-              <div class="card-top">
-                <div class="card-brand">
-                  <div class="brand-avatar">
-                    <img src="./logo.svg" alt="sharedom logo" width="24" height="24">
-                  </div>
-                  <div>
-                    <h4 data-i18n="playground.cardTitle">Snap Preview Card</h4>
-                    <p class="brand-sub" data-i18n="playground.cardSub">High-Resolution DOM Capture</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-metrics">
-                <div class="metric-item">
-                  <span class="m-label" data-i18n="playground.cardStat1Label">Render Engine</span>
-                  <span class="m-val" data-i18n="playground.cardStat1Val">SVG + Canvas</span>
-                </div>
-                <div class="metric-item">
-                  <span class="m-label" data-i18n="playground.cardStat2Label">Performance</span>
-                  <span class="m-val" data-i18n="playground.cardStat2Val">13.5 kB Gzipped</span>
-                </div>
-              </div>
-
-              <div class="card-banner">
-                <span data-i18n="playground.cardQuote">sharedom captures styled DOM elements cleanly and reliably.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: Streamlined Control Panel -->
-          <div class="controls-container">
-            <div class="form-group">
-              <label data-i18n="playground.scaleLabel">Scale Factor:</label>
-              <div class="btn-group" id="scaleGroup">
-                <button type="button" class="btn-opt " data-scale="1">1x</button>
-                <button type="button" class="btn-opt active" data-scale="2">2x (<span data-i18n="playground.scaleRetina">Retina</span>)</button>
-                <button type="button" class="btn-opt " data-scale="3">3x</button>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group flex-1">
-                <label for="play-format" data-i18n="playground.formatLabel">Format:</label>
-                <select id="play-format" class="form-control">
-                  <option value="png" selected="">PNG</option>
-                  <option value="jpeg">JPEG</option>
-                  <option value="webp">WebP</option>
-                </select>
-              </div>
-
-              <div class="form-group flex-1" id="playQualityGroup" style="display: none;">
-                <label for="play-quality"><span data-i18n="playground.qualityLabel">Quality:</span> <span id="qualityDisplay">0.92</span></label>
-                <input type="range" id="play-quality" min="0.1" max="1" step="0.05" value="0.92" class="form-range">
-              </div>
-            </div>
-
-            <div class="actions-row">
-              <button type="button" id="btnPlayCapture" class="btn-primary flex-1" data-i18n="playground.btnCapture">
-                Capture Snapshot
+            <div
+              class="lang-select-menu"
+              role="menu"
+              aria-label="Switch language"
+              data-i18n-attr="aria-label:nav.switchLanguage"
+            >
+              <button type="button" role="menuitemradio" aria-checked="true" class="lang-option active" data-lang="en">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#012169"></rect>
+                    <path d="M0,0L24,16M24,0L0,16" stroke="#fff" stroke-width="3.4"></path>
+                    <path d="M0,0L24,16M24,0L0,16" stroke="#C8102E" stroke-width="1.8"></path>
+                    <path d="M12,0V16M0,8H24" stroke="#fff" stroke-width="5.4"></path>
+                    <path d="M12,0V16M0,8H24" stroke="#C8102E" stroke-width="3.2"></path></svg
+                ></span>
+                <span class="lang-abbr">EN</span>
+                <span class="lang-name">English</span>
               </button>
-              <button type="button" id="btnPlayDownload" class="btn-outline flex-1" data-i18n="playground.btnDownload">
-                Download Image
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="es">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#AA151B"></rect>
+                    <rect y="4" width="24" height="8" fill="#F1BF00"></rect></svg
+                ></span>
+                <span class="lang-abbr">ES</span>
+                <span class="lang-name">Español</span>
+              </button>
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="zh">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#EE1C25"></rect>
+                    <g fill="#FFDE00">
+                      <path
+                        d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                        transform="translate(4.6,4.4) scale(2.7)"
+                      ></path>
+                      <path
+                        d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                        transform="translate(9.6,1.9) scale(0.9)"
+                      ></path>
+                      <path
+                        d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                        transform="translate(11.4,4.1) scale(0.9)"
+                      ></path>
+                      <path
+                        d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                        transform="translate(11.4,6.8) scale(0.9)"
+                      ></path>
+                      <path
+                        d="M0,-1L0.225,-0.309L0.951,-0.309L0.363,0.118L0.588,0.809L0,0.382L-0.588,0.809L-0.363,0.118L-0.951,-0.309L-0.225,-0.309Z"
+                        transform="translate(9.6,8.8) scale(0.9)"
+                      ></path>
+                    </g></svg
+                ></span>
+                <span class="lang-abbr">ZH</span>
+                <span class="lang-name">中文</span>
+              </button>
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="ja">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#fff"></rect>
+                    <circle cx="12" cy="8" r="4.6" fill="#BC002D"></circle></svg
+                ></span>
+                <span class="lang-abbr">JA</span>
+                <span class="lang-name">日本語</span>
+              </button>
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="pt">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#DA291C"></rect>
+                    <rect width="9.6" height="16" fill="#046A38"></rect>
+                    <circle cx="9.6" cy="8" r="3.4" fill="#FFE800"></circle>
+                    <circle cx="9.6" cy="8" r="2.1" fill="#DA291C"></circle>
+                    <circle cx="9.6" cy="8" r="1" fill="#fff"></circle></svg
+                ></span>
+                <span class="lang-abbr">PT</span>
+                <span class="lang-name">Português</span>
+              </button>
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="de">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#000"></rect>
+                    <rect y="5.34" width="24" height="5.33" fill="#DD0000"></rect>
+                    <rect y="10.67" width="24" height="5.33" fill="#FFCE00"></rect></svg
+                ></span>
+                <span class="lang-abbr">DE</span>
+                <span class="lang-name">Deutsch</span>
+              </button>
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="ko">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#fff"></rect>
+                    <circle cx="12" cy="8" r="3.5" fill="#0047A0"></circle>
+                    <path
+                      d="M8.5,8a1.75,1.75 0 0 1 3.5,0a1.75,1.75 0 0 0 3.5,0a3.5,3.5 0 0 0 -7,0Z"
+                      fill="#CD2E3A"
+                    ></path>
+                    <g fill="#000">
+                      <g transform="translate(4.4,3.4) rotate(-56)">
+                        <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                      </g>
+                      <g transform="translate(19.6,3.4) rotate(56)">
+                        <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                      </g>
+                      <g transform="translate(4.4,12.6) rotate(56)">
+                        <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                      </g>
+                      <g transform="translate(19.6,12.6) rotate(-56)">
+                        <rect x="-2.6" y="-1.5" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="-0.42" width="5.2" height="0.85"></rect>
+                        <rect x="-2.6" y="0.65" width="5.2" height="0.85"></rect>
+                      </g>
+                    </g></svg
+                ></span>
+                <span class="lang-abbr">KO</span>
+                <span class="lang-name">한국어</span>
+              </button>
+              <button type="button" role="menuitemradio" aria-checked="false" class="lang-option" data-lang="ru">
+                <span class="lang-flag"
+                  ><svg viewBox="0 0 24 16" role="presentation" focusable="false">
+                    <rect width="24" height="16" fill="#fff"></rect>
+                    <rect y="5.34" width="24" height="5.33" fill="#0039A6"></rect>
+                    <rect y="10.67" width="24" height="5.33" fill="#D52B1E"></rect></svg
+                ></span>
+                <span class="lang-abbr">RU</span>
+                <span class="lang-name">Русский</span>
               </button>
             </div>
           </div>
         </div>
-
-        <!-- Result Box -->
-        <div id="playResultSection" class="result-section" style="display: none;">
-          <div class="result-header">
-            <h3 data-i18n="playground.resultTitle">Live Capture Result</h3>
-            <span id="playResultMeta" class="result-meta"></span>
-          </div>
-          <div class="result-body">
-            <div class="result-img-frame" id="playImgFrame">
-              <img id="playResultImg" src="" alt="Captured snapshot of the preview card" data-i18n-attr="alt:playground.resultAlt">
-            </div>
-            <div class="result-btns">
-              <button type="button" id="btnCopyDataUrl" class="btn-ghost" data-i18n="playground.copyDataUrl">Copy Data URL</button>
-            </div>
-          </div>
-        </div>
-      </section></div>
-    <div id="pdf-demo-mount">
-      <section class="pdf-section" id="pdf-demo">
-        <div class="section-header anim-in" data-anim-key="pdf-header">
-          <h2 data-i18n="pdfDemo.title">PDF Export Demo</h2>
-          <p data-i18n="pdfDemo.subtitle">Capture any DOM element as a pixel-perfect PDF — zero dependencies.</p>
-        </div>
-        <div class="pdf-demo-layout anim-in" style="transition-delay:150ms" data-anim-key="pdf-body">
-          <div class="pdf-preview-col">
-            <div class="pdf-invoice-wrapper">
-              <div id="invoice-card" class="invoice-card">
-                
-    <div class="inv-header">
-      <div class="inv-brand">
-        <img src="./logo.svg" alt="sharedom" class="inv-logo">
-        <span class="inv-brand-name">sharedom</span>
-      </div>
-      <div class="inv-meta">
-        <h2 class="inv-title" data-i18n="pdfDemo.invTitle">INVOICE</h2>
-        <p class="inv-number">INV-2026-0042</p>
-      </div>
-    </div>
-    <div class="inv-parties">
-      <div class="inv-party">
-        <p class="party-label" data-i18n="pdfDemo.invFrom">FROM</p>
-        <p class="party-name">sharedom Studio</p>
-        <p class="party-detail">hello@sharedom.dev</p>
-        <p class="party-detail">123 Dev Lane, San Francisco, CA 94107</p>
-      </div>
-      <div class="inv-party">
-        <p class="party-label" data-i18n="pdfDemo.invBillTo">BILL TO</p>
-        <p class="party-name">Acme Corporation</p>
-        <p class="party-detail">billing@acme.io</p>
-        <p class="party-detail">456 Business Ave, New York, NY 10001</p>
-      </div>
-      <div class="inv-party">
-        <div>
-          <p class="party-label" data-i18n="pdfDemo.invIssueDate">ISSUE DATE</p>
-          <p class="party-name" data-i18n="pdfDemo.invIssueDateValue">September 1, 2026</p>
-        </div>
-        <div style="margin-top:12px">
-          <p class="party-label" data-i18n="pdfDemo.invDueDate">DUE DATE</p>
-          <p class="party-name inv-due" data-i18n="pdfDemo.invDueDateValue">September 15, 2026</p>
-        </div>
-      </div>
-    </div>
-    <table class="inv-table">
-      <thead>
-        <tr>
-          <th class="th-desc" data-i18n="pdfDemo.invColDesc">Description</th>
-          <th class="th-num" data-i18n="pdfDemo.invColQty">Qty</th>
-          <th class="th-num" data-i18n="pdfDemo.invColUnit">Unit Price</th>
-          <th class="th-num" data-i18n="pdfDemo.invColAmount">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-    <tr class="row-even">
-      <td class="td-desc" data-i18n="pdfDemo.invItems.0">UI Component Library License</td>
-      <td class="td-num">1</td>
-      <td class="td-num">$299.00</td>
-      <td class="td-num td-total">$299.00</td>
-    </tr>
-    <tr class="row-odd">
-      <td class="td-desc" data-i18n="pdfDemo.invItems.1">Annual Support &amp; Maintenance</td>
-      <td class="td-num">1</td>
-      <td class="td-num">$149.00</td>
-      <td class="td-num td-total">$149.00</td>
-    </tr>
-    <tr class="row-even">
-      <td class="td-desc" data-i18n="pdfDemo.invItems.2">Custom Theme Integration</td>
-      <td class="td-num">3</td>
-      <td class="td-num">$59.00</td>
-      <td class="td-num td-total">$177.00</td>
-    </tr>
-    <tr class="row-odd">
-      <td class="td-desc" data-i18n="pdfDemo.invItems.3">Developer Consulting Hours</td>
-      <td class="td-num">4</td>
-      <td class="td-num">$95.00</td>
-      <td class="td-num td-total">$380.00</td>
-    </tr></tbody>
-    </table>
-    <div class="inv-summary">
-      <div class="inv-summary-rows">
-        <div class="summary-row"><span data-i18n="pdfDemo.invSubtotal">Subtotal</span><span>$1,005.00</span></div>
-        <div class="summary-row"><span data-i18n="pdfDemo.invTax">Tax (8%)</span><span>$80.40</span></div>
-        <div class="summary-row summary-total"><span data-i18n="pdfDemo.invTotalDue">Total Due</span><span>$1,085.40</span></div>
-      </div>
-    </div>
-    <div class="inv-footer">
-      <p data-i18n="pdfDemo.invThanks">Thank you for your business! Payment is due within 14 days.</p>
-      <p class="inv-footer-sub" data-i18n="pdfDemo.invContact">Questions? Contact us at hello@sharedom.dev · sharedom.dev</p>
-    </div>
-  
-              </div>
-            </div>
-          </div>
-          <div class="pdf-controls-col">
-            <div class="pdf-ctrl-card">
-              <h3 class="pdf-ctrl-title" data-i18n="pdfDemo.exportOptions">Export Options</h3>
-              <div class="pdf-form-group">
-                <label class="pdf-label" data-i18n="pdfDemo.pageSizeLabel">Page Size</label>
-                <div class="btn-group" id="pageSizeGroup">
-                  <button type="button" class="btn-opt active" data-size="auto" data-i18n="pdfDemo.pageSizeAuto">Auto</button>
-                  <button type="button" class="btn-opt " data-size="A4">A4</button>
-                  <button type="button" class="btn-opt " data-size="Letter">Letter</button>
-                  <button type="button" class="btn-opt " data-size="A3">A3</button>
-                </div>
-              </div>
-              <div class="pdf-form-group" id="orientGroup" style="display:none">
-                <label class="pdf-label" data-i18n="pdfDemo.orientationLabel">Orientation</label>
-                <div class="btn-group" id="orientBtnGroup">
-                  <button type="button" class="btn-opt active" data-orient="portrait" data-i18n="pdfDemo.portrait">↕ Portrait</button>
-                  <button type="button" class="btn-opt " data-orient="landscape" data-i18n="pdfDemo.landscape">↔ Landscape</button>
-                </div>
-              </div>
-              <div class="pdf-form-group" id="marginGroup" style="display:none">
-                <label class="pdf-label"><span data-i18n="pdfDemo.marginLabel">Margin</span> — <span id="marginVal">0</span> <span data-i18n="pdfDemo.marginUnit">pt</span></label>
-                <input type="range" id="marginSlider" min="0" max="56" step="4" value="0" class="form-range">
-              </div>
-              <div class="pdf-form-group">
-                <label class="pdf-label" data-i18n="pdfDemo.scaleLabel">Capture Scale</label>
-                <div class="btn-group" id="scaleGroup">
-                  <button type="button" class="btn-opt " data-sc="1">1x</button>
-                  <button type="button" class="btn-opt active" data-sc="2">2x (<span data-i18n="pdfDemo.scaleRetina">Retina</span>)</button>
-                  <button type="button" class="btn-opt " data-sc="3">3x</button>
-                </div>
-              </div>
-              <div class="pdf-form-group">
-                <label class="pdf-label" data-i18n="pdfDemo.metadataLabel">PDF Metadata</label>
-                <input type="text" id="pdfTitle" class="pdf-input" placeholder="Title — e.g. Invoice INV-2026-0042" value="Invoice INV-2026-0042" data-i18n-value="pdfDemo.invoiceLabel" data-i18n-value-suffix=" INV-2026-0042" data-i18n-attr="placeholder:pdfDemo.titlePlaceholder">
-                <input type="text" id="pdfAuthor" class="pdf-input" placeholder="Author" value="sharedom Studio" style="margin-top:8px" data-i18n-attr="placeholder:pdfDemo.authorPlaceholder">
-                <input type="text" id="pdfSubject" class="pdf-input" placeholder="Subject" value="Client Invoice — Acme Corporation" data-i18n-value="pdfDemo.metaSubjectValue" style="margin-top:8px" data-i18n-attr="placeholder:pdfDemo.subjectPlaceholder">
-              </div>
-              <div class="pdf-actions">
-                <button type="button" id="btnPreviewPDF" class="pdf-btn-outline">
-                  <span id="pdfPreviewSpinner" class="pdf-spinner" style="display:none"></span>
-                  <span class="pdf-btn-preview-label" data-i18n="pdfDemo.btnPreview">Preview PDF</span>
-                </button>
-                <button type="button" id="btnGenPDF" class="btn-primary pdf-btn-main">
-                  <span id="pdfSpinner" class="pdf-spinner" style="display:none"></span>
-                  <span class="pdf-btn-label" data-i18n="pdfDemo.btnDownload">Download PDF</span>
-                </button>
-              </div>
-              <p id="pdfStatus" class="pdf-status"></p>
-            </div>
-          </div>
-        </div>
-
-        <div id="pdfPreviewBox" class="result-section pdf-preview-box" style="display:none">
-          <div class="result-header">
-            <h3 data-i18n="pdfDemo.lastPdf">Last generated PDF</h3>
-            <button type="button" id="btnClosePreviewPDF" class="pdf-preview-close" title="Close preview" data-i18n-attr="title:pdfDemo.previewClose">✕</button>
-          </div>
-          <iframe id="pdfPreviewFrame" class="pdf-preview-iframe" title="PDF preview" data-i18n-attr="title:pdfDemo.previewFrameTitle"></iframe>
-          <div class="pdf-preview-actions">
-            <button type="button" id="btnOpenPDF" class="btn-ghost" data-i18n="pdfDemo.openNewTab">Open in new tab ↗</button>
-          </div>
-        </div>
-      </section></div>
-    <div id="telemetry-demo-mount">
-      <section class="playground-section telemetry-section" id="telemetry-demo">
-        <div class="section-header anim-in" data-anim-key="telemetry-header">
-          <h2 data-i18n="telemetryDemo.title">Console &amp; Network Screenshot</h2>
-          <p data-i18n="telemetryDemo.subtitle">Capture console logs and HTTP requests as styled tables in PNG, WebP or PDF.</p>
-        </div>
-
-        <div class="telemetry-grid">
-          <article class="telemetry-card anim-in" style="transition-delay:0ms" data-anim-key="telemetry-console">
-            <div class="telemetry-card-content">
-              <div class="telemetry-icon">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                  <path d="m6 9 3 3-3 3"></path>
-                  <path d="M12 15h5"></path>
+      </nav></div
+    >
+    <main>
+      <div id="hero-mount">
+        <section class="hero">
+          <div class="hero-glow"></div>
+          <div class="hero-inner anim-in" data-anim-key="hero-inner">
+            <a
+              href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hero-extension-pill"
+              title="Also available as a Chrome Extension"
+              data-i18n-attr="title:hero.extensionAvailable"
+            >
+              <span class="pill-badge" data-i18n="hero.extensionPill">Now on Chrome Web Store</span>
+              <span class="pill-text" data-i18n="hero.extensionAvailable">Also available as a Chrome Extension</span>
+              <svg
+                class="pill-arrow"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </a>
+            <h1
+              ><span data-i18n="hero.titleMain">Screenshot</span> <em data-i18n="hero.titleEm">anything</em><br /><span
+                data-i18n="hero.titleEnd"
+                >in the browser &amp; server.</span
+              ></h1
+            >
+            <p class="hero-sub" data-i18n="hero.subtitle"
+              >Zero-dependency library to capture pixel-perfect DOM snapshots in the browser or render
+              ultra-high-definition screenshots in Next.js &amp; SvelteKit SSR servers.</p
+            >
+            <div class="hero-actions">
+              <a href="#usage" class="btn-primary" data-i18n="hero.readDocs">Read Docs</a>
+              <a
+                href="%BASE%404"
+                class="btn-space"
+                aria-label="Open the interactive 3D planet"
+                data-i18n-attr="aria-label:hero.funButtonAria"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="15"
+                  height="15"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="7"></circle>
+                  <ellipse cx="12" cy="12" rx="11" ry="4" transform="rotate(-24 12 12)"></ellipse>
                 </svg>
-              </div>
-              <h3 class="telemetry-card-title" data-i18n="telemetryDemo.consoleCardTitle">Console Logs Capture</h3>
-              <p class="telemetry-card-desc" data-i18n="telemetryDemo.consoleCardDesc">Intercept and capture formatted console tables as PNG or PDF documents.</p>
-              <div class="telemetry-actions">
-                <button type="button" id="btnCapLogs" class="btn-primary telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnCaptureLogs">Capture Logs Image</span>
-                </button>
-                <button type="button" id="btnPdfLogs" class="btn-outline telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnDownloadLogsPdf">Download Logs PDF</span>
-                </button>
-              </div>
+                <span data-i18n="hero.funButton">404?</span>
+              </a>
+              <button
+                type="button"
+                class="btn-ghost"
+                id="copyNpmBtn"
+                aria-label="Copy the npm install command"
+                data-i18n-attr="aria-label:hero.copyCommandAria"
+              >
+                <span data-i18n="hero.copyCommand">npm i sharedom</span>
+                <svg
+                  class="copy-icon"
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
             </div>
-          </article>
 
-          <article class="telemetry-card anim-in" style="transition-delay:120ms" data-anim-key="telemetry-network">
-            <div class="telemetry-card-content">
-              <div class="telemetry-icon telemetry-icon--network">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="hero-links">
+              <a
+                href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hero-link"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="15"
+                  height="15"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M2 12h20"></path>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 8h8.5"></path>
+                  <path d="M8.5 14 4.2 6.9"></path>
+                  <path d="M15.5 14 11.2 21.9"></path>
                 </svg>
-              </div>
-              <h3 class="telemetry-card-title" data-i18n="telemetryDemo.networkCardTitle">Network Requests Capture</h3>
-              <p class="telemetry-card-desc" data-i18n="telemetryDemo.networkCardDesc">Record and capture HTTP requests with status, method, endpoints, and timing.</p>
-              <div class="telemetry-actions">
-                <button type="button" id="btnCapNetwork" class="btn-primary telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnCaptureNetwork">Capture Network Image</span>
-                </button>
-                <button type="button" id="btnPdfNetwork" class="btn-outline telemetry-btn">
-                  <span class="telemetry-btn-spinner" aria-hidden="true"></span>
-                  <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnDownloadNetworkPdf">Download Network PDF</span>
-                </button>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <div id="telemetryResultSection" class="result-section telemetry-result" style="display: none;">
-          <div class="result-header">
-            <h3 data-i18n="telemetryDemo.resultTitle">Capture Preview</h3>
-            <span id="telemetryResultMeta" class="result-meta"></span>
-          </div>
-          <div class="result-body telemetry-result-body ">
-            <div class="telemetry-loader">
-              <span class="telemetry-loader-ring" aria-hidden="true"></span>
-              <p id="telemetryLoaderLabel" class="telemetry-loader-label"></p>
-              <span class="telemetry-loader-hint" data-i18n="telemetryDemo.loaderQuality">Rendering at 3x — highest quality</span>
-            </div>
-            <img id="telemetryResultImg" src="" alt="Captured telemetry table" class="telemetry-result-img" data-i18n-attr="alt:telemetryDemo.resultAlt">
-          </div>
-        </div>
-      </section></div>
-    <div id="features-mount">
-      <section class="features" id="features">
-        <div class="section-header anim-in" data-anim-key="features-header">
-          <h2 data-i18n="features.title">Built for modern stacks</h2>
-          <p data-i18n="features.subtitle">Ultra-fast in the browser. Native and powerful on SSR servers.</p>
-        </div>
-
-        <div class="features-grid">
-          <!-- 1. Client & SSR Native -->
-          <div class="feature-card anim-in" style="transition-delay:0ms" data-anim-key="feat-1">
-            <div class="feature-card-content">
-              <div class="feature-icon-box">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                <span data-i18n="hero.linkExtension">Chrome Extension</span>
+              </a>
+              <a
+                href="https://www.npmjs.com/package/sharedom"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hero-link"
+              >
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                  <path
+                    d="M2 4.5h20v13h-10v2.5H7.5v-2.5H2v-13Zm2.2 10.8h2.2V8.7h2.2v6.6h2.2V6.7H4.2v8.6Zm8.6-8.6v10.8h2.2v-2.2h4.4V6.7h-6.6Zm2.2 2.2h2.2v4.4h-2.2V8.9Z"
+                  ></path>
                 </svg>
-              </div>
-              <div class="feature-title" data-i18n="features.f1Title">Client &amp; SSR Native</div>
-              <div class="feature-desc" data-i18n="features.f1Desc">Seamlessly works in browser SPAs, Next.js App Router, and SvelteKit server endpoints.</div>
-            </div>
-          </div>
-
-          <!-- 2. Element or selector -->
-          <div class="feature-card anim-in" style="transition-delay:80ms" data-anim-key="feat-2">
-            <div class="feature-card-content">
-              <div class="feature-icon-box">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <circle cx="12" cy="12" r="6"></circle>
-                  <circle cx="12" cy="12" r="2"></circle>
+                <span data-i18n="hero.linkNpm">npm package</span>
+              </a>
+              <a
+                href="https://github.com/Erickgiber/sharedom"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hero-link"
+              >
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                  <path
+                    d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.02-2.75-.1-.26-.44-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.54 1.41.2 2.45.1 2.71.64.72 1.02 1.63 1.02 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .28.18.6.69.5A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2Z"
+                  ></path>
                 </svg>
-              </div>
-              <div class="feature-title" data-i18n="features.f2Title">Element or selector</div>
-              <div class="feature-desc" data-i18n="features.f2Desc">Capture any DOM HTMLElement reference, container, or CSS selector string.</div>
+                <span data-i18n="hero.linkGithub">GitHub</span>
+              </a>
             </div>
           </div>
 
-          <!-- 3. PNG · JPEG · WebP -->
-          <div class="feature-card anim-in" style="transition-delay:160ms" data-anim-key="feat-3">
-            <div class="feature-card-content">
-              <div class="feature-icon-box">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-              </div>
-              <div class="feature-title" data-i18n="features.f3Title">PNG · JPEG · WebP</div>
-              <div class="feature-desc" data-i18n="features.f3Desc">Export transparent PNG or compressed JPEG/WebP with fine-grained quality control.</div>
-            </div>
-          </div>
-
-          <!-- 4. Retina & 4K Ready -->
-          <div class="feature-card anim-in" style="transition-delay:240ms" data-anim-key="feat-4">
-            <div class="feature-card-content">
-              <div class="feature-icon-box">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M15 3h6v6"></path>
-                  <path d="M9 21H3v-6"></path>
-                  <path d="M21 3l-7 7"></path>
-                  <path d="M3 21l7-7"></path>
-                  <rect x="8" y="8" width="8" height="8" rx="1.5"></rect>
-                </svg>
-              </div>
-              <div class="feature-title" data-i18n="features.f4Title">Retina &amp; 4K Ready</div>
-              <div class="feature-desc" data-i18n="features.f4Desc">Scale factor 2x or 3x for ultra-sharp high-DPI output on modern displays.</div>
-            </div>
-          </div>
-
-          <!-- 5. CORS & Image Inlining -->
-          <div class="feature-card anim-in" style="transition-delay:320ms" data-anim-key="feat-5">
-            <div class="feature-card-content">
-              <div class="feature-icon-box">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                  <path d="M3 3v5h5"></path>
-                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
-                  <path d="M16 16h5v5"></path>
-                </svg>
-              </div>
-              <div class="feature-title" data-i18n="features.f5Title">CORS &amp; Image Inlining</div>
-              <div class="feature-desc" data-i18n="features.f5Desc">Automatically converts nested images into Base64 to prevent canvas tainting.</div>
-            </div>
-          </div>
-
-          <!-- 6. TypeScript First -->
-          <div class="feature-card anim-in" style="transition-delay:400ms" data-anim-key="feat-6">
-            <div class="feature-card-content">
-              <div class="feature-icon-box">
-                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  <polyline points="9 12 11 14 15 10"></polyline>
-                </svg>
-              </div>
-              <div class="feature-title" data-i18n="features.f6Title">TypeScript First</div>
-              <div class="feature-desc" data-i18n="features.f6Desc">Complete type definitions included for sharedom and sharedom/ssr.</div>
-            </div>
-          </div>
-        </div>
-      </section></div>
-    <div id="usage-mount">
-      <section class="usage" id="usage">
-        <div class="section-header anim-in" data-anim-key="usage-header">
-          <h2 data-i18n="usage.title">Usage Guide</h2>
-          <p class="usage-sub" data-i18n="usage.subtitle">Clean snippets for Browser, Next.js, and SvelteKit SSR.</p>
-        </div>
-
-        <div class="anim-in" style="transition-delay:80ms" data-anim-key="usage-body">
-          <!-- Section Switcher: Client vs SSR -->
-          <div class="usage-segment-row">
-            <div class="segment-pill" id="usageSegmentPill">
-              <button type="button" class="segment-btn active" data-section="client" data-i18n="usage.sectionClient">
-                Browser (Client)
-              </button>
-              <button type="button" class="segment-btn " data-section="ssr" data-i18n="usage.sectionSsr">
-                Server (SSR)
-              </button>
-            </div>
-          </div>
-
-          <!-- Sub-tabs for current section -->
-          <div class="tabs" id="usageSubTabs">
-            <button type="button" class="tab active" data-tab="0" data-i18n="usage.subTabBasic">Basic</button><button type="button" class="tab " data-tab="1" data-i18n="usage.subTabOptions">Options</button><button type="button" class="tab " data-tab="2" data-i18n="usage.subTabDownload">Direct Download</button><button type="button" class="tab " data-tab="3" data-i18n="usage.subTabPdf">PDF Export</button>
-          </div>
-
-          <div class="code-block" id="codeBlock">
-            <div class="code-header">
-              <div class="code-dots">
+          <div class="hero-visual anim-in" style="transition-delay: 200ms" data-anim-key="hero-visual">
+            <div class="browser-glow" id="browserGlow"></div>
+            <div class="browser" id="heroBrowser">
+              <div class="browser-bar">
                 <div class="dot dot-r"></div>
                 <div class="dot dot-y"></div>
                 <div class="dot dot-g"></div>
+                <div class="url-bar"><span data-i18n="mockup.url">localhost:5173</span></div>
               </div>
-              <span class="code-lang">client-basic.ts</span>
-              <button type="button" class="copy-btn" id="copyCodeBtn" data-i18n="usage.copy">copy</button>
+              <div class="browser-body">
+                <div class="fake-line" style="width: 80%; transition-delay: 0.5s" id="l1"></div>
+                <div class="fake-line" style="width: 60%; transition-delay: 0.6s" id="l2"></div>
+                <div class="fake-line" style="width: 90%; transition-delay: 0.7s" id="l3"></div>
+                <div class="fake-line" style="width: 45%; transition-delay: 0.8s" id="l4"></div>
+                <div class="fake-line" style="width: 70%; transition-delay: 0.9s" id="l5"></div>
+                <div class="fake-btns">
+                  <div class="fake-btn fake-btn-1" style="transition-delay: 1s" id="b1"></div>
+                  <div class="fake-btn fake-btn-2" style="transition-delay: 1.1s" id="b2"></div>
+                </div>
+              </div>
+              <div class="flash-overlay" id="flashOverlay" style="transition: opacity 0.4s; opacity: 1"></div>
             </div>
-            <pre><div class="code-row"><span class="line-no">1</span><span class="line-code"><span class="tok-keyword">import</span> { <span class="tok-func">capture</span> } <span class="tok-keyword">from</span> <span class="tok-string">'sharedom'</span>;</span></div><div class="code-row"><span class="line-no">2</span><span class="line-code"> </span></div><div class="code-row"><span class="line-no">3</span><span class="line-code"><span class="tok-comment" data-i18n="usage.commentBasic1">// Capture any DOM element or CSS selector</span></span></div><div class="code-row"><span class="line-no">4</span><span class="line-code"><span class="tok-keyword">const</span> <span class="tok-ident">dataUrl</span> = <span class="tok-keyword">await</span> <span class="tok-func">capture</span>(<span class="tok-string">'#playground-card'</span>);</span></div><div class="code-row"><span class="line-no">5</span><span class="line-code"> </span></div><div class="code-row"><span class="line-no">6</span><span class="line-code"><span class="tok-comment" data-i18n="usage.commentBasic2">// Display in an &lt;img&gt; element</span></span></div><div class="code-row"><span class="line-no">7</span><span class="line-code"><span class="tok-keyword">const</span> <span class="tok-ident">image</span> = <span class="tok-ident">document</span>.<span class="tok-func">querySelector</span>(<span class="tok-string">'img'</span>);</span></div><div class="code-row"><span class="line-no">8</span><span class="line-code"><span class="tok-keyword">if</span> (<span class="tok-ident">image</span>) <span class="tok-ident">image</span>.<span class="tok-ident">src</span> = <span class="tok-ident">dataUrl</span>;</span></div></pre>
+
+            <div class="screenshot-badge" id="screenshotBadge">
+              <div class="badge-title" id="badgeTitle" data-i18n="mockup.outputFile">output.png</div>
+              <div class="badge-lines" id="badgePreviewContainer">
+                <div class="badge-line" style="width: 80%"></div>
+                <div class="badge-line" style="width: 60%"></div>
+                <div class="badge-line" style="width: 90%"></div>
+                <div class="badge-line" style="width: 45%"></div>
+              </div>
+            </div>
+          </div> </section
+      ></div>
+      <div id="playground-mount">
+        <section class="playground-section" id="playground">
+          <div class="section-header anim-in" data-anim-key="playground-header">
+            <h2 data-i18n="playground.title">Interactive Playground</h2>
+            <p data-i18n="playground.subtitle">Test snapshot capture on the card below with real-time options.</p>
           </div>
-        </div>
-      </section></div>
-  </main>
-  <div id="footer-mount">
+
+          <div class="playground-layout anim-in" style="transition-delay: 150ms" data-anim-key="playground-body">
+            <div class="sample-container">
+              <div id="playground-card" class="sample-metric-card">
+                <div class="card-top">
+                  <div class="card-brand">
+                    <div class="brand-avatar">
+                      <img src="/logo.svg" alt="sharedom logo" width="24" height="24" />
+                    </div>
+                    <div>
+                      <h4 data-i18n="playground.cardTitle">Snap Preview Card</h4>
+                      <p class="brand-sub" data-i18n="playground.cardSub">High-Resolution DOM Capture</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-metrics">
+                  <div class="metric-item">
+                    <span class="m-label" data-i18n="playground.cardStat1Label">Render Engine</span>
+                    <span class="m-val" data-i18n="playground.cardStat1Val">SVG + Canvas</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="m-label" data-i18n="playground.cardStat2Label">Performance</span>
+                    <span class="m-val" data-i18n="playground.cardStat2Val">13.5 kB Gzipped</span>
+                  </div>
+                </div>
+
+                <div class="card-banner">
+                  <span data-i18n="playground.cardQuote"
+                    >sharedom captures styled DOM elements cleanly and reliably.</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="controls-container">
+              <div class="form-group">
+                <label data-i18n="playground.scaleLabel">Scale Factor:</label>
+                <div class="btn-group" id="scaleGroup">
+                  <button type="button" class="btn-opt" data-scale="1">1x</button>
+                  <button type="button" class="btn-opt active" data-scale="2"
+                    >2x (<span data-i18n="playground.scaleRetina">Retina</span>)</button
+                  >
+                  <button type="button" class="btn-opt" data-scale="3">3x</button>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="play-format" data-i18n="playground.formatLabel">Format:</label>
+                  <select id="play-format" class="form-control">
+                    <option value="png" selected="">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WebP</option>
+                  </select>
+                </div>
+
+                <div class="form-group flex-1" id="playQualityGroup" style="display: none">
+                  <label for="play-quality"
+                    ><span data-i18n="playground.qualityLabel">Quality:</span>
+                    <span id="qualityDisplay">0.92</span></label
+                  >
+                  <input type="range" id="play-quality" min="0.1" max="1" step="0.05" value="0.92" class="form-range" />
+                </div>
+              </div>
+
+              <div class="actions-row">
+                <button type="button" id="btnPlayCapture" class="btn-primary flex-1" data-i18n="playground.btnCapture">
+                  Capture Snapshot
+                </button>
+                <button
+                  type="button"
+                  id="btnPlayDownload"
+                  class="btn-outline flex-1"
+                  data-i18n="playground.btnDownload"
+                >
+                  Download Image
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="playResultSection" class="result-section" style="display: none">
+            <div class="result-header">
+              <h3 data-i18n="playground.resultTitle">Live Capture Result</h3>
+              <span id="playResultMeta" class="result-meta"></span>
+            </div>
+            <div class="result-body">
+              <div class="result-img-frame" id="playImgFrame">
+                <img
+                  id="playResultImg"
+                  src=""
+                  alt="Captured snapshot of the preview card"
+                  data-i18n-attr="alt:playground.resultAlt"
+                />
+              </div>
+              <div class="result-btns">
+                <button type="button" id="btnCopyDataUrl" class="btn-ghost" data-i18n="playground.copyDataUrl"
+                  >Copy Data URL</button
+                >
+              </div>
+            </div>
+          </div>
+        </section></div
+      >
+      <div id="pdf-demo-mount">
+        <section class="pdf-section" id="pdf-demo">
+          <div class="section-header anim-in" data-anim-key="pdf-header">
+            <h2 data-i18n="pdfDemo.title">PDF Export Demo</h2>
+            <p data-i18n="pdfDemo.subtitle">Capture any DOM element as a pixel-perfect PDF — zero dependencies.</p>
+          </div>
+          <div class="pdf-demo-layout anim-in" style="transition-delay: 150ms" data-anim-key="pdf-body">
+            <div class="pdf-preview-col">
+              <div class="pdf-invoice-wrapper">
+                <div id="invoice-card" class="invoice-card">
+                  <div class="inv-header">
+                    <div class="inv-brand">
+                      <img src="/logo.svg" alt="sharedom" class="inv-logo" />
+                      <span class="inv-brand-name">sharedom</span>
+                    </div>
+                    <div class="inv-meta">
+                      <h2 class="inv-title" data-i18n="pdfDemo.invTitle">INVOICE</h2>
+                      <p class="inv-number">INV-2026-0042</p>
+                    </div>
+                  </div>
+                  <div class="inv-parties">
+                    <div class="inv-party">
+                      <p class="party-label" data-i18n="pdfDemo.invFrom">FROM</p>
+                      <p class="party-name">sharedom Studio</p>
+                      <p class="party-detail">hello@sharedom.dev</p>
+                      <p class="party-detail">123 Dev Lane, San Francisco, CA 94107</p>
+                    </div>
+                    <div class="inv-party">
+                      <p class="party-label" data-i18n="pdfDemo.invBillTo">BILL TO</p>
+                      <p class="party-name">Acme Corporation</p>
+                      <p class="party-detail">billing@acme.io</p>
+                      <p class="party-detail">456 Business Ave, New York, NY 10001</p>
+                    </div>
+                    <div class="inv-party">
+                      <div>
+                        <p class="party-label" data-i18n="pdfDemo.invIssueDate">ISSUE DATE</p>
+                        <p class="party-name" data-i18n="pdfDemo.invIssueDateValue">September 1, 2026</p>
+                      </div>
+                      <div style="margin-top: 12px">
+                        <p class="party-label" data-i18n="pdfDemo.invDueDate">DUE DATE</p>
+                        <p class="party-name inv-due" data-i18n="pdfDemo.invDueDateValue">September 15, 2026</p>
+                      </div>
+                    </div>
+                  </div>
+                  <table class="inv-table">
+                    <thead>
+                      <tr>
+                        <th class="th-desc" data-i18n="pdfDemo.invColDesc">Description</th>
+                        <th class="th-num" data-i18n="pdfDemo.invColQty">Qty</th>
+                        <th class="th-num" data-i18n="pdfDemo.invColUnit">Unit Price</th>
+                        <th class="th-num" data-i18n="pdfDemo.invColAmount">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="row-even">
+                        <td class="td-desc" data-i18n="pdfDemo.invItems.0">UI Component Library License</td>
+                        <td class="td-num">1</td>
+                        <td class="td-num">$299.00</td>
+                        <td class="td-num td-total">$299.00</td>
+                      </tr>
+                      <tr class="row-odd">
+                        <td class="td-desc" data-i18n="pdfDemo.invItems.1">Annual Support &amp; Maintenance</td>
+                        <td class="td-num">1</td>
+                        <td class="td-num">$149.00</td>
+                        <td class="td-num td-total">$149.00</td>
+                      </tr>
+                      <tr class="row-even">
+                        <td class="td-desc" data-i18n="pdfDemo.invItems.2">Custom Theme Integration</td>
+                        <td class="td-num">3</td>
+                        <td class="td-num">$59.00</td>
+                        <td class="td-num td-total">$177.00</td>
+                      </tr>
+                      <tr class="row-odd">
+                        <td class="td-desc" data-i18n="pdfDemo.invItems.3">Developer Consulting Hours</td>
+                        <td class="td-num">4</td>
+                        <td class="td-num">$95.00</td>
+                        <td class="td-num td-total">$380.00</td>
+                      </tr></tbody
+                    >
+                  </table>
+                  <div class="inv-summary">
+                    <div class="inv-summary-rows">
+                      <div class="summary-row"
+                        ><span data-i18n="pdfDemo.invSubtotal">Subtotal</span><span>$1,005.00</span></div
+                      >
+                      <div class="summary-row"><span data-i18n="pdfDemo.invTax">Tax (8%)</span><span>$80.40</span></div>
+                      <div class="summary-row summary-total"
+                        ><span data-i18n="pdfDemo.invTotalDue">Total Due</span><span>$1,085.40</span></div
+                      >
+                    </div>
+                  </div>
+                  <div class="inv-footer">
+                    <p data-i18n="pdfDemo.invThanks">Thank you for your business! Payment is due within 14 days.</p>
+                    <p class="inv-footer-sub" data-i18n="pdfDemo.invContact"
+                      >Questions? Contact us at hello@sharedom.dev · sharedom.dev</p
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pdf-controls-col">
+              <div class="pdf-ctrl-card">
+                <h3 class="pdf-ctrl-title" data-i18n="pdfDemo.exportOptions">Export Options</h3>
+                <div class="pdf-form-group">
+                  <label class="pdf-label" data-i18n="pdfDemo.pageSizeLabel">Page Size</label>
+                  <div class="btn-group" id="pageSizeGroup">
+                    <button type="button" class="btn-opt active" data-size="auto" data-i18n="pdfDemo.pageSizeAuto"
+                      >Auto</button
+                    >
+                    <button type="button" class="btn-opt" data-size="A4">A4</button>
+                    <button type="button" class="btn-opt" data-size="Letter">Letter</button>
+                    <button type="button" class="btn-opt" data-size="A3">A3</button>
+                  </div>
+                </div>
+                <div class="pdf-form-group" id="orientGroup" style="display: none">
+                  <label class="pdf-label" data-i18n="pdfDemo.orientationLabel">Orientation</label>
+                  <div class="btn-group" id="orientBtnGroup">
+                    <button type="button" class="btn-opt active" data-orient="portrait" data-i18n="pdfDemo.portrait"
+                      >↕ Portrait</button
+                    >
+                    <button type="button" class="btn-opt" data-orient="landscape" data-i18n="pdfDemo.landscape"
+                      >↔ Landscape</button
+                    >
+                  </div>
+                </div>
+                <div class="pdf-form-group" id="marginGroup" style="display: none">
+                  <label class="pdf-label"
+                    ><span data-i18n="pdfDemo.marginLabel">Margin</span> — <span id="marginVal">0</span>
+                    <span data-i18n="pdfDemo.marginUnit">pt</span></label
+                  >
+                  <input type="range" id="marginSlider" min="0" max="56" step="4" value="0" class="form-range" />
+                </div>
+                <div class="pdf-form-group">
+                  <label class="pdf-label" data-i18n="pdfDemo.scaleLabel">Capture Scale</label>
+                  <div class="btn-group" id="scaleGroup">
+                    <button type="button" class="btn-opt" data-sc="1">1x</button>
+                    <button type="button" class="btn-opt active" data-sc="2"
+                      >2x (<span data-i18n="pdfDemo.scaleRetina">Retina</span>)</button
+                    >
+                    <button type="button" class="btn-opt" data-sc="3">3x</button>
+                  </div>
+                </div>
+                <div class="pdf-form-group">
+                  <label class="pdf-label" data-i18n="pdfDemo.metadataLabel">PDF Metadata</label>
+                  <input
+                    type="text"
+                    id="pdfTitle"
+                    class="pdf-input"
+                    placeholder="Title — e.g. Invoice INV-2026-0042"
+                    value="Invoice INV-2026-0042"
+                    data-i18n-value="pdfDemo.invoiceLabel"
+                    data-i18n-value-suffix=" INV-2026-0042"
+                    data-i18n-attr="placeholder:pdfDemo.titlePlaceholder"
+                  />
+                  <input
+                    type="text"
+                    id="pdfAuthor"
+                    class="pdf-input"
+                    placeholder="Author"
+                    value="sharedom Studio"
+                    style="margin-top: 8px"
+                    data-i18n-attr="placeholder:pdfDemo.authorPlaceholder"
+                  />
+                  <input
+                    type="text"
+                    id="pdfSubject"
+                    class="pdf-input"
+                    placeholder="Subject"
+                    value="Client Invoice — Acme Corporation"
+                    data-i18n-value="pdfDemo.metaSubjectValue"
+                    style="margin-top: 8px"
+                    data-i18n-attr="placeholder:pdfDemo.subjectPlaceholder"
+                  />
+                </div>
+                <div class="pdf-actions">
+                  <button type="button" id="btnPreviewPDF" class="pdf-btn-outline">
+                    <span id="pdfPreviewSpinner" class="pdf-spinner" style="display: none"></span>
+                    <span class="pdf-btn-preview-label" data-i18n="pdfDemo.btnPreview">Preview PDF</span>
+                  </button>
+                  <button type="button" id="btnGenPDF" class="btn-primary pdf-btn-main">
+                    <span id="pdfSpinner" class="pdf-spinner" style="display: none"></span>
+                    <span class="pdf-btn-label" data-i18n="pdfDemo.btnDownload">Download PDF</span>
+                  </button>
+                </div>
+                <p id="pdfStatus" class="pdf-status"></p>
+              </div>
+            </div>
+          </div>
+
+          <div id="pdfPreviewBox" class="result-section pdf-preview-box" style="display: none">
+            <div class="result-header">
+              <h3 data-i18n="pdfDemo.lastPdf">Last generated PDF</h3>
+              <button
+                type="button"
+                id="btnClosePreviewPDF"
+                class="pdf-preview-close"
+                title="Close preview"
+                data-i18n-attr="title:pdfDemo.previewClose"
+                >✕</button
+              >
+            </div>
+            <iframe
+              id="pdfPreviewFrame"
+              class="pdf-preview-iframe"
+              title="PDF preview"
+              data-i18n-attr="title:pdfDemo.previewFrameTitle"
+            ></iframe>
+            <div class="pdf-preview-actions">
+              <button type="button" id="btnOpenPDF" class="btn-ghost" data-i18n="pdfDemo.openNewTab"
+                >Open in new tab ↗</button
+              >
+            </div>
+          </div>
+        </section></div
+      >
+      <div id="telemetry-demo-mount">
+        <section class="playground-section telemetry-section" id="telemetry-demo">
+          <div class="section-header anim-in" data-anim-key="telemetry-header">
+            <h2 data-i18n="telemetryDemo.title">Console &amp; Network Screenshot</h2>
+            <p data-i18n="telemetryDemo.subtitle"
+              >Capture console logs and HTTP requests as styled tables in PNG, WebP or PDF.</p
+            >
+          </div>
+
+          <div class="telemetry-grid">
+            <article class="telemetry-card anim-in" style="transition-delay: 0ms" data-anim-key="telemetry-console">
+              <div class="telemetry-card-content">
+                <div class="telemetry-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <path d="m6 9 3 3-3 3"></path>
+                    <path d="M12 15h5"></path>
+                  </svg>
+                </div>
+                <h3 class="telemetry-card-title" data-i18n="telemetryDemo.consoleCardTitle">Console Logs Capture</h3>
+                <p class="telemetry-card-desc" data-i18n="telemetryDemo.consoleCardDesc"
+                  >Intercept and capture formatted console tables as PNG or PDF documents.</p
+                >
+                <div class="telemetry-actions">
+                  <button type="button" id="btnCapLogs" class="btn-primary telemetry-btn">
+                    <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                    <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnCaptureLogs">Capture Logs Image</span>
+                  </button>
+                  <button type="button" id="btnPdfLogs" class="btn-outline telemetry-btn">
+                    <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                    <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnDownloadLogsPdf"
+                      >Download Logs PDF</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <article class="telemetry-card anim-in" style="transition-delay: 120ms" data-anim-key="telemetry-network">
+              <div class="telemetry-card-content">
+                <div class="telemetry-icon telemetry-icon--network">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M2 12h20"></path>
+                    <path
+                      d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"
+                    ></path>
+                  </svg>
+                </div>
+                <h3 class="telemetry-card-title" data-i18n="telemetryDemo.networkCardTitle"
+                  >Network Requests Capture</h3
+                >
+                <p class="telemetry-card-desc" data-i18n="telemetryDemo.networkCardDesc"
+                  >Record and capture HTTP requests with status, method, endpoints, and timing.</p
+                >
+                <div class="telemetry-actions">
+                  <button type="button" id="btnCapNetwork" class="btn-primary telemetry-btn">
+                    <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                    <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnCaptureNetwork"
+                      >Capture Network Image</span
+                    >
+                  </button>
+                  <button type="button" id="btnPdfNetwork" class="btn-outline telemetry-btn">
+                    <span class="telemetry-btn-spinner" aria-hidden="true"></span>
+                    <span class="telemetry-btn-label" data-i18n="telemetryDemo.btnDownloadNetworkPdf"
+                      >Download Network PDF</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div id="telemetryResultSection" class="result-section telemetry-result" style="display: none">
+            <div class="result-header">
+              <h3 data-i18n="telemetryDemo.resultTitle">Capture Preview</h3>
+              <span id="telemetryResultMeta" class="result-meta"></span>
+            </div>
+            <div class="result-body telemetry-result-body">
+              <div class="telemetry-loader">
+                <span class="telemetry-loader-ring" aria-hidden="true"></span>
+                <p id="telemetryLoaderLabel" class="telemetry-loader-label"></p>
+                <span class="telemetry-loader-hint" data-i18n="telemetryDemo.loaderQuality"
+                  >Rendering at 3x — highest quality</span
+                >
+              </div>
+              <img
+                id="telemetryResultImg"
+                src=""
+                alt="Captured telemetry table"
+                class="telemetry-result-img"
+                data-i18n-attr="alt:telemetryDemo.resultAlt"
+              />
+            </div>
+          </div> </section
+      ></div>
+      <div id="features-mount">
+        <section class="features" id="features">
+          <div class="section-header anim-in" data-anim-key="features-header">
+            <h2 data-i18n="features.title">Built for modern stacks</h2>
+            <p data-i18n="features.subtitle">Ultra-fast in the browser. Native and powerful on SSR servers.</p>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-card anim-in" style="transition-delay: 0ms" data-anim-key="feat-1">
+              <div class="feature-card-content">
+                <div class="feature-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
+                <div class="feature-title" data-i18n="features.f1Title">Client &amp; SSR Native</div>
+                <div class="feature-desc" data-i18n="features.f1Desc"
+                  >Seamlessly works in browser SPAs, Next.js App Router, and SvelteKit server endpoints.</div
+                >
+              </div>
+            </div>
+
+            <div class="feature-card anim-in" style="transition-delay: 80ms" data-anim-key="feat-2">
+              <div class="feature-card-content">
+                <div class="feature-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                  </svg>
+                </div>
+                <div class="feature-title" data-i18n="features.f2Title">Element or selector</div>
+                <div class="feature-desc" data-i18n="features.f2Desc"
+                  >Capture any DOM HTMLElement reference, container, or CSS selector string.</div
+                >
+              </div>
+            </div>
+
+            <div class="feature-card anim-in" style="transition-delay: 160ms" data-anim-key="feat-3">
+              <div class="feature-card-content">
+                <div class="feature-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+                <div class="feature-title" data-i18n="features.f3Title">PNG · JPEG · WebP</div>
+                <div class="feature-desc" data-i18n="features.f3Desc"
+                  >Export transparent PNG or compressed JPEG/WebP with fine-grained quality control.</div
+                >
+              </div>
+            </div>
+
+            <div class="feature-card anim-in" style="transition-delay: 240ms" data-anim-key="feat-4">
+              <div class="feature-card-content">
+                <div class="feature-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M15 3h6v6"></path>
+                    <path d="M9 21H3v-6"></path>
+                    <path d="M21 3l-7 7"></path>
+                    <path d="M3 21l7-7"></path>
+                    <rect x="8" y="8" width="8" height="8" rx="1.5"></rect>
+                  </svg>
+                </div>
+                <div class="feature-title" data-i18n="features.f4Title">Retina &amp; 4K Ready</div>
+                <div class="feature-desc" data-i18n="features.f4Desc"
+                  >Scale factor 2x or 3x for ultra-sharp high-DPI output on modern displays.</div
+                >
+              </div>
+            </div>
+
+            <div class="feature-card anim-in" style="transition-delay: 320ms" data-anim-key="feat-5">
+              <div class="feature-card-content">
+                <div class="feature-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                    <path d="M16 16h5v5"></path>
+                  </svg>
+                </div>
+                <div class="feature-title" data-i18n="features.f5Title">CORS &amp; Image Inlining</div>
+                <div class="feature-desc" data-i18n="features.f5Desc"
+                  >Automatically converts nested images into Base64 to prevent canvas tainting.</div
+                >
+              </div>
+            </div>
+
+            <div class="feature-card anim-in" style="transition-delay: 400ms" data-anim-key="feat-6">
+              <div class="feature-card-content">
+                <div class="feature-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                  </svg>
+                </div>
+                <div class="feature-title" data-i18n="features.f6Title">TypeScript First</div>
+                <div class="feature-desc" data-i18n="features.f6Desc"
+                  >Complete type definitions included for sharedom and sharedom/ssr.</div
+                >
+              </div>
+            </div>
+          </div>
+        </section></div
+      >
+      <div id="usage-mount">
+        <section class="usage" id="usage">
+          <div class="section-header anim-in" data-anim-key="usage-header">
+            <h2 data-i18n="usage.title">Usage Guide</h2>
+            <p class="usage-sub" data-i18n="usage.subtitle">Clean snippets for Browser, Next.js, and SvelteKit SSR.</p>
+          </div>
+
+          <div class="anim-in" style="transition-delay: 80ms" data-anim-key="usage-body">
+            <div class="usage-segment-row">
+              <div class="segment-pill" id="usageSegmentPill">
+                <button type="button" class="segment-btn active" data-section="client" data-i18n="usage.sectionClient">
+                  Browser (Client)
+                </button>
+                <button type="button" class="segment-btn" data-section="ssr" data-i18n="usage.sectionSsr">
+                  Server (SSR)
+                </button>
+              </div>
+            </div>
+
+            <div class="tabs" id="usageSubTabs">
+              <button type="button" class="tab active" data-tab="0" data-i18n="usage.subTabBasic">Basic</button
+              ><button type="button" class="tab" data-tab="1" data-i18n="usage.subTabOptions">Options</button
+              ><button type="button" class="tab" data-tab="2" data-i18n="usage.subTabDownload">Direct Download</button
+              ><button type="button" class="tab" data-tab="3" data-i18n="usage.subTabPdf">PDF Export</button>
+            </div>
+
+            <div class="code-block" id="codeBlock">
+              <div class="code-header">
+                <div class="code-dots">
+                  <div class="dot dot-r"></div>
+                  <div class="dot dot-y"></div>
+                  <div class="dot dot-g"></div>
+                </div>
+                <span class="code-lang">client-basic.ts</span>
+                <button type="button" class="copy-btn" id="copyCodeBtn" data-i18n="usage.copy">copy</button>
+              </div>
+              <pre><div class="code-row"><span class="line-no">1</span><span class="line-code"><span class="tok-keyword">import</span> { <span class="tok-func">capture</span> } <span class="tok-keyword">from</span> <span class="tok-string">'sharedom'</span>;</span></div><div class="code-row"><span class="line-no">2</span><span class="line-code"> </span></div><div class="code-row"><span class="line-no">3</span><span class="line-code"><span class="tok-comment" data-i18n="usage.commentBasic1">// Capture any DOM element or CSS selector</span></span></div><div class="code-row"><span class="line-no">4</span><span class="line-code"><span class="tok-keyword">const</span> <span class="tok-ident">dataUrl</span> = <span class="tok-keyword">await</span> <span class="tok-func">capture</span>(<span class="tok-string">'#playground-card'</span>);</span></div><div class="code-row"><span class="line-no">5</span><span class="line-code"> </span></div><div class="code-row"><span class="line-no">6</span><span class="line-code"><span class="tok-comment" data-i18n="usage.commentBasic2">// Display in an &lt;img&gt; element</span></span></div><div class="code-row"><span class="line-no">7</span><span class="line-code"><span class="tok-keyword">const</span> <span class="tok-ident">image</span> = <span class="tok-ident">document</span>.<span class="tok-func">querySelector</span>(<span class="tok-string">'img'</span>);</span></div><div class="code-row"><span class="line-no">8</span><span class="line-code"><span class="tok-keyword">if</span> (<span class="tok-ident">image</span>) <span class="tok-ident">image</span>.<span class="tok-ident">src</span> = <span class="tok-ident">dataUrl</span>;</span></div></pre>
+            </div>
+          </div>
+        </section></div
+      >
+    </main>
+    <div id="footer-mount">
       <footer>
         <div class="footer-logo">
-          <a href="./" class="footer-logo-link" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit;">
-            <img src="./logo.svg" alt="ShareDOM logo" width="20" height="20">
+          <a
+            href="%BASE%"
+            class="footer-logo-link"
+            style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: inherit"
+          >
+            <img src="/logo.svg" alt="ShareDOM logo" width="20" height="20" />
             <span class="logo-name">ShareDOM</span>
           </a>
         </div>
         <div class="footer-links">
-          <a href="./privacy" class="footer-privacy-link" data-i18n="footer.privacy">Privacy Policy</a>
-          <a href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm" target="_blank" rel="noopener noreferrer"><span data-i18n="hero.linkExtension">Chrome Extension</span> ↗</a>
-          <a href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener" class="footer-coffee-link" data-i18n="nav.buyCoffee">☕ Buy me a coffee</a>
-          <a href="https://www.npmjs.com/package/sharedom" target="_blank" rel="noopener"><span data-i18n="hero.linkNpm">npm package</span> ↗</a>
-          <a href="https://github.com/Erickgiber/sharedom" target="_blank" rel="noopener"><span data-i18n="hero.linkGithub">GitHub</span> ↗</a>
+          <a href="%BASE%privacy" class="footer-privacy-link" data-i18n="footer.privacy">Privacy Policy</a>
+          <a
+            href="https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><span data-i18n="hero.linkExtension">Chrome Extension</span> ↗</a
+          >
+          <a
+            href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL"
+            target="_blank"
+            rel="noopener"
+            class="footer-coffee-link"
+            data-i18n="nav.buyCoffee"
+            >☕ Buy me a coffee</a
+          >
+          <a href="https://www.npmjs.com/package/sharedom" target="_blank" rel="noopener"
+            ><span data-i18n="hero.linkNpm">npm package</span> ↗</a
+          >
+          <a href="https://github.com/Erickgiber/sharedom" target="_blank" rel="noopener"
+            ><span data-i18n="hero.linkGithub">GitHub</span> ↗</a
+          >
         </div>
         <span class="footer-license">
-          <span data-i18n="footer.license">MIT License</span> · <span data-i18n="footer.builtWith">Built with</span> <span class="footer-heart" aria-label="love" data-i18n-attr="aria-label:footer.heartLabel"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span> <span data-i18n="footer.by">by</span> Erickgiber · <span id="footerYear">2026</span>
+          <span data-i18n="footer.license">MIT License</span> · <span data-i18n="footer.builtWith">Built with</span>
+          <span class="footer-heart" aria-label="love" data-i18n-attr="aria-label:footer.heartLabel"
+            ><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              ></path></svg
+          ></span>
+          <span data-i18n="footer.by">by</span> Erickgiber · <span id="footerYear">2026</span>
         </span>
-      </footer></div>
+      </footer></div
+    >
 
-  <script type="module" src="./main.ts"></script>
-</body>
-
+    <script type="module" src="/main.ts"></script>
+  </body>
 </html>

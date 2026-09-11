@@ -24,7 +24,8 @@ export function initFeatures(container: HTMLElement): void {
     }
 
     function handleMouseLeave(): void {
-      card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease';
+      card.style.transition =
+        'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease';
       card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
       card.style.removeProperty('--mouse-x');
       card.style.removeProperty('--mouse-y');

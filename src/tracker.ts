@@ -22,7 +22,12 @@ function safeStringify(arg: unknown): string {
     if (arg === null) return 'null';
     if (arg === undefined) return 'undefined';
     if (typeof arg === 'string') return truncate(arg, MAX_STR_LEN);
-    if (typeof arg === 'number' || typeof arg === 'boolean' || typeof arg === 'symbol' || typeof arg === 'bigint') {
+    if (
+        typeof arg === 'number' ||
+        typeof arg === 'boolean' ||
+        typeof arg === 'symbol' ||
+        typeof arg === 'bigint'
+    ) {
         return String(arg);
     }
     if (typeof arg === 'function') return `ƒ ${arg.name || 'anonymous'}()`;
@@ -74,7 +79,10 @@ function formatTrackerArgs(args: unknown[]): string {
         const nonCssArgs: unknown[] = [];
         for (let i = 1; i < args.length; i++) {
             const a = args[i];
-            if (typeof a === 'string' && (a.includes(':') || a.includes('color') || a.includes('font') || a.includes('background'))) {
+            if (
+                typeof a === 'string' &&
+                (a.includes(':') || a.includes('color') || a.includes('font') || a.includes('background'))
+            ) {
                 continue;
             }
             nonCssArgs.push(a);
@@ -158,8 +166,8 @@ export function startConsoleCapture(): () => void {
         try {
             const err = event.error;
             const message = err
-                ? (err.stack || `${err.name || 'Error'}: ${err.message || event.message}`)
-                : (event.message || 'Script error');
+                ? err.stack || `${err.name || 'Error'}: ${err.message || event.message}`
+                : event.message || 'Script error';
             if (message) {
                 pushLog('error', [message]);
             }
@@ -169,9 +177,12 @@ export function startConsoleCapture(): () => void {
     originalRejectionHandler = (event: PromiseRejectionEvent) => {
         try {
             const reason = event.reason;
-            const message = reason instanceof Error
-                ? (reason.stack || `${reason.name}: ${reason.message}`)
-                : (typeof reason === 'object' && reason !== null ? safeStringify(reason) : String(reason));
+            const message =
+                reason instanceof Error
+                    ? reason.stack || `${reason.name}: ${reason.message}`
+                    : typeof reason === 'object' && reason !== null
+                      ? safeStringify(reason)
+                      : String(reason);
             if (message) {
                 pushLog('error', [`Unhandled Rejection: ${message}`]);
             }
@@ -237,7 +248,10 @@ function extractEndpointName(urlStr: string): string {
         return truncate(urlStr, 80);
     }
     try {
-        const parsed = new URL(urlStr, typeof window !== 'undefined' ? window.location.href : 'http://localhost');
+        const parsed = new URL(
+            urlStr,
+            typeof window !== 'undefined' ? window.location.href : 'http://localhost'
+        );
         const path = parsed.pathname;
         if (!path || path === '/') {
             return truncate(parsed.host || urlStr, 80);

@@ -89,13 +89,13 @@ export function getJpegDimensions(bytes: Uint8Array): { width: number; height: n
             marker <= 0xcf &&
             marker !== 0xc4 && // DHT (Huffman table)
             marker !== 0xc8 && // JPG reserved
-            marker !== 0xcc;   // DAC (Arithmetic conditioning)
+            marker !== 0xcc; // DAC (Arithmetic conditioning)
 
         if (isSof) {
             // Segment format: Length (2 bytes), Precision (1 byte), Height (2 bytes), Width (2 bytes)
             if (offset + 7 <= bytes.length) {
                 const height = (bytes[offset + 3] << 8) | bytes[offset + 4];
-                const width  = (bytes[offset + 5] << 8) | bytes[offset + 6];
+                const width = (bytes[offset + 5] << 8) | bytes[offset + 6];
                 return { width, height };
             }
             break;
@@ -128,10 +128,7 @@ export function getJpegDimensions(bytes: Uint8Array): { width: number; height: n
  *   styles: '.card { font-size: 24px; padding: 20px; }'
  * });
  */
-export async function captureSSR(
-    htmlOrUrl: string,
-    options: SsrCaptureOptions = {}
-): Promise<Uint8Array> {
+export async function captureSSR(htmlOrUrl: string, options: SsrCaptureOptions = {}): Promise<Uint8Array> {
     const {
         viewport = { width: 1200, height: 630 },
         backgroundColor = '#ffffff',
@@ -179,10 +176,7 @@ export async function captureSSR(
  * @param options    SSR capture options.
  * @returns          A Base64 Data URL string (`data:image/svg+xml;base64,...`).
  */
-export async function createSsrSnapshot(
-    htmlOrUrl: string,
-    options: SsrCaptureOptions = {}
-): Promise<string> {
+export async function createSsrSnapshot(htmlOrUrl: string, options: SsrCaptureOptions = {}): Promise<string> {
     const buffer = await captureSSR(htmlOrUrl, options);
     const base64 = uint8ArrayToBase64(buffer);
     const format = options.format || 'svg';
@@ -190,10 +184,10 @@ export async function createSsrSnapshot(
         format === 'svg'
             ? 'image/svg+xml'
             : format === 'jpeg'
-            ? 'image/jpeg'
-            : format === 'webp'
-            ? 'image/webp'
-            : 'image/png';
+              ? 'image/jpeg'
+              : format === 'webp'
+                ? 'image/webp'
+                : 'image/png';
     return `data:${mime};base64,${base64}`;
 }
 
@@ -220,10 +214,7 @@ export async function createSsrSnapshot(
  *   });
  * }
  */
-export function createPdfFromImageSSR(
-    image: Uint8Array | string,
-    options: SsrPdfOptions = {}
-): Uint8Array {
+export function createPdfFromImageSSR(image: Uint8Array | string, options: SsrPdfOptions = {}): Uint8Array {
     const bytes = typeof image === 'string' ? dataUrlToBytes(image) : image;
 
     let widthPx = options.imageWidthPx;

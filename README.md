@@ -10,6 +10,7 @@ Fast, zero-dependency DOM snapshot, screenshot, and PDF capture library for the 
 **🌐 [Try the interactive playground &rarr;](https://erickgiber.github.io/sharedom/)** &nbsp;·&nbsp; capture, PDF export and telemetry demos running live in your browser.
 
 > 🧩 **Available as both an NPM Library and an Official Chrome Extension:**
+>
 > - **[NPM Library (`sharedom`)](https://www.npmjs.com/package/sharedom)**: Full programmatic API for your web applications, dashboards, telemetry tools, or automated testing (Playwright/Puppeteer).
 > - **[Chrome Extension (Web Store)](https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm)**: Interactive 1-click browser inspector to capture elements, console logs, and network traffic directly on any website without writing code.
 
@@ -59,7 +60,7 @@ import { capture } from 'sharedom';
 // Capture by CSS selector
 const dataUrl = await capture('#my-card', {
   scale: 2,
-  format: 'png'
+  format: 'png',
 });
 
 // Display in an <img> element
@@ -75,7 +76,7 @@ import { downloadCapture } from 'sharedom';
 // Pass element reference or selector and filename
 await downloadCapture('#my-card', 'card-snapshot.png', {
   scale: 2,
-  backgroundColor: '#ffffff'
+  backgroundColor: '#ffffff',
 });
 ```
 
@@ -86,11 +87,11 @@ import { downloadPDF, capturePDF, printElement } from 'sharedom';
 
 // 1. Direct PDF download with page presets and metadata
 await downloadPDF('#invoice-card', 'invoice-2026.pdf', {
-  pageSize: 'A4',         // 'auto' | 'A4' | 'Letter' | 'A3' | 'A5' | 'Legal' | 'Tabloid'
+  pageSize: 'A4', // 'auto' | 'A4' | 'Letter' | 'A3' | 'A5' | 'Legal' | 'Tabloid'
   orientation: 'portrait', // 'portrait' | 'landscape'
-  margin: 20,              // margin in points (default: 0)
-  scale: 2,               // 2x Retina sharpness
-  quality: 0.92,          // JPEG stream quality
+  margin: 20, // margin in points (default: 0)
+  scale: 2, // 2x Retina sharpness
+  quality: 0.92, // JPEG stream quality
   title: 'Invoice INV-2026-0042',
   author: 'sharedom Studio',
   subject: 'Client Billing',
@@ -191,28 +192,31 @@ const zipBytes = buildZip([
 ]);
 
 // Or trigger instant browser download:
-downloadZip([
-  { name: 'log-1.png', data: logPages[0] },
-  { name: 'log-2.png', data: logPages[1] },
-], 'all-captures.zip');
+downloadZip(
+  [
+    { name: 'log-1.png', data: logPages[0] },
+    { name: 'log-2.png', data: logPages[1] },
+  ],
+  'all-captures.zip'
+);
 ```
 
 ---
 
 ## 📦 NPM Library vs Chrome Extension
 
-| Feature | `sharedom` (NPM Library) | ShareDOM (Chrome Extension) |
-|---|---|---|
-| **Environment** | Web Apps, Dashboards, Next.js, Node.js | Any website via Chrome toolbar |
-| **Usage Mode** | Programmatic TypeScript / JavaScript API | Interactive 1-click UI with Shadow DOM |
-| **DOM Element Capture** | `capture('#id')`, `downloadCapture()` | Hover element, click to capture |
-| **Console Logs Capture** | `captureConsoleLogs()`, `downloadConsoleLogs()` | Dedicated button in popup & modal |
-| **Network Requests Capture** | `captureNetworkRequests()`, `downloadNetworkRequests()` | Dedicated button in popup & modal |
-| **Smart Pagination** | `capture*Pages({ entriesPerPage })` | Live navigation arrows & preview |
-| **Multi-page PDF Export** | `downloadConsoleLogsPDF()`, `capturePDF()` | Dedicated "PDF" button |
-| **Multi-page ZIP Download** | Automatic `.zip` when pages > 1 (`downloadZip`) | Automatic `.zip` when pages > 1 |
-| **Zero Dependencies** | 0 external runtime dependencies | 0 external runtime dependencies |
-| **Availability** | [npm i sharedom](https://www.npmjs.com/package/sharedom) | [Chrome Web Store](https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm) |
+| Feature                      | `sharedom` (NPM Library)                                 | ShareDOM (Chrome Extension)                                                                                             |
+| ---------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **Environment**              | Web Apps, Dashboards, Next.js, Node.js                   | Any website via Chrome toolbar                                                                                          |
+| **Usage Mode**               | Programmatic TypeScript / JavaScript API                 | Interactive 1-click UI with Shadow DOM                                                                                  |
+| **DOM Element Capture**      | `capture('#id')`, `downloadCapture()`                    | Hover element, click to capture                                                                                         |
+| **Console Logs Capture**     | `captureConsoleLogs()`, `downloadConsoleLogs()`          | Dedicated button in popup & modal                                                                                       |
+| **Network Requests Capture** | `captureNetworkRequests()`, `downloadNetworkRequests()`  | Dedicated button in popup & modal                                                                                       |
+| **Smart Pagination**         | `capture*Pages({ entriesPerPage })`                      | Live navigation arrows & preview                                                                                        |
+| **Multi-page PDF Export**    | `downloadConsoleLogsPDF()`, `capturePDF()`               | Dedicated "PDF" button                                                                                                  |
+| **Multi-page ZIP Download**  | Automatic `.zip` when pages > 1 (`downloadZip`)          | Automatic `.zip` when pages > 1                                                                                         |
+| **Zero Dependencies**        | 0 external runtime dependencies                          | 0 external runtime dependencies                                                                                         |
+| **Availability**             | [npm i sharedom](https://www.npmjs.com/package/sharedom) | [Chrome Web Store](https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm) |
 
 ---
 
@@ -229,7 +233,7 @@ const html = card ? card.outerHTML : '<div class="banner">Hello World</div>';
 const response = await fetch('/api/screenshot', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ html })
+  body: JSON.stringify({ html }),
 });
 
 // Receive image blob and create an Object URL
@@ -250,14 +254,14 @@ export async function POST(request: Request) {
   const buffer = await captureSSR(html, {
     scale: 2,
     format: 'png',
-    viewport: { width: 1200, height: 630 }
+    viewport: { width: 1200, height: 630 },
   });
 
   return new NextResponse(buffer, {
     headers: {
       'Content-Type': 'image/png',
-      'Cache-Control': 'public, max-age=31536000, immutable'
-    }
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
   });
 }
 ```
@@ -275,13 +279,13 @@ export const POST: RequestHandler = async ({ request }) => {
   const buffer = await captureSSR(html, {
     scale: 2,
     format: 'png',
-    viewport: { width: 1200, height: 630 }
+    viewport: { width: 1200, height: 630 },
   });
 
   return new Response(buffer, {
     headers: {
-      'Content-Type': 'image/png'
-    }
+      'Content-Type': 'image/png',
+    },
   });
 };
 ```
@@ -321,72 +325,89 @@ export async function POST(request: Request) {
 ### Client: `sharedom`
 
 #### `capture(target, options?)`
+
 Captures a DOM element and returns a Promise resolving to an optimized base64 Data URL.
+
 - **`target`** (`string | HTMLElement`): The CSS selector or HTMLElement to capture.
 - **`options`** (`CaptureOptions`, optional): Configuration options.
 
 #### `downloadCapture(target, filename?, options?)`
+
 Captures a DOM element and triggers a browser download.
+
 - **`target`** (`string | HTMLElement`): The CSS selector or HTMLElement to capture.
 - **`filename`** (`string`, optional, default: `'screenshot.png'`): The name of the downloaded file.
 - **`options`** (`CaptureOptions`, optional): Configuration options.
 
 #### `CaptureOptions`
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `scale` | `number` | `1` | Resolution multiplier (e.g. `2` for 2x scale). |
-| `backgroundColor` | `string` | `undefined` | Background fill color. Transparent by default. |
-| `format` | `'png' \| 'jpeg' \| 'webp'` | `'png'` | Output image format. |
-| `quality` | `number` | `0.92` | Compression quality for JPEG/WebP (between `0` and `1`). |
-| `optimize` | `boolean` | `true` | Automatically clean transparent entropy and optimize Base64 output. |
-| `width` | `number` | `element.width` | Custom target width in pixels. |
-| `height` | `number` | `element.height` | Custom target height in pixels. |
-| `language` | `'en' \| 'es'` | `'en'` | Language for table headings, badges, and status labels. |
+
+| Option            | Type                        | Default          | Description                                                         |
+| :---------------- | :-------------------------- | :--------------- | :------------------------------------------------------------------ |
+| `scale`           | `number`                    | `1`              | Resolution multiplier (e.g. `2` for 2x scale).                      |
+| `backgroundColor` | `string`                    | `undefined`      | Background fill color. Transparent by default.                      |
+| `format`          | `'png' \| 'jpeg' \| 'webp'` | `'png'`          | Output image format.                                                |
+| `quality`         | `number`                    | `0.92`           | Compression quality for JPEG/WebP (between `0` and `1`).            |
+| `optimize`        | `boolean`                   | `true`           | Automatically clean transparent entropy and optimize Base64 output. |
+| `width`           | `number`                    | `element.width`  | Custom target width in pixels.                                      |
+| `height`          | `number`                    | `element.height` | Custom target height in pixels.                                     |
+| `language`        | `'en' \| 'es'`              | `'en'`           | Language for table headings, badges, and status labels.             |
 
 #### `downloadPDF(target, filename?, options?)`
+
 Captures a DOM element and triggers a direct PDF file download in the browser.
+
 - **`target`** (`string | HTMLElement`): The CSS selector or HTMLElement to capture.
 - **`filename`** (`string`, optional, default: `'capture.pdf'`): The name of the downloaded PDF file.
 - **`options`** (`PdfOptions`, optional): Configuration options for the PDF document.
 
 #### `capturePDF(target, options?)`
+
 Captures a DOM element and returns a Promise resolving to a PDF `Blob`.
+
 - **`target`** (`string | HTMLElement`): The CSS selector or HTMLElement to capture.
 - **`options`** (`PdfOptions`, optional): Configuration options for the PDF document.
 
 #### `printElement(target, options?)`
+
 Opens the browser's native print dialog for the selected element in a hidden iframe.
+
 - **`target`** (`string | HTMLElement`): The CSS selector or HTMLElement to print.
 - **`options`** (`Pick<PdfOptions, 'scale' | 'quality' | 'backgroundColor' | 'title'>`, optional): Print configuration.
 
 #### `PdfOptions`
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `pageSize` | `'auto' \| 'A4' \| 'Letter' \| 'A3' \| 'A5' \| 'Legal' \| 'Tabloid'` | `'auto'` | PDF page preset size. `'auto'` fits page exactly to element dimensions. |
-| `orientation` | `'portrait' \| 'landscape'` | `'portrait'` | Page orientation (applicable when `pageSize` is not `'auto'`). |
-| `margin` | `number` | `0` | Margin around the content in points (`1 pt = 1/72 inch`). |
-| `scale` | `number` | `2` | Rendering scale factor for crisp Retina/High-DPI output. |
-| `quality` | `number` | `0.92` | JPEG stream compression quality (between `0` and `1`). |
-| `backgroundColor` | `string` | `'#ffffff'` | Background fill color of the page. |
-| `title` | `string` | `undefined` | PDF Document title in `/Info` dictionary (supports UTF-16BE Spanish/Unicode). |
-| `author` | `string` | `undefined` | PDF Document author. |
-| `subject` | `string` | `undefined` | PDF Document subject. |
-| `keywords` | `string \| string[]` | `undefined` | PDF Document keywords. |
-| `language` | `'en' \| 'es'` | `'en'` | Language for table headings, badges, and status labels. |
+
+| Option            | Type                                                                 | Default      | Description                                                                   |
+| :---------------- | :------------------------------------------------------------------- | :----------- | :---------------------------------------------------------------------------- |
+| `pageSize`        | `'auto' \| 'A4' \| 'Letter' \| 'A3' \| 'A5' \| 'Legal' \| 'Tabloid'` | `'auto'`     | PDF page preset size. `'auto'` fits page exactly to element dimensions.       |
+| `orientation`     | `'portrait' \| 'landscape'`                                          | `'portrait'` | Page orientation (applicable when `pageSize` is not `'auto'`).                |
+| `margin`          | `number`                                                             | `0`          | Margin around the content in points (`1 pt = 1/72 inch`).                     |
+| `scale`           | `number`                                                             | `2`          | Rendering scale factor for crisp Retina/High-DPI output.                      |
+| `quality`         | `number`                                                             | `0.92`       | JPEG stream compression quality (between `0` and `1`).                        |
+| `backgroundColor` | `string`                                                             | `'#ffffff'`  | Background fill color of the page.                                            |
+| `title`           | `string`                                                             | `undefined`  | PDF Document title in `/Info` dictionary (supports UTF-16BE Spanish/Unicode). |
+| `author`          | `string`                                                             | `undefined`  | PDF Document author.                                                          |
+| `subject`         | `string`                                                             | `undefined`  | PDF Document subject.                                                         |
+| `keywords`        | `string \| string[]`                                                 | `undefined`  | PDF Document keywords.                                                        |
+| `language`        | `'en' \| 'es'`                                                       | `'en'`       | Language for table headings, badges, and status labels.                       |
 
 #### `captureConsoleLogs(options?)` / `downloadConsoleLogs(filename?, options?)`
+
 Renders intercepted or provided console logs into a sleek rounded table and exports as a Base64 Data URL or triggers a direct image download.
 
 #### `captureConsoleLogsPDF(options?)` / `downloadConsoleLogsPDF(filename?, options?)`
+
 Renders console logs into a styled table and exports directly to a PDF `Blob` or triggers a PDF file download.
 
 #### `captureNetworkRequests(options?)` / `downloadNetworkRequests(filename?, options?)`
+
 Captures HTTP requests with method, endpoint name, full URL, status code, duration, and timestamp into an image.
 
 #### `captureNetworkRequestsPDF(options?)` / `downloadNetworkRequestsPDF(filename?, options?)`
+
 Captures HTTP requests and exports as a PDF document.
 
 #### `setLanguage(lang)` / `getLanguage()`
+
 Configures global library language (`'en'` or `'es'`) for generated tables and metadata.
 
 ---
@@ -394,33 +415,41 @@ Configures global library language (`'en'` or `'es'`) for generated tables and m
 ### SSR: `sharedom/ssr`
 
 #### `captureSSR(htmlOrUrl, options?)`
+
 Captures an HTML string or URL on the server and returns a `Promise<Uint8Array>` containing the SVG foreignObject markup.
 
 #### `createSsrSnapshot(htmlOrUrl, options?)`
+
 Creates an SSR snapshot and returns it as a Base64 Data URL (`data:image/svg+xml;base64,...`).
 
 #### `createPdfFromImageSSR(image, options?)`
+
 Generates a valid PDF 1.4 binary (`Uint8Array`) on the server with **zero native dependencies**.
+
 - **`image`** (`Uint8Array | string`): Raw JPEG `Uint8Array` bytes or a Base64 Data URL (`data:image/jpeg;base64,...`). Auto-detects pixel width and height from JPEG SOF markers.
 - **`options`** (`SsrPdfOptions`, optional): PDF build options (`pageSize`, `orientation`, `margin`, `title`, `author`, `keywords`, `dpi`).
 
 #### `buildPdf(jpegBytes, options)`
+
 Low-level, pure TypeScript zero-dependency PDF 1.4 binary builder.
+
 - **`jpegBytes`** (`Uint8Array`): Raw JPEG byte stream.
 - **`options`** (`PdfBuildOptions`): Detailed page dimensions, image pixel size, metadata, and margins.
 
 #### `getJpegDimensions(bytes)`
+
 Parses JPEG SOF (Start of Frame) segment markers according to ISO/IEC 10918-1 and returns `{ width: number, height: number }` without external libraries.
 
 #### `SsrCaptureOptions`
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `viewport` | `{ width: number, height: number }` | `{ width: 1200, height: 630 }` | Viewport dimensions. |
-| `scale` | `number` | `2` | Device pixel ratio / scale. |
-| `format` | `'svg' \| 'png' \| 'jpeg' \| 'webp'` | `'svg'` | Output format MIME. |
-| `backgroundColor` | `string` | `'#ffffff'` | Background fill color. |
-| `delay` | `number` | `0` | Delay in milliseconds before capture. |
-| `styles` | `string` | `''` | Custom CSS stylesheet injected into SVG. |
+
+| Option            | Type                                 | Default                        | Description                              |
+| :---------------- | :----------------------------------- | :----------------------------- | :--------------------------------------- |
+| `viewport`        | `{ width: number, height: number }`  | `{ width: 1200, height: 630 }` | Viewport dimensions.                     |
+| `scale`           | `number`                             | `2`                            | Device pixel ratio / scale.              |
+| `format`          | `'svg' \| 'png' \| 'jpeg' \| 'webp'` | `'svg'`                        | Output format MIME.                      |
+| `backgroundColor` | `string`                             | `'#ffffff'`                    | Background fill color.                   |
+| `delay`           | `number`                             | `0`                            | Delay in milliseconds before capture.    |
+| `styles`          | `string`                             | `''`                           | Custom CSS stylesheet injected into SVG. |
 
 ---
 

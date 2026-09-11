@@ -36,7 +36,8 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "assets:store": "node store-assets/scripts/capture-store-assets.mjs",
-    "assets:seo": "npm run build && node preview/scripts/generate-seo-assets.mjs"
+    "assets:seo": "npm run build && node preview/scripts/generate-seo-assets.mjs",
+    "format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore"
   },
   "keywords": [
     "sharedom",
@@ -63,7 +64,10 @@
   "devDependencies": {
     "@playwright/test": "^1.50.1",
     "@types/chrome": "^0.2.7",
+    "@types/three": "^0.185.4",
     "esbuild": "^0.28.2",
+    "prettier": "^3.9.6",
+    "three": "^0.186.0",
     "tsup": "^8.3.6",
     "typescript": "^5.7.3",
     "vite": "^6.2.0"

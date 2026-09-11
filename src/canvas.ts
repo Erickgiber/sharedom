@@ -38,7 +38,8 @@ export function renderSvgToCanvas(
                     const dataUrl = exportOptimizedCanvas(canvas, context, format, quality);
                     resolve(dataUrl);
                 } else {
-                    const mimeType = format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
+                    const mimeType =
+                        format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
                     const dataUrl = canvas.toDataURL(mimeType, quality);
                     resolve(dataUrl);
                 }

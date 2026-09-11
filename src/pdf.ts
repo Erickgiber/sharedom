@@ -21,10 +21,10 @@ async function captureAsJpeg(
     syncDynamicStates(element, clone);
     cloneComputedStyles(element, clone);
 
-    clone.style.width     = `${width}px`;
-    clone.style.height    = `${height}px`;
+    clone.style.width = `${width}px`;
+    clone.style.height = `${height}px`;
     clone.style.boxSizing = 'border-box';
-    clone.style.margin    = '0';
+    clone.style.margin = '0';
 
     const cleanupImages = await inlineImages(clone);
 
@@ -40,7 +40,7 @@ async function captureAsJpeg(
 
         return {
             dataUrl,
-            widthPx:  Math.round(width  * scale),
+            widthPx: Math.round(width * scale),
             heightPx: Math.round(height * scale),
         };
     } finally {
@@ -49,10 +49,10 @@ async function captureAsJpeg(
 }
 
 function dataUrlToBytes(dataUrl: string): Uint8Array {
-    const commaIdx  = dataUrl.indexOf(',');
-    const base64    = commaIdx !== -1 ? dataUrl.slice(commaIdx + 1) : dataUrl;
+    const commaIdx = dataUrl.indexOf(',');
+    const base64 = commaIdx !== -1 ? dataUrl.slice(commaIdx + 1) : dataUrl;
     const binaryStr = atob(base64);
-    const bytes     = new Uint8Array(binaryStr.length);
+    const bytes = new Uint8Array(binaryStr.length);
     for (let i = 0; i < binaryStr.length; i++) {
         bytes[i] = binaryStr.charCodeAt(i);
     }
@@ -77,34 +77,26 @@ function dataUrlToBytes(dataUrl: string): Uint8Array {
  *   scale: 2,
  * });
  */
-export async function capturePDF(
-    target: DomTarget,
-    options: PdfOptions = {}
-): Promise<Blob> {
+export async function capturePDF(target: DomTarget, options: PdfOptions = {}): Promise<Blob> {
     const {
-        scale           = 2,
+        scale = 2,
         backgroundColor = '#ffffff',
-        quality         = 0.92,
-        pageSize        = 'auto',
-        orientation     = 'portrait',
-        margin          = 0,
+        quality = 0.92,
+        pageSize = 'auto',
+        orientation = 'portrait',
+        margin = 0,
         title,
         author,
         subject,
         keywords,
     } = options;
 
-    const { dataUrl, widthPx, heightPx } = await captureAsJpeg(
-        target,
-        scale,
-        quality,
-        backgroundColor
-    );
+    const { dataUrl, widthPx, heightPx } = await captureAsJpeg(target, scale, quality, backgroundColor);
 
     const jpegBytes = dataUrlToBytes(dataUrl);
 
     const pdfBytes = buildPdf(jpegBytes, {
-        imageWidthPx:  widthPx,
+        imageWidthPx: widthPx,
         imageHeightPx: heightPx,
         dpi: 96 * scale,
         pageSize,
@@ -141,16 +133,16 @@ export async function downloadPDF(
     if (typeof document === 'undefined') {
         throw new Error(
             '[sharedom]: downloadPDF() requires a browser environment. ' +
-            'For SSR environments, use "createPdfFromImageSSR" or "buildPdf" from "sharedom/ssr".'
+                'For SSR environments, use "createPdfFromImageSSR" or "buildPdf" from "sharedom/ssr".'
         );
     }
     const blob = await capturePDF(target, options);
-    const url  = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
     try {
         const link = document.createElement('a');
         link.download = filename.endsWith('.pdf') ? filename : `${filename}.pdf`;
-        link.href     = url;
+        link.href = url;
         link.click();
     } finally {
         setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -176,10 +168,10 @@ export async function printElement(
         );
     }
     const {
-        scale           = 2,
-        quality         = 0.92,
+        scale = 2,
+        quality = 0.92,
         backgroundColor = '#ffffff',
-        title           = (typeof document !== 'undefined' ? document.title : '') || 'sharedom',
+        title = (typeof document !== 'undefined' ? document.title : '') || 'sharedom',
     } = options;
 
     const { dataUrl } = await captureAsJpeg(target, scale, quality, backgroundColor);
@@ -189,12 +181,12 @@ export async function printElement(
 
         Object.assign(iframe.style, {
             position: 'fixed',
-            top:      '-9999px',
-            left:     '-9999px',
-            width:    '1px',
-            height:   '1px',
-            opacity:  '0',
-            border:   'none',
+            top: '-9999px',
+            left: '-9999px',
+            width: '1px',
+            height: '1px',
+            opacity: '0',
+            border: 'none',
         });
 
         iframe.onload = () => {
@@ -208,14 +200,16 @@ export async function printElement(
             doc.open();
             doc.write(
                 `<!DOCTYPE html><html><head>` +
-                `<title>${escaped}</title>` +
-                `<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#fff}img{display:block;width:100%;height:auto;page-break-after:avoid}@page{margin:0}</style>` +
-                `</head><body><img src="${dataUrl}" alt="${escaped}"/></body></html>`
+                    `<title>${escaped}</title>` +
+                    `<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#fff}img{display:block;width:100%;height:auto;page-break-after:avoid}@page{margin:0}</style>` +
+                    `</head><body><img src="${dataUrl}" alt="${escaped}"/></body></html>`
             );
             doc.close();
 
             setTimeout(() => {
-                try { iframe.contentWindow?.print(); } catch (_) {}
+                try {
+                    iframe.contentWindow?.print();
+                } catch (_) {}
                 setTimeout(() => {
                     document.body.removeChild(iframe);
                     resolve();

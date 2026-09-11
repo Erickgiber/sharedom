@@ -1,8 +1,5 @@
 function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 export function highlightCode(code: string): string {
@@ -53,20 +50,56 @@ export function highlightCode(code: string): string {
           const word = line.slice(i, j);
 
           const keywords = new Set([
-            'import', 'from', 'export', 'default', 'const', 'let', 'var',
-            'await', 'async', 'function', 'return', 'type', 'interface',
-            'as', 'new', 'if', 'else', 'try', 'catch', 'finally'
+            'import',
+            'from',
+            'export',
+            'default',
+            'const',
+            'let',
+            'var',
+            'await',
+            'async',
+            'function',
+            'return',
+            'type',
+            'interface',
+            'as',
+            'new',
+            'if',
+            'else',
+            'try',
+            'catch',
+            'finally',
           ]);
 
           const types = new Set([
-            'CaptureOptions', 'SsrCaptureOptions', 'NextResponse', 'Response',
-            'Request', 'RequestHandler', 'Uint8Array', 'Buffer', 'Promise',
-            'HTMLElement', 'Record', 'string', 'number', 'boolean'
+            'CaptureOptions',
+            'SsrCaptureOptions',
+            'NextResponse',
+            'Response',
+            'Request',
+            'RequestHandler',
+            'Uint8Array',
+            'Buffer',
+            'Promise',
+            'HTMLElement',
+            'Record',
+            'string',
+            'number',
+            'boolean',
           ]);
 
           const funcs = new Set([
-            'capture', 'downloadCapture', 'captureSSR', 'createSsrSnapshot',
-            'log', 'json', 'querySelector', 'addEventListener', 'POST', 'GET'
+            'capture',
+            'downloadCapture',
+            'captureSSR',
+            'createSsrSnapshot',
+            'log',
+            'json',
+            'querySelector',
+            'addEventListener',
+            'POST',
+            'GET',
           ]);
 
           if (keywords.has(word)) {

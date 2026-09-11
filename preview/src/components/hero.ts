@@ -4,6 +4,8 @@ import { showToast } from './toast';
 let isHeroAnimated = false;
 
 export function initHero(): void {
+  isHeroAnimated = false;
+
   document.getElementById('copyNpmBtn')?.addEventListener('click', () => {
     navigator.clipboard.writeText('npm i sharedom');
     showToast(getT().toast.copiedNpm);
@@ -111,10 +113,13 @@ export function initHeroAnimation(): void {
   }, 500);
 
   lines.forEach((id, i) => {
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) el.style.opacity = '1';
-    }, 500 + i * 100);
+    setTimeout(
+      () => {
+        const el = document.getElementById(id);
+        if (el) el.style.opacity = '1';
+      },
+      500 + i * 100
+    );
   });
 
   setTimeout(() => {
