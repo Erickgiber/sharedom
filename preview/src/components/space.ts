@@ -209,6 +209,8 @@ export function initSpace(): () => void {
   scene.add(starField);
 
   const PLANET_R = 2.15;
+  const TILT_LIMIT = 0.12;
+  const TILT_SPAN_DEG = 22;
   const panel = document.getElementById('panel');
   let baseScale = 1;
 
@@ -260,6 +262,7 @@ export function initSpace(): () => void {
   let tiltY = 0;
   let targetTiltX = 0;
   let targetTiltY = 0;
+  let tiltFromSensor = false;
 
   function onDown(e: PointerEvent): void {
     dragging = true;
@@ -269,8 +272,10 @@ export function initSpace(): () => void {
   }
 
   function onMove(e: PointerEvent): void {
-    targetTiltX = ((e.clientY / window.innerHeight) * 2 - 1) * 0.12;
-    targetTiltY = ((e.clientX / window.innerWidth) * 2 - 1) * 0.12;
+    if (!tiltFromSensor) {
+      targetTiltX = ((e.clientY / window.innerHeight) * 2 - 1) * TILT_LIMIT;
+      targetTiltY = ((e.clientX / window.innerWidth) * 2 - 1) * TILT_LIMIT;
+    }
     if (!dragging) return;
     velY = (e.clientX - lastX) * 0.0045;
     velX = (e.clientY - lastY) * 0.0045;
@@ -290,6 +295,82 @@ export function initSpace(): () => void {
   window.addEventListener('pointermove', onMove, { passive: true });
   window.addEventListener('pointerup', onUp);
   window.addEventListener('pointercancel', onUp);
+
+  type MotionPermission = 'granted' | 'denied';
+  type DeviceOrientationEventClass = typeof DeviceOrientationEvent & {
+    requestPermission?: () => Promise<MotionPermission>;
+  };
+
+  let disposed = false;
+  let baseBeta = 0;
+  let baseGamma = 0;
+  let baseAngle = -1;
+
+  function screenAngle(): number {
+    return screen.orientation ? screen.orientation.angle : 0;
+  }
+
+  function shortestAngle(deg: number): number {
+    return deg - 360 * Math.round(deg / 360);
+  }
+
+  function sensorTilt(deg: number): number {
+    return Math.max(-TILT_LIMIT, Math.min(TILT_LIMIT, (deg / TILT_SPAN_DEG) * TILT_LIMIT));
+  }
+
+  function onOrientation(e: DeviceOrientationEvent): void {
+    if (e.beta === null || e.gamma === null) return;
+
+    const angle = screenAngle();
+    if (angle !== baseAngle) {
+      baseAngle = angle;
+      baseBeta = e.beta;
+      baseGamma = e.gamma;
+      return;
+    }
+
+    const dBeta = shortestAngle(e.beta - baseBeta);
+    const dGamma = shortestAngle(e.gamma - baseGamma);
+    const a = (angle * Math.PI) / 180;
+    const cos = Math.cos(a);
+    const sin = Math.sin(a);
+
+    tiltFromSensor = true;
+    targetTiltY = sensorTilt(dGamma * cos + dBeta * sin);
+    targetTiltX = sensorTilt(dBeta * cos - dGamma * sin);
+  }
+
+  function enableTiltSensor(): void {
+    if (disposed) return;
+    window.addEventListener('deviceorientation', onOrientation, { passive: true });
+  }
+
+  function onPermissionGesture(): void {
+    window.removeEventListener('click', onPermissionGesture);
+    const motion = DeviceOrientationEvent as DeviceOrientationEventClass;
+    if (typeof motion.requestPermission !== 'function') return;
+    motion.requestPermission().then(
+      (state) => {
+        if (state === 'granted') enableTiltSensor();
+      },
+      // Prompt dismissed or blocked by policy: the page stays on the pointer path.
+      () => {}
+    );
+  }
+
+  const hasTiltSensor =
+    !reduceMotion &&
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+  if (hasTiltSensor) {
+    // iOS only hands out orientation data when asked from inside a user gesture.
+    if (typeof (DeviceOrientationEvent as DeviceOrientationEventClass).requestPermission === 'function') {
+      window.addEventListener('click', onPermissionGesture);
+    } else {
+      enableTiltSensor();
+    }
+  }
 
   let frame = 0;
   let running = true;
@@ -343,6 +424,7 @@ export function initSpace(): () => void {
 
   return function teardown(): void {
     running = false;
+    disposed = true;
     cancelAnimationFrame(frame);
     window.clearTimeout(resizeTimer);
     window.removeEventListener('resize', onResize);
@@ -350,6 +432,8 @@ export function initSpace(): () => void {
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onUp);
     window.removeEventListener('pointercancel', onUp);
+    window.removeEventListener('click', onPermissionGesture);
+    window.removeEventListener('deviceorientation', onOrientation);
     document.removeEventListener('visibilitychange', onVisibility);
     document.body.classList.remove('scene-on');
 
