@@ -6,12 +6,8 @@ import {
     NetworkCaptureOptions,
     Language,
 } from './types';
-import { resolveElement, validateElementDimensions, validateOptions, syncDynamicStates } from './dom';
-import { snapshotMediaElement } from './media';
-import { cloneComputedStyles } from './styles';
-import { inlineImages } from './images';
-import { createSvgDataUrl } from './svg';
-import { renderSvgToCanvas } from './canvas';
+import { resolveElement, validateOptions } from './dom';
+import { rasterizeElement } from './pipeline';
 import { getConsoleLogs, getNetworkRequests } from './tracker';
 import { createConsoleLogsElement, createNetworkRequestsElement, chunkItems } from './renderer';
 import { downloadZip } from './zip-writer';
@@ -64,32 +60,8 @@ export { snapshotMediaElement } from './media';
 export async function capture(target: DomTarget, options: CaptureOptions = {}): Promise<string> {
     validateOptions(options);
 
-    const element = resolveElement(target);
-    const { width, height } = validateElementDimensions(element);
-
-    const targetWidth = options.width ?? width;
-    const targetHeight = options.height ?? height;
-
-    const cloned = element.cloneNode(true) as HTMLElement;
-    syncDynamicStates(element, cloned);
-
-    // A canvas or video as the capture root has no parent to replace itself in.
-    const clone = snapshotMediaElement(element) ?? cloned;
-    cloneComputedStyles(element, clone);
-
-    clone.style.width = `${targetWidth}px`;
-    clone.style.height = `${targetHeight}px`;
-    clone.style.boxSizing = 'border-box';
-    clone.style.margin = '0';
-
-    const cleanupImages = await inlineImages(clone);
-
-    try {
-        const svgDataUrl = createSvgDataUrl(clone, targetWidth, targetHeight);
-        return await renderSvgToCanvas(svgDataUrl, targetWidth, targetHeight, options);
-    } finally {
-        cleanupImages();
-    }
+    const { dataUrl } = await rasterizeElement(resolveElement(target), options);
+    return dataUrl;
 }
 
 export async function downloadCapture(

@@ -1,9 +1,6 @@
 import { DomTarget, PdfOptions, ConsolePdfOptions, NetworkPdfOptions } from './types';
-import { resolveElement, validateElementDimensions, syncDynamicStates } from './dom';
-import { cloneComputedStyles } from './styles';
-import { inlineImages } from './images';
-import { createSvgDataUrl } from './svg';
-import { renderSvgToCanvas } from './canvas';
+import { resolveElement } from './dom';
+import { rasterizeElement } from './pipeline';
 import { buildPdf, buildMultiPagePdf } from './pdf-writer';
 import { getConsoleLogs, getNetworkRequests } from './tracker';
 import { createConsoleLogsElement, createNetworkRequestsElement, chunkItems } from './renderer';
@@ -14,38 +11,15 @@ async function captureAsJpeg(
     quality: number,
     backgroundColor: string
 ): Promise<{ dataUrl: string; widthPx: number; heightPx: number }> {
-    const element = resolveElement(target);
-    const { width, height } = validateElementDimensions(element);
+    const { dataUrl, width, height } = await rasterizeElement(resolveElement(target), {
+        scale,
+        format: 'jpeg',
+        quality,
+        backgroundColor,
+        optimize: true,
+    });
 
-    const clone = element.cloneNode(true) as HTMLElement;
-    syncDynamicStates(element, clone);
-    cloneComputedStyles(element, clone);
-
-    clone.style.width = `${width}px`;
-    clone.style.height = `${height}px`;
-    clone.style.boxSizing = 'border-box';
-    clone.style.margin = '0';
-
-    const cleanupImages = await inlineImages(clone);
-
-    try {
-        const svgDataUrl = createSvgDataUrl(clone, width, height);
-        const dataUrl = await renderSvgToCanvas(svgDataUrl, width, height, {
-            scale,
-            format: 'jpeg',
-            quality,
-            backgroundColor,
-            optimize: true,
-        });
-
-        return {
-            dataUrl,
-            widthPx: Math.round(width * scale),
-            heightPx: Math.round(height * scale),
-        };
-    } finally {
-        cleanupImages();
-    }
+    return { dataUrl, widthPx: width, heightPx: height };
 }
 
 function dataUrlToBytes(dataUrl: string): Uint8Array {
