@@ -1,6 +1,6 @@
 {
   "name": "sharedom",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Fast and lightweight DOM snapshot, screenshot, PDF and console/network capture library for browser, SSR and automated testing.",
   "type": "module",
   "main": "./dist/index.cjs",

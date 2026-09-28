@@ -92,7 +92,11 @@ function clonePseudoElements(
         const needsContent = pseudo === '::before' || pseudo === '::after';
         if (needsContent && (pseudoStyle.content === 'none' || pseudoStyle.content === 'normal')) continue;
 
-        const declarations = diffComputedStyle(pseudoStyle, style, ctx.sandbox.defaultsFor(source, pseudo));
+        const declarations = diffComputedStyle(
+            pseudoStyle,
+            style,
+            ctx.sandbox.defaultsFor(source, pseudoStyle, pseudo)
+        );
         if (declarations.length === 0) continue;
 
         if (!className) {
@@ -282,7 +286,11 @@ function cloneElement(
     const inlineStyle = inlineStyleOf(clone);
     if (inlineStyle) {
         clone.removeAttribute('style');
-        for (const [name, value] of diffComputedStyle(style, parentStyle, ctx.sandbox.defaultsFor(clone))) {
+        for (const [name, value] of diffComputedStyle(
+            style,
+            parentStyle,
+            ctx.sandbox.defaultsFor(clone, style)
+        )) {
             inlineStyle.setProperty(name, value);
         }
     }
