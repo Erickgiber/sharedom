@@ -8,21 +8,15 @@ import { exportOptimizedCanvas } from './optimizer';
 const MAX_CANVAS_SIDE = 32767;
 const MAX_CANVAS_AREA = 268_435_456;
 
-function fitToCanvasLimits(width: number, height: number, scale: number): number {
-    const maxBySide = Math.min(MAX_CANVAS_SIDE / width, MAX_CANVAS_SIDE / height);
-    const maxByArea = Math.sqrt(MAX_CANVAS_AREA / (width * height));
-    const limit = Math.min(maxBySide, maxByArea);
-    return scale <= limit ? scale : limit;
+export interface CanvasSize {
+    width: number;
+    height: number;
 }
 
-export function renderSvgToCanvas(
-    svgDataUrl: string,
-    width: number,
-    height: number,
-    options: CaptureOptions
-): Promise<string> {
-    const { scale = 1, backgroundColor, quality = 0.92, format = 'png', optimize = true } = options;
-    const effectiveScale = fitToCanvasLimits(width, height, scale);
+export function fitCanvasSize(width: number, height: number, scale: number): CanvasSize {
+    const maxBySide = Math.min(MAX_CANVAS_SIDE / width, MAX_CANVAS_SIDE / height);
+    const maxByArea = Math.sqrt(MAX_CANVAS_AREA / (width * height));
+    const effectiveScale = Math.min(scale, maxBySide, maxByArea);
 
     if (effectiveScale < scale) {
         console.warn(
@@ -31,57 +25,64 @@ export function renderSvgToCanvas(
         );
     }
 
-    return new Promise<string>((resolve, reject) => {
-        const image = new Image();
+    return {
+        width: Math.max(1, Math.round(width * effectiveScale)),
+        height: Math.max(1, Math.round(height * effectiveScale)),
+    };
+}
 
-        image.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = Math.round(width * effectiveScale);
-            canvas.height = Math.round(height * effectiveScale);
+/** Draws an SVG whose intrinsic size already is `size`, so no bitmap scaling happens here. */
+export async function renderSvgToCanvas(
+    svgDataUrl: string,
+    size: CanvasSize,
+    options: CaptureOptions
+): Promise<string> {
+    const { backgroundColor, quality = 0.92, format = 'png', optimize = true } = options;
 
-            const context = canvas.getContext('2d', { willReadFrequently: true });
-            if (!context) {
-                return reject(new Error('[sharedom]: Could not obtain 2D canvas context.'));
-            }
+    const image = new Image();
+    image.src = svgDataUrl;
+    try {
+        // Unlike onload, decode() resolves only once the image, embedded fonts included, is ready to paint.
+        await image.decode();
+    } catch (error) {
+        throw new Error('[sharedom]: The browser could not render the captured markup as an image.', {
+            cause: error,
+        });
+    }
 
-            context.imageSmoothingEnabled = true;
-            context.imageSmoothingQuality = 'high';
-            context.scale(effectiveScale, effectiveScale);
+    const canvas = document.createElement('canvas');
+    canvas.width = size.width;
+    canvas.height = size.height;
 
-            if (backgroundColor) {
-                context.fillStyle = backgroundColor;
-                context.fillRect(0, 0, width, height);
-            }
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    if (!context) {
+        throw new Error('[sharedom]: Could not obtain 2D canvas context.');
+    }
 
-            context.drawImage(image, 0, 0);
+    if (backgroundColor) {
+        context.fillStyle = backgroundColor;
+        context.fillRect(0, 0, size.width, size.height);
+    }
 
-            try {
-                const mimeType =
-                    format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
-                const dataUrl = optimize
-                    ? exportOptimizedCanvas(canvas, context, format, quality)
-                    : canvas.toDataURL(mimeType, quality);
+    context.drawImage(image, 0, 0, size.width, size.height);
 
-                // A canvas the browser refused to rasterize exports as the empty "data:," URL.
-                if (!dataUrl.startsWith('data:image/')) {
-                    return reject(
-                        new Error(
-                            `[sharedom]: The browser could not rasterize ${canvas.width}x${canvas.height}px. ` +
-                                'Capture a smaller element or lower the scale option.'
-                        )
-                    );
-                }
+    let dataUrl: string;
+    try {
+        const mimeType = format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
+        dataUrl = optimize
+            ? exportOptimizedCanvas(canvas, context, format, quality)
+            : canvas.toDataURL(mimeType, quality);
+    } catch (error) {
+        throw new Error(`[sharedom]: Failed to export canvas image. ${error}`, { cause: error });
+    }
 
-                resolve(dataUrl);
-            } catch (error) {
-                reject(new Error(`[sharedom]: Failed to export canvas image. ${error}`));
-            }
-        };
+    // A canvas the browser refused to rasterize exports as the empty "data:," URL.
+    if (!dataUrl.startsWith('data:image/')) {
+        throw new Error(
+            `[sharedom]: The browser could not rasterize ${canvas.width}x${canvas.height}px. ` +
+                'Capture a smaller element or lower the scale option.'
+        );
+    }
 
-        image.onerror = (error) => {
-            reject(new Error(`[sharedom]: Failed to load rendered SVG image. ${error}`));
-        };
-
-        image.src = svgDataUrl;
-    });
+    return dataUrl;
 }

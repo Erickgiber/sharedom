@@ -1,4 +1,3 @@
-import { snapshotMediaElement } from './media';
 import { DomTarget } from './types';
 
 export function resolveElement(target: DomTarget): HTMLElement {
@@ -24,10 +23,17 @@ export function resolveElement(target: DomTarget): HTMLElement {
     throw new Error('[sharedom]: Target must be a valid CSS selector string or an HTMLElement.');
 }
 
+/**
+ * The clone is laid out without the transforms of the element and its ancestors, so a transformed
+ * element is measured by its layout box. Otherwise the fractional on-screen size is kept, because
+ * rounding it can make text wrap differently in the clone.
+ */
 export function validateElementDimensions(element: HTMLElement): { width: number; height: number } {
     const rect = element.getBoundingClientRect();
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
+    const isTransformed =
+        Math.abs(rect.width - element.offsetWidth) >= 1 || Math.abs(rect.height - element.offsetHeight) >= 1;
+    const width = isTransformed ? element.offsetWidth : rect.width;
+    const height = isTransformed ? element.offsetHeight : rect.height;
 
     if (width <= 0 || height <= 0) {
         throw new Error(
@@ -57,52 +63,5 @@ export function validateOptions(options: { scale?: number; quality?: number; for
         options.format !== 'webp'
     ) {
         throw new Error('[sharedom]: Format option must be "png", "jpeg", or "webp".');
-    }
-}
-
-export function syncDynamicStates(source: Element, target: Element): void {
-    if (
-        typeof HTMLInputElement !== 'undefined' &&
-        source instanceof HTMLInputElement &&
-        target instanceof HTMLInputElement
-    ) {
-        target.setAttribute('value', source.value);
-        target.value = source.value;
-        if (source.checked) {
-            target.setAttribute('checked', '');
-            target.checked = true;
-        }
-    } else if (
-        typeof HTMLTextAreaElement !== 'undefined' &&
-        source instanceof HTMLTextAreaElement &&
-        target instanceof HTMLTextAreaElement
-    ) {
-        target.textContent = source.value;
-        target.value = source.value;
-    } else if (
-        typeof HTMLSelectElement !== 'undefined' &&
-        source instanceof HTMLSelectElement &&
-        target instanceof HTMLSelectElement
-    ) {
-        target.value = source.value;
-        const targetOptions = target.querySelectorAll('option');
-        const selectedIndex = source.selectedIndex;
-        if (selectedIndex >= 0 && targetOptions[selectedIndex]) {
-            targetOptions[selectedIndex].setAttribute('selected', 'true');
-        }
-    } else if (target.parentNode) {
-        const snapshot = snapshotMediaElement(source);
-        if (snapshot) {
-            target.replaceWith(snapshot);
-            return;
-        }
-    }
-
-    const sourceChildren = Array.from(source.children);
-    const targetChildren = Array.from(target.children);
-    for (let i = 0; i < sourceChildren.length; i++) {
-        if (targetChildren[i]) {
-            syncDynamicStates(sourceChildren[i], targetChildren[i]);
-        }
     }
 }
