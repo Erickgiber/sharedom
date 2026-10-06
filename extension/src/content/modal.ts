@@ -9,10 +9,10 @@ import {
   PdfOptions,
 } from '../../../src/index';
 import { translations, ExtensionLanguage } from '../shared/i18n';
-import { ScreenCapture, ScreenCaptureError, captureElementFromScreen } from './screen-capture';
+import { ScreenCapture, captureElementFromScreen } from './screen-capture';
+import { ImageAnnotator, Stroke, drawStrokes } from './annotator';
 
-/** DOM rebuilds the element as vectors; screen copies the composited pixels of the tab. */
-type CaptureMode = 'dom' | 'screen';
+type CaptureType = 'element' | 'console' | 'network' | 'area';
 
 const SCREEN_EXPORT_QUALITY = 0.92;
 
@@ -45,7 +45,7 @@ export class ActionModal {
     language: 'en',
   };
   private isCapturing = false;
-  private currentCaptureType: 'element' | 'console' | 'network' = 'element';
+  private currentCaptureType: CaptureType = 'element';
   private chunkElements: HTMLElement[] = [];
   private chunkDataUrls: string[] = [];
   private currentPageIndex = 0;
@@ -53,9 +53,14 @@ export class ActionModal {
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private idleTimer: number | null = null;
   private rawItems: any[] = [];
-  private captureMode: CaptureMode = 'dom';
+  private usesEngine = false;
   /** Read once per selection; changing the format only re-encodes it. */
   private screenCapture: ScreenCapture | null = null;
+  private strokes: Stroke[] = [];
+  private annotator: ImageAnnotator | null = null;
+  private scaleButtons: HTMLElement | null = null;
+  private backgroundGroup: HTMLElement | null = null;
+  private session = 0;
 
   private onClose: () => void;
   private onReselect: () => void;
@@ -125,8 +130,8 @@ export class ActionModal {
 
     this.currentCaptureType = captureType;
     this.screenCapture = null;
-    // Console and network cards are rendered off screen, so only the DOM mode can see them.
-    if (captureType !== 'element') this.captureMode = 'dom';
+    this.strokes = [];
+    this.usesEngine = captureType !== 'element';
 
     if (captureType === 'console' || captureType === 'network') {
       this.detectedBgColor = '#0f172a';
@@ -137,11 +142,53 @@ export class ActionModal {
     }
 
     this.hide();
+    const session = this.session;
+    if (!this.usesEngine) await this.captureScreenPixels();
+    if (session !== this.session) return;
+
     this.createModalDOM();
     await this.refreshCapture();
   }
 
+  public async showImage(capture: ScreenCapture): Promise<void> {
+    this.rawItems = [];
+    this.chunkElements = [];
+    this.totalPages = 1;
+    this.currentPageIndex = 0;
+    this.currentElement = null;
+    this.currentCaptureType = 'area';
+    this.screenCapture = capture;
+    this.strokes = [];
+    this.usesEngine = false;
+    this.detectedBgColor = undefined;
+    this.currentOptions.backgroundColor = undefined;
+
+    this.hide();
+    this.createModalDOM();
+    await this.refreshCapture();
+  }
+
+  private async captureScreenPixels(): Promise<void> {
+    const host = this.shadow.host;
+    try {
+      if (!this.currentElement || !(host instanceof HTMLElement)) {
+        throw new Error('There is no element to read from the screen.');
+      }
+      this.screenCapture = await captureElementFromScreen(this.currentElement, host);
+    } catch {
+      this.usesEngine = true;
+      this.onToast(translations[this.currentOptions.language].modal.engineFallback, 'ℹ️');
+    }
+  }
+
+  private usesScreenPixels(): boolean {
+    return !this.usesEngine && this.screenCapture !== null;
+  }
+
   public hide(): void {
+    this.session++;
+    this.annotator?.close();
+    this.annotator = null;
     if (this.idleTimer) {
       clearTimeout(this.idleTimer);
       this.idleTimer = null;
@@ -157,7 +204,7 @@ export class ActionModal {
   }
 
   private renderPreviewImage(previewBox: HTMLElement | null, dataUrl: string): void {
-    if (!previewBox || !this.currentElement) return;
+    if (!previewBox) return;
     previewBox.innerHTML = '';
     const img = document.createElement('img');
     img.className = 'sharedom-preview-img';
@@ -166,11 +213,11 @@ export class ActionModal {
     const meta = document.createElement('div');
     meta.className = 'sharedom-preview-meta';
     const format = this.currentOptions.format.toUpperCase();
-    if (this.captureMode === 'screen' && this.screenCapture) {
+    if (this.screenCapture && !this.usesEngine) {
       const { canvas, pixelRatio } = this.screenCapture;
       const ratio = Number(pixelRatio.toFixed(2));
       meta.textContent = `${canvas.width} × ${canvas.height} px (${ratio}x ${format})`;
-    } else {
+    } else if (this.currentElement) {
       const rect = this.currentElement.getBoundingClientRect();
       const width = Math.round(rect.width * this.currentOptions.scale);
       const height = Math.round(rect.height * this.currentOptions.scale);
@@ -267,7 +314,6 @@ export class ActionModal {
   }
 
   private createModalDOM(): void {
-    if (!this.currentElement) return;
     const t = translations[this.currentOptions.language].modal;
 
     this.backdrop = document.createElement('div');
@@ -318,7 +364,10 @@ export class ActionModal {
     } else if (this.currentCaptureType === 'network') {
       title.textContent = t.networkTitle;
       subtitle.textContent = t.networkSubtitle;
-    } else {
+    } else if (this.currentCaptureType === 'area' && this.screenCapture) {
+      title.textContent = t.areaTitle;
+      subtitle.textContent = `${this.screenCapture.canvas.width} × ${this.screenCapture.canvas.height} px`;
+    } else if (this.currentElement) {
       title.textContent = t.title;
       const tag = this.currentElement.tagName.toLowerCase();
       const idStr = this.currentElement.id ? `#${this.currentElement.id}` : '';
@@ -435,7 +484,7 @@ export class ActionModal {
       const btn = document.createElement('button');
       btn.className = `sharedom-btn-option ${this.currentOptions.scale === s ? 'active' : ''}`;
       btn.textContent = `${s}x`;
-      btn.disabled = this.captureMode === 'screen';
+      btn.disabled = !this.usesEngine;
       btn.addEventListener('click', async () => {
         if (this.currentOptions.scale === s || this.isCapturing) return;
         scaleBtnGroup.querySelectorAll('.sharedom-btn-option').forEach((b) => b.classList.remove('active'));
@@ -554,10 +603,9 @@ export class ActionModal {
     controlsGrid.appendChild(formatGroup);
     controlsGrid.appendChild(bgGroup);
 
-    if (this.currentCaptureType === 'element') {
-      body.appendChild(this.createModeGroup(scaleBtnGroup, bgGroup));
-    }
-    bgGroup.hidden = this.captureMode === 'screen';
+    this.scaleButtons = scaleBtnGroup;
+    this.backgroundGroup = bgGroup;
+    bgGroup.hidden = !this.usesEngine;
     body.appendChild(controlsGrid);
 
     const footer = document.createElement('div');
@@ -581,8 +629,23 @@ export class ActionModal {
       this.onReselect();
     });
 
-    if (this.currentCaptureType === 'element') {
+    if (this.canAnnotate()) {
+      const editBtn = document.createElement('button');
+      editBtn.className = 'sharedom-btn sharedom-btn-secondary sharedom-btn-icon';
+      editBtn.setAttribute('title', t.edit);
+      editBtn.setAttribute('aria-label', t.edit);
+      editBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+      `;
+      editBtn.addEventListener('click', async () => {
+        await this.openAnnotator();
+      });
+
       footerLeft.appendChild(reselectBtn);
+      footerLeft.appendChild(editBtn);
     } else if (this.currentCaptureType === 'console') {
       const copyLogsBtn = document.createElement('button');
       copyLogsBtn.className = 'sharedom-btn sharedom-btn-copylogs';
@@ -666,6 +729,26 @@ export class ActionModal {
       await this.copyImageToClipboard();
     });
 
+    if (typeof navigator.share === 'function') {
+      const shareBtn = document.createElement('button');
+      shareBtn.className = 'sharedom-btn sharedom-btn-secondary sharedom-btn-icon';
+      shareBtn.setAttribute('title', t.share);
+      shareBtn.setAttribute('aria-label', t.share);
+      shareBtn.innerHTML = `
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+      `;
+      shareBtn.addEventListener('click', async () => {
+        await this.shareImage();
+      });
+      footerRight.appendChild(shareBtn);
+    }
+
     footerRight.appendChild(downloadBtn);
     footerRight.appendChild(downloadPdfBtn);
     footerRight.appendChild(copyBtn);
@@ -682,6 +765,7 @@ export class ActionModal {
 
     this.keydownHandler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        if (this.closeAnnotator()) return;
         this.hide();
         this.onClose();
       } else if (e.key === 'ArrowLeft' && this.totalPages > 1) {
@@ -693,76 +777,149 @@ export class ActionModal {
     window.addEventListener('keydown', this.keydownHandler);
   }
 
-  /** The screen mode has no scale (it is the display's) and no background (the page paints it). */
-  private createModeGroup(scaleBtnGroup: HTMLElement, bgGroup: HTMLElement): HTMLElement {
-    const t = translations[this.currentOptions.language].modal;
+  public closeAnnotator(): boolean {
+    if (!this.annotator) return false;
+    this.annotator.close();
+    return true;
+  }
 
-    const group = document.createElement('div');
-    group.className = 'sharedom-control-group';
-    const label = document.createElement('label');
-    label.className = 'sharedom-control-label';
-    label.textContent = t.captureMode;
+  private canAnnotate(): boolean {
+    return this.currentCaptureType === 'element' || this.currentCaptureType === 'area';
+  }
 
-    const buttons = document.createElement('div');
-    buttons.className = 'sharedom-btn-group';
+  private syncEngineControls(): void {
+    this.scaleButtons?.querySelectorAll('button').forEach((button) => (button.disabled = !this.usesEngine));
+    if (this.backgroundGroup) this.backgroundGroup.hidden = !this.usesEngine;
+  }
 
-    const modes: Array<{ mode: CaptureMode; text: string; tooltip: string }> = [
-      { mode: 'dom', text: t.modeDom, tooltip: t.modeDomTooltip },
-      { mode: 'screen', text: t.modeScreen, tooltip: t.modeScreenTooltip },
-    ];
-    modes.forEach(({ mode, text, tooltip }) => {
-      const btn = document.createElement('button');
-      btn.className = `sharedom-btn-option ${this.captureMode === mode ? 'active' : ''}`;
-      btn.textContent = text;
-      btn.title = tooltip;
-      btn.dataset.mode = mode;
-      btn.addEventListener('click', async () => {
-        if (this.captureMode === mode || this.isCapturing) return;
-        buttons.querySelectorAll('.sharedom-btn-option').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        this.captureMode = mode;
-        scaleBtnGroup.querySelectorAll('button').forEach((b) => (b.disabled = mode === 'screen'));
-        bgGroup.hidden = mode === 'screen';
-        await this.refreshCapture();
-      });
-      buttons.appendChild(btn);
-    });
+  private exportCanvas(format: ModalOptions['format']): HTMLCanvasElement {
+    if (!this.screenCapture) throw new Error('No screen capture to encode.');
+    const source = this.screenCapture.canvas;
+    const isOpaqueFormat = format === 'jpeg';
+    if (this.strokes.length === 0 && !isOpaqueFormat) return source;
 
-    group.appendChild(label);
-    group.appendChild(buttons);
-    return group;
+    const canvas = document.createElement('canvas');
+    canvas.width = source.width;
+    canvas.height = source.height;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Could not obtain a 2D canvas context.');
+
+    if (isOpaqueFormat) {
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    context.drawImage(source, 0, 0);
+    drawStrokes(context, this.strokes);
+    return canvas;
   }
 
   private encodeScreenCapture(format: ModalOptions['format']): string {
-    if (!this.screenCapture) throw new Error('No screen capture to encode.');
     const mimeType = format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
-    return this.screenCapture.canvas.toDataURL(mimeType, SCREEN_EXPORT_QUALITY);
+    return this.exportCanvas(format).toDataURL(mimeType, SCREEN_EXPORT_QUALITY);
   }
 
-  private async refreshScreenCapture(previewBox: HTMLElement | null): Promise<void> {
-    if (!this.currentElement) return;
-    const host = this.shadow.host;
-    if (!(host instanceof HTMLElement)) throw new Error('The overlay host is not an HTML element.');
-
-    this.screenCapture ??= await captureElementFromScreen(this.currentElement, host);
+  private refreshScreenCapture(previewBox: HTMLElement | null): void {
     this.currentDataUrl = this.encodeScreenCapture(this.currentOptions.format);
     this.chunkDataUrls = [this.currentDataUrl];
     this.renderPreviewImage(previewBox, this.currentDataUrl);
   }
 
-  private captureErrorMessage(error: unknown): { title: string; detail: string } {
+  private async rasterizeEngineCapture(): Promise<ScreenCapture> {
+    if (!this.currentElement) throw new Error('There is no element to rasterize.');
+
+    const isPng = this.currentOptions.format === 'png' && this.currentDataUrl.startsWith('data:image/png');
+    const dataUrl = isPng
+      ? this.currentDataUrl
+      : await capture(this.currentElement, {
+          scale: this.currentOptions.scale,
+          format: 'png',
+          backgroundColor: this.currentOptions.backgroundColor,
+          optimize: true,
+        });
+
+    const image = new Image();
+    image.src = dataUrl;
+    await image.decode();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Could not obtain a 2D canvas context.');
+    context.drawImage(image, 0, 0);
+
+    return { canvas, pixelRatio: this.currentOptions.scale };
+  }
+
+  private async openAnnotator(): Promise<void> {
+    if (this.isCapturing || this.annotator) return;
     const t = translations[this.currentOptions.language].modal;
-    if (error instanceof ScreenCaptureError) {
-      return {
-        title: error.reason === 'too-large' ? t.screenTooLarge : t.screenUnavailable,
-        detail: error.message,
-      };
+    const session = this.session;
+
+    let source: ScreenCapture;
+    try {
+      source =
+        this.screenCapture && !this.usesEngine ? this.screenCapture : await this.rasterizeEngineCapture();
+    } catch {
+      this.onToast(t.captureFailed, '⚠️');
+      return;
     }
-    return { title: t.captureFailed, detail: String(error) };
+    if (session !== this.session || this.annotator) return;
+
+    const annotator = new ImageAnnotator(this.shadow, {
+      done: t.editDone,
+      cancel: t.editCancel,
+      undo: t.editUndo,
+      clear: t.editClear,
+    });
+    this.annotator = annotator;
+    const strokes = await annotator.open(source.canvas, this.strokes);
+    if (this.annotator !== annotator) return;
+    this.annotator = null;
+    if (!strokes) return;
+
+    this.screenCapture = source;
+    this.usesEngine = false;
+    this.strokes = strokes;
+    this.syncEngineControls();
+    await this.refreshCapture();
+  }
+
+  private fileBaseName(): string {
+    const now = new Date();
+    const pad = (value: number) => String(value).padStart(2, '0');
+    const timestamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+    if (this.currentCaptureType === 'console') return `sharedom-console-${timestamp}`;
+    if (this.currentCaptureType === 'network') return `sharedom-network-${timestamp}`;
+    if (!this.currentElement) return `sharedom-area-${timestamp}`;
+
+    const tag = this.currentElement.tagName.toLowerCase();
+    const id = this.currentElement.id ? `-${this.currentElement.id}` : '';
+    return `sharedom-${tag}${id}-${timestamp}`;
+  }
+
+  private async shareImage(): Promise<void> {
+    if (!this.currentDataUrl) return;
+    const t = translations[this.currentOptions.language].modal;
+
+    try {
+      const response = await fetch(this.currentDataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], `${this.fileBaseName()}.${this.currentOptions.format}`, { type: blob.type });
+      if (!navigator.canShare?.({ files: [file] })) {
+        this.onToast(t.shareError, '⚠️');
+        return;
+      }
+      await navigator.share({ files: [file] });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      this.onToast(t.shareError, '⚠️');
+    }
   }
 
   private async refreshCapture(): Promise<void> {
-    if (!this.currentElement || !this.shadow) return;
+    if (!this.shadow) return;
     const t = translations[this.currentOptions.language].modal;
     this.isCapturing = true;
 
@@ -782,8 +939,8 @@ export class ActionModal {
     }
 
     try {
-      if (this.captureMode === 'screen') {
-        await this.refreshScreenCapture(previewBox);
+      if (this.usesScreenPixels()) {
+        this.refreshScreenCapture(previewBox);
         return;
       }
 
@@ -814,9 +971,8 @@ export class ActionModal {
         message.style.cssText = 'color: #ef4444; font-size: 13px; text-align: center; padding: 16px;';
         const detail = document.createElement('span');
         detail.style.cssText = 'font-size: 11px; color: #a1a1aa;';
-        const { title, detail: detailText } = this.captureErrorMessage(error);
-        detail.textContent = detailText;
-        message.append(title, document.createElement('br'), detail);
+        detail.textContent = String(error);
+        message.append(t.captureFailed, document.createElement('br'), detail);
         previewBox.replaceChildren(message);
       }
     } finally {
@@ -825,7 +981,6 @@ export class ActionModal {
   }
 
   private async copyImageToClipboard(): Promise<void> {
-    if (!this.currentElement) return;
     const t = translations[this.currentOptions.language].modal;
 
     try {
@@ -856,10 +1011,11 @@ export class ActionModal {
       if (this.currentOptions.format === 'png' && this.currentDataUrl.startsWith('data:image/png')) {
         const res = await fetch(this.currentDataUrl);
         pngBlob = await res.blob();
-      } else if (this.captureMode === 'screen') {
+      } else if (this.usesScreenPixels()) {
         const res = await fetch(this.encodeScreenCapture('png'));
         pngBlob = await res.blob();
       } else {
+        if (!this.currentElement) throw new Error('There is no element to copy.');
         const pngDataUrl = await capture(this.currentElement, {
           scale: this.currentOptions.scale,
           format: 'png',
@@ -888,23 +1044,11 @@ export class ActionModal {
   }
 
   private async triggerDownload(): Promise<void> {
-    if (!this.currentDataUrl || !this.currentElement) return;
+    if (!this.currentDataUrl) return;
     const t = translations[this.currentOptions.language].modal;
 
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
     const ext = this.currentOptions.format;
-
-    let basePrefix = '';
-    if (this.currentCaptureType === 'console') {
-      basePrefix = `sharedom-console-${timestamp}`;
-    } else if (this.currentCaptureType === 'network') {
-      basePrefix = `sharedom-network-${timestamp}`;
-    } else {
-      const tag = this.currentElement.tagName.toLowerCase();
-      const id = this.currentElement.id ? `-${this.currentElement.id}` : '';
-      basePrefix = `sharedom-${tag}${id}-${timestamp}`;
-    }
+    const basePrefix = this.fileBaseName();
 
     if (this.totalPages > 1) {
       await this.ensureAllChunksCaptured();
@@ -928,22 +1072,10 @@ export class ActionModal {
   }
 
   private async triggerPdfDownload(btn?: HTMLButtonElement): Promise<void> {
-    if (!this.currentElement || this.isCapturing) return;
+    if (this.isCapturing) return;
     const t = translations[this.currentOptions.language].modal;
 
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
-
-    let filename = '';
-    if (this.currentCaptureType === 'console') {
-      filename = `sharedom-console-${timestamp}.pdf`;
-    } else if (this.currentCaptureType === 'network') {
-      filename = `sharedom-network-${timestamp}.pdf`;
-    } else {
-      const tag = this.currentElement.tagName.toLowerCase();
-      const id = this.currentElement.id ? `-${this.currentElement.id}` : '';
-      filename = `sharedom-${tag}${id}-${timestamp}.pdf`;
-    }
+    const filename = `${this.fileBaseName()}.pdf`;
 
     const originalHTML = btn?.innerHTML;
     if (btn) {
@@ -963,7 +1095,7 @@ export class ActionModal {
         pageSize: 'auto',
       };
 
-      if (this.captureMode === 'screen' && this.screenCapture) {
+      if (this.screenCapture && !this.usesEngine) {
         const { canvas, pixelRatio } = this.screenCapture;
         const jpeg = this.encodeScreenCapture('jpeg');
         const bin = atob(jpeg.split(',')[1]);
@@ -1015,7 +1147,7 @@ export class ActionModal {
         link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         this.onToast(`${t.pdfSuccess} ${filename}`, '📄');
-      } else {
+      } else if (this.currentElement) {
         await downloadPDF(this.currentElement, filename, pdfOpts);
         this.onToast(`${t.pdfSuccess} ${filename}`, '📄');
       }

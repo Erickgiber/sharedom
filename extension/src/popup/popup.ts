@@ -31,6 +31,9 @@ import {
 const inspectBtn = document.getElementById('inspect-btn') as HTMLButtonElement;
 const captureConsoleBtn = document.getElementById('capture-console-btn') as HTMLButtonElement;
 const captureNetworkBtn = document.getElementById('capture-network-btn') as HTMLButtonElement;
+const captureAreaBtn = document.getElementById('capture-area-btn') as HTMLButtonElement;
+const btnAreaTitle = document.getElementById('btn-area-title') as HTMLElement;
+const btnAreaSubtitle = document.getElementById('btn-area-subtitle') as HTMLElement;
 const recordBtn = document.getElementById('record-btn') as HTMLButtonElement;
 const btnRecordTitle = document.getElementById('btn-record-title') as HTMLElement;
 const btnRecordSubtitle = document.getElementById('btn-record-subtitle') as HTMLElement;
@@ -96,6 +99,7 @@ const txtFormatLabel = document.getElementById('txt-format-label') as HTMLElemen
 const txtShortcutsTitle = document.getElementById('txt-shortcuts-title') as HTMLElement;
 const txtShortcutInspect = document.getElementById('txt-shortcut-inspect') as HTMLElement;
 const txtShortcutRecord = document.getElementById('txt-shortcut-record') as HTMLElement;
+const txtShortcutArea = document.getElementById('txt-shortcut-area') as HTMLElement;
 const txtShortcutParentChild = document.getElementById('txt-shortcut-parent-child') as HTMLElement;
 const txtShortcutCapture = document.getElementById('txt-shortcut-capture') as HTMLElement;
 const txtShortcutCancel = document.getElementById('txt-shortcut-cancel') as HTMLElement;
@@ -173,6 +177,7 @@ function updateBannerUI(): void {
     if (bannerDesc) bannerDesc.textContent = t.restrictedPageDesc;
     if (bannerActions) bannerActions.style.display = 'none';
     if (inspectBtn) inspectBtn.disabled = true;
+    if (captureAreaBtn) captureAreaBtn.disabled = true;
     if (captureConsoleBtn) captureConsoleBtn.disabled = true;
     if (captureNetworkBtn) captureNetworkBtn.disabled = true;
   } else if (hasPermissionError) {
@@ -188,11 +193,13 @@ function updateBannerUI(): void {
     if (bannerRetryBtn) bannerRetryBtn.textContent = t.btnRetry;
     if (bannerReloadBtn) bannerReloadBtn.textContent = t.btnReloadTab;
     if (inspectBtn) inspectBtn.disabled = false;
+    if (captureAreaBtn) captureAreaBtn.disabled = false;
     if (captureConsoleBtn) captureConsoleBtn.disabled = false;
     if (captureNetworkBtn) captureNetworkBtn.disabled = false;
   } else {
     if (statusBanner) statusBanner.style.display = 'none';
     if (inspectBtn) inspectBtn.disabled = false;
+    if (captureAreaBtn) captureAreaBtn.disabled = false;
     if (captureConsoleBtn) captureConsoleBtn.disabled = false;
     if (captureNetworkBtn) captureNetworkBtn.disabled = false;
   }
@@ -210,6 +217,8 @@ function applyLanguage(lang: ExtensionLanguage): void {
   if (btnConsoleSubtitle) btnConsoleSubtitle.textContent = t.btnConsoleLogsSubtitle;
   if (btnNetworkTitle) btnNetworkTitle.textContent = t.btnNetworkRequests;
   if (btnNetworkSubtitle) btnNetworkSubtitle.textContent = t.btnNetworkRequestsSubtitle;
+  if (btnAreaTitle) btnAreaTitle.textContent = t.btnArea;
+  if (btnAreaSubtitle) btnAreaSubtitle.textContent = t.btnAreaSubtitle;
   if (btnRecordTitle) btnRecordTitle.textContent = t.btnRecord;
   if (btnRecordSubtitle) btnRecordSubtitle.textContent = t.btnRecordSubtitle;
   if (shortcutsSettingsBtn) shortcutsSettingsBtn.textContent = t.shortcutsSettings;
@@ -229,6 +238,7 @@ function applyLanguage(lang: ExtensionLanguage): void {
   if (txtShortcutsTitle) txtShortcutsTitle.textContent = t.shortcutsTitle;
   if (txtShortcutInspect) txtShortcutInspect.textContent = t.shortcutInspect;
   if (txtShortcutRecord) txtShortcutRecord.textContent = t.shortcutRecord;
+  if (txtShortcutArea) txtShortcutArea.textContent = t.shortcutArea;
   if (txtShortcutParentChild) txtShortcutParentChild.textContent = t.shortcutParentChild;
   if (txtShortcutCapture) txtShortcutCapture.textContent = t.shortcutCapture;
   if (txtShortcutCancel) txtShortcutCancel.textContent = t.shortcutCancel;
@@ -350,7 +360,9 @@ async function ensureInjected(tabId: number): Promise<void> {
   });
 }
 
-async function triggerTabAction(actionType: 'START_INSPECTOR' | 'CAPTURE_CONSOLE_LOGS' | 'CAPTURE_NETWORK_REQUESTS'): Promise<void> {
+type TabAction = 'START_INSPECTOR' | 'START_AREA_CAPTURE' | 'CAPTURE_CONSOLE_LOGS' | 'CAPTURE_NETWORK_REQUESTS';
+
+async function triggerTabAction(actionType: TabAction): Promise<void> {
   hasPermissionError = false;
   updateBannerUI();
 
@@ -527,6 +539,7 @@ scaleSelect?.addEventListener('change', saveSettings);
 formatSelect?.addEventListener('change', saveSettings);
 
 inspectBtn?.addEventListener('click', () => triggerTabAction('START_INSPECTOR'));
+captureAreaBtn?.addEventListener('click', () => triggerTabAction('START_AREA_CAPTURE'));
 captureConsoleBtn?.addEventListener('click', () => triggerTabAction('CAPTURE_CONSOLE_LOGS'));
 captureNetworkBtn?.addEventListener('click', () => triggerTabAction('CAPTURE_NETWORK_REQUESTS'));
 bannerRetryBtn?.addEventListener('click', () => triggerTabAction('START_INSPECTOR'));

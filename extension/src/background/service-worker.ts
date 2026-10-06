@@ -41,6 +41,11 @@ chrome.runtime.onInstalled.addListener(() => {
     title: 'Inspect & Capture DOM Element',
     contexts: ['page', 'selection', 'image', 'link', 'editable'],
   });
+  chrome.contextMenus.create({
+    id: 'sharedom-capture-area',
+    title: 'Capture Screen Area',
+    contexts: ['page', 'selection', 'image', 'link', 'editable'],
+  });
   void refreshEarlyCapture();
 });
 
@@ -161,13 +166,13 @@ async function injectInspector(tabId: number): Promise<void> {
   await chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] });
 }
 
-async function toggleInspectorOnActiveTab(): Promise<void> {
+async function sendToActiveTab(type: string, typeAfterInjection = type): Promise<void> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.id || isKnownRestrictedUrl(tab.url)) return;
 
   const tabId = tab.id;
   try {
-    await chrome.tabs.sendMessage(tabId, { type: 'TOGGLE_INSPECTOR' });
+    await chrome.tabs.sendMessage(tabId, { type });
     return;
   } catch {
     // No content script in this tab yet.
@@ -175,16 +180,28 @@ async function toggleInspectorOnActiveTab(): Promise<void> {
 
   try {
     await injectInspector(tabId);
-    await chrome.tabs.sendMessage(tabId, { type: 'START_INSPECTOR' });
+    await chrome.tabs.sendMessage(tabId, { type: typeAfterInjection });
   } catch {
     const t = translations[await currentLanguage()].popup;
     await flagActionError(tabId, t.permissionErrorDesc);
   }
 }
 
+function toggleInspectorOnActiveTab(): Promise<void> {
+  return sendToActiveTab('TOGGLE_INSPECTOR', 'START_INSPECTOR');
+}
+
+function captureAreaOnActiveTab(): Promise<void> {
+  return sendToActiveTab('START_AREA_CAPTURE');
+}
+
 chrome.commands.onCommand.addListener((command) => {
   if (command === 'toggle-inspector') {
     void toggleInspectorOnActiveTab();
+    return;
+  }
+  if (command === 'capture-area') {
+    void captureAreaOnActiveTab();
     return;
   }
   if (command === 'toggle-recording') {
@@ -197,6 +214,9 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId === 'sharedom-inspect') {
     void toggleInspectorOnActiveTab();
+  }
+  if (info.menuItemId === 'sharedom-capture-area') {
+    void captureAreaOnActiveTab();
   }
 });
 
@@ -277,6 +297,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       () => sendResponse(getRecordingState())
     );
     return true;
+  }
+
+  if (message.type === 'MICROPHONE_GRANTED') {
+    void restoreStateFromOffscreen()
+      .then(() => loadStoredSettings())
+      .then((settings) => startRecording(settings, true));
+    return undefined;
   }
 
   if (message.type === 'SHAREDOM_CAPTURE_VISIBLE_TAB') {

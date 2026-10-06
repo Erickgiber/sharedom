@@ -23,6 +23,11 @@ export interface CaptureNetworkMessage {
   options?: InspectorOptions;
 }
 
+export interface StartAreaCaptureMessage {
+  type: 'START_AREA_CAPTURE';
+  options?: InspectorOptions;
+}
+
 export interface StopInspectorMessage {
   type: 'STOP_INSPECTOR';
 }
@@ -53,6 +58,7 @@ export type ExtensionMessage =
   | StartInspectorMessage
   | CaptureConsoleMessage
   | CaptureNetworkMessage
+  | StartAreaCaptureMessage
   | StopInspectorMessage
   | ToggleInspectorMessage
   | GetInspectorStatusMessage

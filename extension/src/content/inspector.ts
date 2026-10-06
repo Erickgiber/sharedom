@@ -1,5 +1,7 @@
 import { OverlayManager } from './overlay';
 import { ActionModal } from './modal';
+import { AreaSelector } from './area-selector';
+import { captureAreaFromScreen, copyCaptureToClipboard } from './screen-capture';
 import { ExtensionLanguage, normalizeLanguage, translations } from '../shared/i18n';
 import {
   getConsoleLogs,
@@ -30,6 +32,8 @@ export interface InspectorStartOptions {
   format?: 'png' | 'jpeg' | 'webp';
   language?: ExtensionLanguage;
 }
+
+const FAILURE_TOAST_MS = 2600;
 
 const pageLogs: ConsoleLogEntry[] = [];
 const pageRequests: NetworkRequestEntry[] = [];
@@ -88,6 +92,8 @@ export class DomInspector {
   private currentLanguage: ExtensionLanguage = 'en';
   private lastPointer: { x: number; y: number } | null = null;
   private isKeyboardNavigating = false;
+  private isAreaCapture = false;
+  private areaSelector: AreaSelector | null = null;
 
   private onMouseMoveBound = this.onMouseMove.bind(this);
   private onMouseOverBound = this.onMouseOver.bind(this);
@@ -129,7 +135,7 @@ export class DomInspector {
         shadow,
         {
           onClose: () => this.stop(),
-          onReselect: () => this.resumeInspection(),
+          onReselect: () => (this.isAreaCapture ? void this.selectArea() : this.resumeInspection()),
           onToast: (msg, icon) => this.overlay?.showToast(msg, icon),
         },
         { scale, format, language: this.currentLanguage }
@@ -236,12 +242,66 @@ export class DomInspector {
     }
   }
 
+  public async captureArea(options?: InspectorStartOptions): Promise<void> {
+    this.stop();
+    this.isActive = true;
+    this.isModalOpen = true;
+    this.isAreaCapture = true;
+
+    await this.initOverlayAndModal(options);
+    await this.selectArea();
+  }
+
+  private async selectArea(): Promise<void> {
+    const overlay = this.overlay;
+    const shadow = overlay?.getShadowRoot();
+    const host = overlay?.getHostElement();
+    if (!overlay || !shadow || !host) return;
+
+    const t = translations[this.currentLanguage];
+    const selector = new AreaSelector(shadow, t.overlay.areaPrompt);
+    this.areaSelector = selector;
+    const area = await selector.select();
+    if (this.areaSelector !== selector) return;
+    this.areaSelector = null;
+
+    if (!area) {
+      this.stop();
+      return;
+    }
+
+    try {
+      const pending = captureAreaFromScreen(area, host);
+      const copying = copyCaptureToClipboard(pending);
+      const capture = await pending;
+      if (this.overlay !== overlay || !this.modal) return;
+
+      await this.modal.showImage(capture);
+      if (await copying) {
+        overlay.showToast(t.modal.areaCopied, '📋');
+      } else {
+        overlay.showToast(t.modal.copyError, '⚠️');
+      }
+    } catch {
+      if (this.overlay !== overlay) return;
+      overlay.showToast(t.modal.captureFailed, '⚠️');
+      setTimeout(() => {
+        if (this.overlay === overlay) this.stop();
+      }, FAILURE_TOAST_MS);
+    }
+  }
+
   public stop(): void {
     if (!this.isActive) return;
 
     this.detachEvents();
     this.isActive = false;
     this.isModalOpen = false;
+    this.isAreaCapture = false;
+
+    const selector = this.areaSelector;
+    this.areaSelector = null;
+    selector?.cancel();
     this.hoveredElement = null;
     this.selectedElement = null;
 
@@ -371,6 +431,7 @@ export class DomInspector {
     if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();
+      if (this.modal?.closeAnnotator()) return;
       this.stop();
       return;
     }
