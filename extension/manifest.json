@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ShareDOM - DOM Screenshot Inspector",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Inspect and capture any DOM element, console logs and network requests, and record your screen in high quality. 8 languages.",
   "icons": {
     "16": "icons/icon-16.png",
