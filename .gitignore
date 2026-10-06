@@ -22,3 +22,6 @@ playwright.config.ts
 
 # Generated build artifacts
 src/tracker-source.generated.ts
+
+# macOS resource forks
+._*
