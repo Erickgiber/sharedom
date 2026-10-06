@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sharedom - DOM Capture</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="28" height="28" fill="none">
+            <defs>
+              <linearGradient id="popupLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#a78bfa" />
+                <stop offset="100%" stop-color="#7c3aed" />
+              </linearGradient>
+            </defs>
+            <rect width="48" height="48" rx="12" fill="url(#popupLogoGrad)" />
+            <rect x="1" y="1" width="46" height="46" rx="11" stroke="rgba(255,255,255,0.25)" stroke-width="1" />
+            <path d="M12 18V14H16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M36 18V14H32" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M12 30V34H16" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M36 30V34H32" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M19 22L16 24.5L19 27" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M29 22L32 24.5L29 27" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="24" cy="24.5" r="3" fill="white" />
+            <circle cx="34" cy="14" r="1.5" fill="#facc15" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="title">sharedom</span>
+          <span class="badge" id="version-badge"></span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="lang-select" id="lang-select">
+          <button type="button" class="lang-select-trigger" id="lang-select-trigger" aria-haspopup="menu" aria-expanded="false">
+            <span class="lang-flag" id="lang-flag"></span>
+            <span class="lang-abbr" id="lang-abbr">EN</span>
+            <svg class="lang-caret" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+          <div class="lang-select-menu" id="lang-select-menu" role="menu"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section id="main-view" class="view">
+        <section id="whats-new" class="whats-new" hidden>
+          <div class="whats-new-header">
+            <span class="whats-new-badge" id="whats-new-version"></span>
+            <span class="whats-new-title" id="whats-new-title">What's new</span>
+            <button type="button" class="whats-new-close" id="whats-new-close" aria-label="Close">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+                <path d="M18 6 6 18M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <ul class="whats-new-list" id="whats-new-list"></ul>
+        </section>
+      <!-- Status & Permission Banner -->
+      <div id="status-banner" class="status-banner" style="display: none;">
+        <div class="banner-icon-wrap">
+          <svg id="banner-icon-shield" class="banner-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <svg id="banner-icon-alert" class="banner-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="banner-content">
+          <span id="banner-title" class="banner-title">Protected Page</span>
+          <span id="banner-desc" class="banner-desc">Browser internal pages are protected by security policies.</span>
+          <div id="banner-actions" class="banner-actions" style="display: none;">
+            <button type="button" id="banner-retry-btn" class="banner-btn banner-btn-primary">Retry</button>
+            <button type="button" id="banner-reload-btn" class="banner-btn">Reload Tab</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-vertical-stack">
+        <button id="inspect-btn" class="cta-button">
+          <div class="cta-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="22" y1="12" x2="18" y2="12"></line>
+              <line x1="6" y1="12" x2="2" y2="12"></line>
+              <line x1="12" y1="6" x2="12" y2="2"></line>
+              <line x1="12" y1="22" x2="12" y2="18"></line>
+            </svg>
+          </div>
+          <div class="cta-text">
+            <span id="cta-title" class="cta-title">Inspect DOM Element</span>
+            <span id="cta-subtitle" class="cta-subtitle">Hover & click any element on the page</span>
+          </div>
+        </button>
+
+        <button id="capture-console-btn" class="special-btn">
+          <div class="special-btn-icon icon-console">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 17 10 11 4 5"></polyline>
+              <line x1="12" y1="19" x2="20" y2="19"></line>
+            </svg>
+          </div>
+          <div class="special-btn-text">
+            <span id="btn-console-title" class="special-btn-title">Capture Console Logs</span>
+            <span id="btn-console-subtitle" class="special-btn-subtitle">Export terminal logs as image or PDF</span>
+          </div>
+        </button>
+
+        <button id="capture-network-btn" class="special-btn">
+          <div class="special-btn-icon icon-network">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <div class="special-btn-text">
+            <span id="btn-network-title" class="special-btn-title">Capture Network Requests</span>
+            <span id="btn-network-subtitle" class="special-btn-subtitle">Export API calls, status & duration</span>
+          </div>
+        </button>
+
+        <button id="record-btn" class="special-btn">
+          <div class="special-btn-icon icon-record">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14"></path>
+              <rect x="3" y="6" width="12" height="12" rx="2"></rect>
+            </svg>
+          </div>
+          <div class="special-btn-text">
+            <span id="btn-record-title" class="special-btn-title">Record Screen</span>
+            <span id="btn-record-subtitle" class="special-btn-subtitle">Tab, window or full screen up to 120 fps</span>
+          </div>
+        </button>
+      </div>
+
+      <section class="section" id="early-capture-section" style="display: none;">
+        <span id="txt-early-title" class="section-title">Capture From Page Load</span>
+        <div class="early-capture-card">
+          <div class="early-capture-main">
+            <div class="early-capture-text">
+              <span id="early-capture-host" class="early-capture-host">example.com</span>
+              <span id="txt-early-desc" class="early-capture-desc">Records console and network from the first byte on this site.</span>
+            </div>
+            <label class="switch" for="early-capture-toggle">
+              <input type="checkbox" id="early-capture-toggle" />
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+            </label>
+          </div>
+          <span id="early-capture-hint" class="early-capture-hint" style="display: none;"></span>
+          <div class="early-capture-main early-capture-divider">
+            <div class="early-capture-text">
+              <span id="txt-image-access-title" class="early-capture-host">Cross-origin images</span>
+              <span id="txt-image-access-desc" class="early-capture-desc">Lets captures include images other domains block. Applies to every site.</span>
+            </div>
+            <label class="switch" for="image-access-toggle">
+              <input type="checkbox" id="image-access-toggle" />
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+            </label>
+          </div>
+          <span id="image-access-hint" class="early-capture-hint" style="display: none;"></span>
+          <span class="early-capture-legend">
+            <span class="legend-dot legend-dot-watching"></span>
+            <span id="txt-early-legend">Green dot on the extension icon: this site is being watched from page load.</span>
+          </span>
+        </div>
+      </section>
+
+      <section class="section">
+        <span id="txt-default-settings" class="section-title">Default Settings</span>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label id="txt-resolution-label" class="setting-label" for="scale-select">Resolution</label>
+            <select id="scale-select" class="custom-select">
+              <option value="1">1x Standard</option>
+              <option value="2" selected>2x Retina HD</option>
+              <option value="3">3x Ultra HD</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label id="txt-format-label" class="setting-label" for="format-select">Format</label>
+            <select id="format-select" class="custom-select">
+              <option value="png" selected>PNG (Alpha)</option>
+              <option value="jpeg">JPEG</option>
+              <option value="webp">WebP</option>
+              <option value="pdf">PDF Document</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="shortcuts-card">
+        <div class="shortcuts-header">
+          <span id="txt-shortcuts-title" class="shortcuts-title">Keyboard Shortcuts</span>
+        </div>
+        <div class="shortcut-row">
+          <span id="txt-shortcut-inspect" class="shortcut-desc">Inspect Element</span>
+          <div class="kbd-wrap">
+            <kbd class="os-modifier">Alt</kbd>
+            <span>+</span>
+            <kbd>Shift</kbd>
+            <span>+</span>
+            <kbd>S</kbd>
+          </div>
+        </div>
+        <div class="shortcut-row">
+          <span id="txt-shortcut-record" class="shortcut-desc">Record screen</span>
+          <div class="kbd-wrap">
+            <kbd class="os-modifier">Alt</kbd>
+            <span>+</span>
+            <kbd>Shift</kbd>
+            <span>+</span>
+            <kbd>R</kbd>
+          </div>
+        </div>
+        <div class="shortcut-row">
+          <span id="txt-shortcut-parent-child" class="shortcut-desc">Parent / Child</span>
+          <div class="kbd-wrap">
+            <kbd>↑</kbd>
+            <kbd>↓</kbd>
+          </div>
+        </div>
+        <div class="shortcut-row">
+          <span id="txt-shortcut-capture" class="shortcut-desc">Capture Element</span>
+          <div class="kbd-wrap">
+            <kbd>↵ Enter</kbd>
+            <span>/</span>
+            <kbd>Space</kbd>
+          </div>
+        </div>
+        <div class="shortcut-row">
+          <span id="txt-shortcut-cancel" class="shortcut-desc">Cancel / Close</span>
+          <div class="kbd-wrap">
+            <kbd>Esc</kbd>
+          </div>
+        </div>
+        <button type="button" id="shortcuts-settings-btn" class="shortcuts-settings-btn">Change shortcuts</button>
+      </section>
+
+      <a id="coffee-link" class="coffee-btn" href="https://www.paypal.com/ncp/payment/62GKBN5BDSAWL" target="_blank" rel="noopener noreferrer">
+        <span class="coffee-icon">☕</span>
+        <span id="txt-coffee" class="coffee-text">Buy me a coffee</span>
+      </a>
+      </section>
+
+      <section id="recorder-view" class="view" hidden>
+        <div class="view-header">
+          <button type="button" id="recorder-back-btn" class="view-back-btn" aria-label="Back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+          <div class="view-header-text">
+            <span id="txt-rec-title" class="view-title">Screen Recorder</span>
+            <span id="txt-rec-subtitle" class="view-subtitle">Record a tab, a window or the whole screen</span>
+          </div>
+          <span class="rec-indicator" id="rec-indicator" hidden></span>
+        </div>
+
+        <div class="rec-stats" id="rec-stats" hidden>
+          <div class="rec-stat">
+            <span id="txt-rec-elapsed" class="rec-stat-label">Elapsed</span>
+            <span id="rec-elapsed" class="rec-stat-value">00:00</span>
+          </div>
+          <div class="rec-stat">
+            <span id="txt-rec-size" class="rec-stat-label">Size</span>
+            <span id="rec-size" class="rec-stat-value">0 KB</span>
+          </div>
+        </div>
+
+        <p id="txt-rec-source-hint" class="rec-note">Chrome asks what to share: pick a tab, a window or an entire screen.</p>
+
+        <div class="settings-grid" id="rec-settings">
+          <div class="setting-item">
+            <label id="txt-rec-framerate" class="setting-label" for="rec-fps-select">Frame rate</label>
+            <select id="rec-fps-select" class="custom-select">
+              <option value="30">30 fps</option>
+              <option value="60" selected>60 fps</option>
+              <option value="120">120 fps</option>
+              <option value="0">Unlimited</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label id="txt-rec-quality" class="setting-label" for="rec-quality-select">Quality</label>
+            <select id="rec-quality-select" class="custom-select">
+              <option value="standard">Standard</option>
+              <option value="high" selected>High</option>
+              <option value="ultra">Ultra</option>
+            </select>
+          </div>
+
+          <div class="setting-item setting-item-wide">
+            <label id="txt-rec-format" class="setting-label" for="rec-format-select">Format</label>
+            <select id="rec-format-select" class="custom-select"></select>
+          </div>
+        </div>
+
+        <label class="rec-check" for="rec-mic-toggle">
+          <input type="checkbox" id="rec-mic-toggle" />
+          <span id="txt-rec-microphone">Include microphone</span>
+        </label>
+
+        <p id="txt-rec-mp4-note" class="rec-note rec-note-muted" hidden>MP4 is written when you stop.</p>
+        <p id="txt-rec-watermark" class="rec-note rec-note-muted">A small ShareDOM badge is added in the bottom corner.</p>
+        <p id="txt-rec-buffer" class="rec-note rec-note-muted">Recording is buffered on disk, so long sessions never fill memory.</p>
+
+        <p id="rec-status" class="rec-status">Ready to record</p>
+
+        <button type="button" id="rec-start-btn" class="cta-button cta-record">
+          <div class="cta-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="7"></circle>
+            </svg>
+          </div>
+          <div class="cta-text">
+            <span id="txt-rec-start" class="cta-title">Start recording</span>
+          </div>
+        </button>
+
+        <button type="button" id="rec-stop-btn" class="cta-button cta-stop" hidden>
+          <div class="cta-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="7" width="10" height="10" rx="2"></rect>
+            </svg>
+          </div>
+          <div class="cta-text">
+            <span id="txt-rec-stop" class="cta-title">Stop &amp; save</span>
+          </div>
+        </button>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span id="txt-footer">Zero dependencies DOM snapshotter</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
