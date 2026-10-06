@@ -27,6 +27,8 @@ export interface PopupTranslations {
   btnConsoleLogsSubtitle: string;
   btnNetworkRequests: string;
   btnNetworkRequestsSubtitle: string;
+  btnArea: string;
+  btnAreaSubtitle: string;
   btnRecord: string;
   btnRecordSubtitle: string;
   defaultSettings: string;
@@ -42,6 +44,7 @@ export interface PopupTranslations {
   shortcutsTitle: string;
   shortcutInspect: string;
   shortcutRecord: string;
+  shortcutArea: string;
   shortcutParentChild: string;
   shortcutCapture: string;
   shortcutCancel: string;
@@ -74,6 +77,7 @@ export interface OverlayTranslations {
   parent: string;
   capture: string;
   exit: string;
+  areaPrompt: string;
 }
 
 export interface ModalTranslations {
@@ -126,13 +130,16 @@ export interface ModalTranslations {
   networkCopyError: string;
   noLogsToCopy: string;
   noRequestsToCopy: string;
-  captureMode: string;
-  modeDom: string;
-  modeScreen: string;
-  modeDomTooltip: string;
-  modeScreenTooltip: string;
-  screenTooLarge: string;
-  screenUnavailable: string;
+  areaTitle: string;
+  areaCopied: string;
+  engineFallback: string;
+  share: string;
+  shareError: string;
+  edit: string;
+  editDone: string;
+  editCancel: string;
+  editUndo: string;
+  editClear: string;
 }
 
 export interface RecorderTranslations {
@@ -159,6 +166,8 @@ export interface RecorderTranslations {
   micPageDenied: string;
   micOpenedTab: string;
   micUnavailable: string;
+  micMuted: string;
+  micPageStarting: string;
   start: string;
   stop: string;
   elapsed: string;

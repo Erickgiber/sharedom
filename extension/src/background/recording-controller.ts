@@ -6,6 +6,8 @@ import {
 } from '../shared/recording';
 
 const OFFSCREEN_URL = 'offscreen.html';
+const MICROPHONE_PAGE = 'microphone.html';
+const MICROPHONE_AUTOSTART_PAGE = `${MICROPHONE_PAGE}?autostart=1`;
 
 let state: RecordingState = {
   status: 'idle',
@@ -77,7 +79,11 @@ async function ensureOffscreenDocument(): Promise<void> {
 
   await chrome.offscreen.createDocument({
     url: OFFSCREEN_URL,
-    reasons: [chrome.offscreen.Reason.DISPLAY_MEDIA, chrome.offscreen.Reason.BLOBS],
+    reasons: [
+      chrome.offscreen.Reason.DISPLAY_MEDIA,
+      chrome.offscreen.Reason.USER_MEDIA,
+      chrome.offscreen.Reason.BLOBS,
+    ],
     justification: 'Records the screen the user picked and buffers it until it is saved.',
   });
 }
@@ -90,14 +96,27 @@ async function closeOffscreenDocument(): Promise<void> {
   }
 }
 
-export async function startRecording(settings: RecordingSettings): Promise<void> {
+async function openMicrophonePage(): Promise<void> {
+  const url = chrome.runtime.getURL(MICROPHONE_AUTOSTART_PAGE);
+  try {
+    const tabs = await chrome.runtime.getContexts({ contextTypes: [chrome.runtime.ContextType.TAB] });
+    const existing = tabs.find((context) => context.documentUrl?.includes(MICROPHONE_PAGE));
+    if (existing && existing.tabId >= 0) {
+      await chrome.tabs.update(existing.tabId, { url, active: true });
+      return;
+    }
+  } catch {}
+  await chrome.tabs.create({ url });
+}
+
+export async function startRecording(settings: RecordingSettings, isMicrophoneChecked = false): Promise<void> {
   if (state.status !== 'idle' && state.status !== 'error') return;
 
   setState({ status: 'starting', bytes: 0, startedAt: 0, settings, messageKey: undefined });
 
   try {
     await ensureOffscreenDocument();
-    await chrome.runtime.sendMessage({ type: 'RECORDER_START', settings });
+    await chrome.runtime.sendMessage({ type: 'RECORDER_START', settings, isMicrophoneChecked });
   } catch {
     await closeOffscreenDocument();
     setState({ status: 'error', messageKey: 'statusError' });
@@ -164,7 +183,15 @@ interface OffscreenSaveMessage {
   bytes: number;
 }
 
-export type OffscreenMessage = OffscreenStatusMessage | OffscreenProgressMessage | OffscreenSaveMessage;
+interface OffscreenMicrophonePermissionMessage {
+  type: 'RECORDER_MIC_PERMISSION';
+}
+
+export type OffscreenMessage =
+  | OffscreenStatusMessage
+  | OffscreenProgressMessage
+  | OffscreenSaveMessage
+  | OffscreenMicrophonePermissionMessage;
 
 async function saveRecording(message: OffscreenSaveMessage): Promise<void> {
   try {
@@ -200,6 +227,12 @@ export function handleOffscreenMessage(message: OffscreenMessage): boolean {
     if (message.status === 'error') {
       void closeOffscreenDocument();
     }
+    return true;
+  }
+
+  if (message.type === 'RECORDER_MIC_PERMISSION') {
+    setState({ status: 'idle', messageKey: 'micOpenedTab' });
+    void openMicrophonePage();
     return true;
   }
 

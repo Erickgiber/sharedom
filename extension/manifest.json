@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ShareDOM - DOM Screenshot Inspector",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Inspect and capture any DOM element, console logs and network requests, and record your screen in high quality. 8 languages.",
   "icons": {
     "16": "icons/icon-16.png",
@@ -41,10 +41,17 @@
       },
       "description": "Toggle DOM Inspector"
     },
+    "capture-area": {
+      "suggested_key": {
+        "default": "Alt+Shift+F",
+        "mac": "Alt+Shift+F"
+      },
+      "description": "Capture a screen area"
+    },
     "toggle-recording": {
       "suggested_key": {
-        "default": "Alt+Shift+R",
-        "mac": "Alt+Shift+R"
+        "default": "Alt+Shift+V",
+        "mac": "Alt+Shift+V"
       },
       "description": "Start or stop screen recording"
     }

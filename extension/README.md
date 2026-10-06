@@ -20,6 +20,9 @@ Extensión profesional para Google Chrome basada en el motor de la librería **`
   - `Esc`: Cancela o cierra el inspector inmediatamente.
   - `Alt + Shift + S` (o `Cmd + Shift + S` en macOS): Atajo global para activar el inspector en la pestaña activa.
 - 🛡️ **Aislamiento con Shadow DOM**: La interfaz y overlays de la extensión no interfieren con el CSS de la página web ni son capturados en la imagen final.
+- 🖼️ **Captura fiel de la pantalla**: Cada elemento se captura copiando los píxeles reales que compone el navegador (iframes, WebGL, vídeo y desenfoques incluidos). Si esos píxeles no se pueden leer —por ejemplo, cuando el elemento es más grande que el área visible— el motor `sharedom` lo reconstruye desde el DOM y el modal lo avisa.
+- ✂️ **Captura de área libre**: Arrastra un rectángulo sobre la página, como en el capturador nativo de macOS o Windows. La imagen se copia al portapapeles en el acto, con su aviso, y se abre el panel para compartirla, descargarla o exportarla a PDF.
+- ✏️ **Lápiz de edición**: Dibuja sobre cualquier captura (seis colores, tres grosores, deshacer y borrar) antes de copiarla, compartirla o descargarla.
 - 📋 **Copiar al portapapeles**: Copia la imagen PNG directamente al portapapeles del sistema operativo (`navigator.clipboard.write`).
 - 💾 **Descarga instantánea & ZIP Multipágina**: Descarga capturas optimizadas. Si la captura contiene múltiples páginas de red o consola, las empaqueta automáticamente en un archivo `.zip` comprimido con cero dependencias.
 - ⏱️ **Captura desde la carga (opt-in por sitio)**: Interruptor en el popup que activa el tracker en `document_start` para ese origen concreto, para no perder los mensajes de consola emitidos durante la carga de la página.
@@ -27,9 +30,8 @@ Extensión profesional para Google Chrome basada en el motor de la librería **`
 - 📊 **Captura de Consola y Red**: Exporta los registros de la consola del navegador y tablas de peticiones HTTP (método, endpoint, status, duración) como imágenes compactas (12-15 filas por página), documentos PDF multipágina o archivos ZIP.
 - 📄 **Exportación a PDF**: Descarga cualquier elemento o captura especializada directamente como documento PDF formateado.
 - 🎨 **Controles en tiempo real**:
-  - **Resolución**: `1x`, `2x (Retina HD)`, `3x (Ultra HD)`.
   - **Formato**: `PNG` (con canal alfa), `JPEG`, `WebP`.
-  - **Fondo**: `Transparente`, `Blanco`, `Oscuro` o `Color personalizado`.
+  - **Resolución** (`1x`, `2x`, `3x`) y **Fondo** (`Transparente`, `Blanco`, `Oscuro` o `Color personalizado`): disponibles cuando la captura la renderiza el motor `sharedom`; la captura fiel usa la resolución de tu pantalla y el fondo que pinta la página.
 - 🎥 **Grabador de pantalla integrado en el popup**: Graba una pestaña, una ventana o la pantalla completa, con fps sin límite opcional, micrófono, presets de calidad, salida MP4 o WebM y marca de agua discreta. La grabación sigue corriendo con el popup cerrado y el buffer va a disco, no a memoria.
 - 🆕 **Novedades al actualizar**: La primera vez que abres el popup tras una actualización aparece una tarjeta con los cambios de esa versión, en tu idioma, y solo esa vez.
 - 🌐 **8 idiomas (EN / ES / ZH / JA / PT / DE / KO / RU)**: Selector con banderas en el popup, igual que la landing.
@@ -80,9 +82,13 @@ Esto compilará los módulos TypeScript y generará la carpeta lista para produc
    - Si deseas capturar el contenedor exterior o padre, presiona la tecla `↑`.
 4. **Hacer clic para capturar**:
    - Al hacer clic, se abrirá el panel flotante con la previsualización en vivo.
-   - Ajusta la escala (1x, 2x, 3x) o el formato si lo deseas.
+   - Ajusta el formato si lo deseas, o pulsa el **lápiz** para dibujar sobre la captura.
    - Haz clic en **"Copy Image"** para pegar directamente en Slack, Discord, Notion, Figma, etc.
-   - Haz clic en **"Download"** para guardar el archivo en tu disco.
+   - Haz clic en **"Download"** para guardar el archivo en tu disco, o en el botón de **compartir** para enviarlo con el diálogo del sistema (en páginas HTTPS y navegadores con Web Share).
+
+### ✂️ Captura de área
+
+Pulsa **"Capturar Área de Pantalla"** en el popup, usa `Alt + Shift + F` (`⌥ + ⇧ + F` en macOS) o el menú contextual **"Capture Screen Area"**. La página se oscurece y el cursor pasa a ser una cruz: arrastra para delimitar el recorte y suelta. La imagen queda copiada en el portapapeles de inmediato y se abre el panel con las opciones de compartir, descargar, PDF y lápiz. `Esc` cancela. El recorte se limita a lo que muestra la pestaña: Chrome no permite a una extensión leer el resto del escritorio sin su diálogo de compartir pantalla.
 
 ---
 
@@ -99,9 +105,9 @@ Pulsa **"Grabar Pantalla"** en el popup y la ventana cambia a la vista del graba
 
 > **Por qué WebM por defecto**: el muxer MP4 de Chrome no entrega datos mientras grabas — escribe el archivo entero al detener. Eso tiene dos consecuencias: el tamaño no se puede medir en vivo (se muestra `—` hasta el final) y el navegador retiene el vídeo en memoria hasta que paras, así que la grabación se detiene sola al llegar al límite seguro de 2 GB estimados. WebM entrega fragmentos continuamente: tamaño real en vivo y escritura a disco sobre la marcha. Elige MP4 cuando necesites compatibilidad directa con un editor; WebM para sesiones largas.
 
-> **Micrófono**: Chrome no permite mostrar el diálogo de permiso de micrófono dentro de un popup de extensión — lo deniega en el acto, sin preguntar. Por eso, al activar la casilla se abre una pestaña propia (`microphone.html`) donde sí aparece el diálogo; el permiso queda concedido al origen de la extensión y el documento oculto que graba lo hereda. Si ya estaba concedido no se abre nada. Y si lo deniegas, la grabación sigue y el estado lo dice (*"Grabando · sin micrófono"*) en vez de ignorarlo en silencio.
+> **Micrófono**: Chrome no permite mostrar el diálogo de permiso de micrófono dentro de un popup de extensión — lo deniega en el acto, sin preguntar. Por eso el permiso se pide en una pestaña propia (`microphone.html`), donde sí aparece el diálogo; queda concedido al origen de la extensión y el documento oculto que graba lo hereda. La pestaña se abre al activar la casilla y también **al iniciar una grabación con micrófono sin el permiso concedido**, sea desde el popup o desde el atajo: en ese caso la grabación arranca sola en cuanto lo concedes, y la pestaña se cierra al empezar a grabar. Nunca se graba sin micrófono en silencio: si el dispositivo no está disponible o el sistema lo tiene silenciado, el estado lo dice (*"Grabando · sin micrófono"* / *"Grabando · micrófono silenciado"*).
 
-Atajo: `Alt + Shift + R` (`⌥ + ⇧ + R` en macOS) inicia y detiene la grabación sin abrir el popup.
+Atajo: `Alt + Shift + V` (`⌥ + ⇧ + V` en macOS) inicia y detiene la grabación sin abrir el popup.
 
 ### La grabación sobrevive al popup
 
@@ -212,7 +218,10 @@ extension/
 │   │   ├── page-tracker.ts        # Tracker de consola y red en el mundo MAIN
 │   │   ├── inspector.ts           # Interceptación de eventos y navegación DOM
 │   │   ├── overlay.ts             # Shadow DOM host y recuadros de resaltado
-│   │   ├── modal.ts               # Modal flotante con preview, copiado y descarga
+│   │   ├── modal.ts               # Modal flotante con preview, copiado, compartir y descarga
+│   │   ├── screen-capture.ts      # Lectura de los píxeles reales de la pestaña y recorte
+│   │   ├── area-selector.ts       # Selección de área libre arrastrando sobre la página
+│   │   ├── annotator.ts           # Lápiz para dibujar sobre la captura
 │   │   └── styles.ts              # Estilos CSS encapsulados
 │   ├── shared/
 │   │   ├── i18n/                  # Traducciones en 8 idiomas (un archivo por idioma)

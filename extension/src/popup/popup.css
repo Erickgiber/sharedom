@@ -308,6 +308,12 @@ body {
   border: 1px solid rgba(167, 139, 250, 0.25);
 }
 
+.icon-area {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
 .icon-network {
   background: rgba(56, 189, 248, 0.15);
   color: #38bdf8;

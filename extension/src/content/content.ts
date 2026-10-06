@@ -41,6 +41,11 @@ if (!(window as any).__sharedom_content_script_loaded__) {
         sendResponse({ success: true, active: true });
         break;
 
+      case 'START_AREA_CAPTURE':
+        inspector.captureArea(message.options);
+        sendResponse({ success: true, active: true });
+        break;
+
       case 'STOP_INSPECTOR':
         inspector.stop();
         sendResponse({ success: true, active: false });

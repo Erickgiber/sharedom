@@ -701,6 +701,153 @@ export const overlayStyles = `
   text-align: center;
 }
 
+.sharedom-area-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+  cursor: crosshair;
+  background: rgba(0, 0, 0, 0.35);
+  user-select: none;
+  touch-action: none;
+  z-index: 2147483646;
+}
+
+.sharedom-area-layer.is-selecting {
+  background: transparent;
+}
+
+.sharedom-area-hint {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(18, 18, 24, 0.94);
+  color: #f4f4f5;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.sharedom-area-selection {
+  position: absolute;
+  border: 1px solid #ffffff;
+  outline: 1px dashed #6366f1;
+  outline-offset: -1px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.sharedom-area-size {
+  position: absolute;
+  left: 0;
+  bottom: -26px;
+  background: #0f172a;
+  color: #38bdf8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  white-space: nowrap;
+}
+
+.sharedom-annotator {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(9, 9, 11, 0.94);
+  pointer-events: auto;
+  z-index: 2147483647;
+  animation: sharedomFadeIn 0.15s ease;
+}
+
+.sharedom-annotator-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #111116;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sharedom-annotator-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px 0 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sharedom-annotator-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.sharedom-annotator-color:hover {
+  transform: scale(1.1);
+}
+
+.sharedom-annotator-color.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px #6366f1;
+}
+
+.sharedom-annotator-size {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1e1e26;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sharedom-annotator-size span {
+  display: block;
+  border-radius: 50%;
+  background: #e4e4e7;
+}
+
+.sharedom-annotator-size.active {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.25);
+}
+
+.sharedom-annotator-spacer {
+  flex: 1;
+}
+
+.sharedom-annotator-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.sharedom-annotator-canvas {
+  max-width: 100%;
+  max-height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+  border-radius: 4px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
 @media (max-width: 600px) {
   .sharedom-modal-footer {
     flex-direction: column;

@@ -9,6 +9,7 @@ import { drawWatermark } from '../shared/watermark';
 interface StartMessage {
   type: 'RECORDER_START';
   settings: RecordingSettings;
+  isMicrophoneChecked?: boolean;
 }
 
 interface StopMessage {
@@ -23,6 +24,7 @@ const MAX_BITRATE = 120_000_000;
  * chunks are requested from the frame pipeline instead: it is driven by the media stack.
  */
 const CHUNK_INTERVAL_MS = 1000;
+const AUDIO_CONTEXT_RESUME_TIMEOUT_MS = 1500;
 const BUFFER_FILE = 'sharedom-recording.bin';
 /** Ceiling for containers the browser keeps in memory until the recording stops. */
 const BUFFERED_MEMORY_LIMIT_BYTES = 2 * 1024 * 1024 * 1024;
@@ -192,25 +194,73 @@ async function buildStream(settings: RecordingSettings): Promise<MediaStream> {
   }
 }
 
-async function mixAudio(stream: MediaStream): Promise<{ tracks: MediaStreamTrack[]; ok: boolean }> {
-  const sourceAudio = stream.getAudioTracks();
-
+async function microphonePermission(): Promise<PermissionState | null> {
   try {
-    microphoneStream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true },
+    const status = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+    return status.state;
+  } catch {
+    return null;
+  }
+}
+
+async function openMicrophone(): Promise<MediaStream | null> {
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
     });
   } catch {
-    // The extension origin has no microphone grant yet; the popup asks for it when enabling it.
-    return { tracks: sourceAudio, ok: false };
+    try {
+      return await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      return null;
+    }
+  }
+}
+
+async function resumeAudioContext(context: AudioContext): Promise<boolean> {
+  const isRunning = () => context.state === 'running';
+  if (isRunning()) return true;
+
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, AUDIO_CONTEXT_RESUME_TIMEOUT_MS));
+  await Promise.race([context.resume().catch(() => undefined), timeout]);
+  return isRunning();
+}
+
+function reportMicrophoneState(track: MediaStreamTrack): void {
+  if (recorder?.state !== 'recording') return;
+  report({
+    type: 'RECORDER_STATUS',
+    status: 'recording',
+    messageKey: track.muted ? 'micMuted' : undefined,
+  });
+}
+
+async function mixAudio(stream: MediaStream): Promise<{ tracks: MediaStreamTrack[]; messageKey?: string }> {
+  const sourceAudio = stream.getAudioTracks();
+
+  microphoneStream = await openMicrophone();
+  const [microphoneTrack] = microphoneStream?.getAudioTracks() ?? [];
+  if (!microphoneStream || !microphoneTrack) {
+    return { tracks: sourceAudio, messageKey: 'micUnavailable' };
   }
 
-  if (sourceAudio.length === 0) return { tracks: microphoneStream.getAudioTracks(), ok: true };
+  microphoneTrack.addEventListener('mute', () => reportMicrophoneState(microphoneTrack));
+  microphoneTrack.addEventListener('unmute', () => reportMicrophoneState(microphoneTrack));
+  const messageKey = microphoneTrack.muted ? 'micMuted' : undefined;
 
-  audioContext = new AudioContext();
-  const destination = audioContext.createMediaStreamDestination();
-  audioContext.createMediaStreamSource(new MediaStream(sourceAudio)).connect(destination);
-  audioContext.createMediaStreamSource(microphoneStream).connect(destination);
-  return { tracks: destination.stream.getAudioTracks(), ok: true };
+  if (sourceAudio.length === 0) return { tracks: [microphoneTrack], messageKey };
+
+  const context = new AudioContext();
+  if (!(await resumeAudioContext(context))) {
+    void context.close().catch(() => undefined);
+    return { tracks: [microphoneTrack], messageKey };
+  }
+
+  audioContext = context;
+  const destination = context.createMediaStreamDestination();
+  context.createMediaStreamSource(new MediaStream(sourceAudio)).connect(destination);
+  context.createMediaStreamSource(microphoneStream).connect(destination);
+  return { tracks: destination.stream.getAudioTracks(), messageKey };
 }
 
 function releaseStreams(): void {
@@ -277,6 +327,14 @@ async function start(message: StartMessage): Promise<void> {
     return;
   }
 
+  if (settings.microphone && !message.isMicrophoneChecked) {
+    const permission = await microphonePermission();
+    if (permission === 'prompt' || permission === 'denied') {
+      report({ type: 'RECORDER_MIC_PERMISSION' });
+      return;
+    }
+  }
+
   await removeBufferFile();
   recordedBytes = 0;
   writeQueue = Promise.resolve();
@@ -300,9 +358,9 @@ async function start(message: StartMessage): Promise<void> {
     return;
   }
 
-  const mixed = settings.microphone
+  const mixed: { tracks: MediaStreamTrack[]; messageKey?: string } = settings.microphone
     ? await mixAudio(sourceStream)
-    : { tracks: sourceStream.getAudioTracks(), ok: true };
+    : { tracks: sourceStream.getAudioTracks() };
   const audioTracks = mixed.tracks;
 
   await loadWatermarkLogo();
@@ -357,7 +415,7 @@ async function start(message: StartMessage): Promise<void> {
     status: 'recording',
     startedAt: recordingStartedAt,
     bytes: 0,
-    messageKey: mixed.ok ? undefined : 'micUnavailable',
+    messageKey: mixed.messageKey,
   });
 }
 

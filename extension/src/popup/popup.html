@@ -103,6 +103,22 @@
           </div>
         </button>
 
+        <button id="capture-area-btn" class="special-btn">
+          <div class="special-btn-icon icon-area">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 9V6a2 2 0 0 1 2-2h3"></path>
+              <path d="M15 4h3a2 2 0 0 1 2 2v3"></path>
+              <path d="M20 15v3a2 2 0 0 1-2 2h-3"></path>
+              <path d="M9 20H6a2 2 0 0 1-2-2v-3"></path>
+              <circle cx="12" cy="12" r="2.5"></circle>
+            </svg>
+          </div>
+          <div class="special-btn-text">
+            <span id="btn-area-title" class="special-btn-title">Capture Screen Area</span>
+            <span id="btn-area-subtitle" class="special-btn-subtitle">Drag to select; copied to the clipboard instantly</span>
+          </div>
+        </button>
+
         <button id="capture-console-btn" class="special-btn">
           <div class="special-btn-icon icon-console">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -215,13 +231,23 @@
           </div>
         </div>
         <div class="shortcut-row">
+          <span id="txt-shortcut-area" class="shortcut-desc">Capture area</span>
+          <div class="kbd-wrap">
+            <kbd class="os-modifier">Alt</kbd>
+            <span>+</span>
+            <kbd>Shift</kbd>
+            <span>+</span>
+            <kbd>F</kbd>
+          </div>
+        </div>
+        <div class="shortcut-row">
           <span id="txt-shortcut-record" class="shortcut-desc">Record screen</span>
           <div class="kbd-wrap">
             <kbd class="os-modifier">Alt</kbd>
             <span>+</span>
             <kbd>Shift</kbd>
             <span>+</span>
-            <kbd>R</kbd>
+            <kbd>V</kbd>
           </div>
         </div>
         <div class="shortcut-row">
