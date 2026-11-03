@@ -14,6 +14,7 @@ import { downloadZip } from './zip-writer';
 
 export type {
     CaptureOptions,
+    CaptureClip,
     DomTarget,
     DOMTarget,
     PdfOptions,

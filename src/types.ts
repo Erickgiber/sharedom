@@ -1,5 +1,12 @@
 export type Language = 'en' | 'es' | 'zh' | 'ja' | 'pt' | 'de' | 'ko' | 'ru';
 
+export interface CaptureClip {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 export interface CaptureOptions {
     scale?: number;
     backgroundColor?: string;
@@ -7,6 +14,7 @@ export interface CaptureOptions {
     format?: 'png' | 'jpeg' | 'webp';
     width?: number;
     height?: number;
+    clip?: CaptureClip;
     optimize?: boolean;
     language?: Language;
 }

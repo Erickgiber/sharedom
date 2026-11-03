@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sharedom - DOM Capture</title>
+  <title>ShareDOM - DOM Capture</title>
+  <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -31,12 +32,18 @@
           </svg>
         </div>
         <div class="brand-text">
-          <span class="title">sharedom</span>
+          <span class="title">ShareDOM</span>
           <span class="badge" id="version-badge"></span>
         </div>
       </div>
 
       <div class="header-actions">
+        <button type="button" class="header-icon-btn" id="settings-btn" aria-label="Settings" title="Settings">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
         <div class="lang-select" id="lang-select">
           <button type="button" class="lang-select-trigger" id="lang-select-trigger" aria-haspopup="menu" aria-expanded="false">
             <span class="lang-flag" id="lang-flag"></span>
@@ -174,17 +181,6 @@
             </label>
           </div>
           <span id="early-capture-hint" class="early-capture-hint" style="display: none;"></span>
-          <div class="early-capture-main early-capture-divider">
-            <div class="early-capture-text">
-              <span id="txt-image-access-title" class="early-capture-host">Cross-origin images</span>
-              <span id="txt-image-access-desc" class="early-capture-desc">Lets captures include images other domains block. Applies to every site.</span>
-            </div>
-            <label class="switch" for="image-access-toggle">
-              <input type="checkbox" id="image-access-toggle" />
-              <span class="switch-track"><span class="switch-thumb"></span></span>
-            </label>
-          </div>
-          <span id="image-access-hint" class="early-capture-hint" style="display: none;"></span>
           <span class="early-capture-legend">
             <span class="legend-dot legend-dot-watching"></span>
             <span id="txt-early-legend">Green dot on the extension icon: this site is being watched from page load.</span>
@@ -365,6 +361,68 @@
             <span id="txt-rec-stop" class="cta-title">Stop &amp; save</span>
           </div>
         </button>
+      </section>
+
+      <section id="settings-view" class="view" hidden>
+        <div class="view-header">
+          <button type="button" id="settings-back-btn" class="view-back-btn" aria-label="Back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+          <div class="view-header-text">
+            <span id="txt-settings-title" class="view-title">Settings</span>
+            <span id="txt-settings-subtitle" class="view-subtitle">Choose what happens after each DOM or area capture</span>
+          </div>
+        </div>
+
+        <section class="section">
+          <span id="txt-settings-capture" class="section-title">After capturing</span>
+          <div class="settings-card">
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <span id="txt-show-modal-title" class="settings-row-title">Show the options window</span>
+                <span id="txt-show-modal-desc" class="settings-row-desc">Preview, resolution, pencil and export right after each capture.</span>
+              </div>
+              <label class="switch" for="show-modal-toggle">
+                <input type="checkbox" id="show-modal-toggle" />
+                <span class="switch-track"><span class="switch-thumb"></span></span>
+              </label>
+            </div>
+            <div class="settings-row settings-divider">
+              <div class="settings-row-text">
+                <span id="txt-auto-copy-title" class="settings-row-title">Copy automatically</span>
+                <span id="txt-auto-copy-desc" class="settings-row-desc">The image goes to the clipboard as soon as it is taken.</span>
+              </div>
+              <label class="switch" for="auto-copy-toggle">
+                <input type="checkbox" id="auto-copy-toggle" />
+                <span class="switch-track"><span class="switch-thumb"></span></span>
+              </label>
+            </div>
+            <span id="auto-copy-hint" class="early-capture-hint" hidden></span>
+          </div>
+        </section>
+
+        <section class="section">
+          <span id="txt-settings-images" class="section-title">Images</span>
+          <div class="settings-card">
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <span id="txt-image-access-title" class="settings-row-title">Cross-origin images</span>
+                <span id="txt-image-access-desc" class="settings-row-desc">Lets captures include images other domains block. Applies to every site.</span>
+              </div>
+              <label class="switch" for="image-access-toggle">
+                <input type="checkbox" id="image-access-toggle" />
+                <span class="switch-track"><span class="switch-thumb"></span></span>
+              </label>
+            </div>
+            <div id="image-access-pending" class="settings-pending" hidden>
+              <span id="txt-image-access-pending" class="settings-row-desc">Chrome has not confirmed access yet.</span>
+              <button type="button" id="image-access-grant-btn" class="banner-btn banner-btn-primary">Grant access</button>
+            </div>
+            <span id="image-access-hint" class="early-capture-hint" style="display: none;"></span>
+          </div>
+        </section>
       </section>
     </main>
 

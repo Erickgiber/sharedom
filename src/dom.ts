@@ -1,4 +1,4 @@
-import { DomTarget } from './types';
+import { CaptureClip, DomTarget } from './types';
 
 export function resolveElement(target: DomTarget): HTMLElement {
     if (typeof document === 'undefined') {
@@ -44,9 +44,18 @@ export function validateElementDimensions(element: HTMLElement): { width: number
     return { width, height };
 }
 
-export function validateOptions(options: { scale?: number; quality?: number; format?: string }): void {
+export function validateOptions(options: {
+    scale?: number;
+    quality?: number;
+    format?: string;
+    clip?: CaptureClip;
+}): void {
     if (options.scale !== undefined && (typeof options.scale !== 'number' || options.scale <= 0)) {
         throw new Error('[sharedom]: Scale option must be a positive number.');
+    }
+
+    if (options.clip !== undefined && !(options.clip.width > 0 && options.clip.height > 0)) {
+        throw new Error('[sharedom]: Clip option must have a positive width and height.');
     }
 
     if (

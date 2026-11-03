@@ -61,7 +61,8 @@ export async function rasterizeElement(
         embedFontFaces(tree.fontFamilies, tree.text),
     ]);
 
-    const size = fitCanvasSize(width, height, options.scale ?? 1);
+    const viewport = options.clip ?? { x: 0, y: 0, width, height };
+    const size = fitCanvasSize(viewport.width, viewport.height, options.scale ?? 1);
     const svgDataUrl = createSvgDataUrl(
         {
             root: tree.root,
@@ -71,7 +72,8 @@ export async function rasterizeElement(
         width,
         height,
         size.width,
-        size.height
+        size.height,
+        viewport
     );
     const dataUrl = await renderSvgToCanvas(svgDataUrl, size, options);
 

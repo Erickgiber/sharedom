@@ -69,6 +69,18 @@ export interface PopupTranslations {
   imageAccessDesc: string;
   imageAccessEnabled: string;
   imageAccessDenied: string;
+  settingsButton: string;
+  settingsTitle: string;
+  settingsSubtitle: string;
+  settingsCaptureSection: string;
+  settingsImagesSection: string;
+  showModalTitle: string;
+  showModalDesc: string;
+  autoCopyTitle: string;
+  autoCopyDesc: string;
+  autoCopyForced: string;
+  imageAccessPending: string;
+  imageAccessGrant: string;
 }
 
 export interface OverlayTranslations {
@@ -131,7 +143,7 @@ export interface ModalTranslations {
   noLogsToCopy: string;
   noRequestsToCopy: string;
   areaTitle: string;
-  areaCopied: string;
+  scaleOriginal: string;
   engineFallback: string;
   share: string;
   shareError: string;

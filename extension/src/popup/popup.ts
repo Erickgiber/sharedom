@@ -27,6 +27,15 @@ import {
   isImageAccessEnabled,
   originPatternFromUrl,
 } from '../shared/early-capture';
+import {
+  CaptureSettings,
+  DEFAULT_CAPTURE_SETTINGS,
+  loadCaptureSettings,
+  markImageAccessPrompted,
+  saveCaptureSettings,
+  shouldCopyAfterCapture,
+  wasImageAccessPrompted,
+} from '../shared/capture-settings';
 
 const inspectBtn = document.getElementById('inspect-btn') as HTMLButtonElement;
 const captureConsoleBtn = document.getElementById('capture-console-btn') as HTMLButtonElement;
@@ -124,8 +133,25 @@ const earlyCaptureHint = document.getElementById('early-capture-hint') as HTMLEl
 const txtEarlyTitle = document.getElementById('txt-early-title') as HTMLElement;
 const txtEarlyDesc = document.getElementById('txt-early-desc') as HTMLElement;
 const txtEarlyLegend = document.getElementById('txt-early-legend') as HTMLElement;
+const settingsBtn = document.getElementById('settings-btn') as HTMLButtonElement;
+const settingsView = document.getElementById('settings-view') as HTMLElement;
+const settingsBackBtn = document.getElementById('settings-back-btn') as HTMLButtonElement;
+const txtSettingsTitle = document.getElementById('txt-settings-title') as HTMLElement;
+const txtSettingsSubtitle = document.getElementById('txt-settings-subtitle') as HTMLElement;
+const txtSettingsCapture = document.getElementById('txt-settings-capture') as HTMLElement;
+const txtSettingsImages = document.getElementById('txt-settings-images') as HTMLElement;
+const showModalToggle = document.getElementById('show-modal-toggle') as HTMLInputElement;
+const txtShowModalTitle = document.getElementById('txt-show-modal-title') as HTMLElement;
+const txtShowModalDesc = document.getElementById('txt-show-modal-desc') as HTMLElement;
+const autoCopyToggle = document.getElementById('auto-copy-toggle') as HTMLInputElement;
+const txtAutoCopyTitle = document.getElementById('txt-auto-copy-title') as HTMLElement;
+const txtAutoCopyDesc = document.getElementById('txt-auto-copy-desc') as HTMLElement;
+const autoCopyHint = document.getElementById('auto-copy-hint') as HTMLElement;
 const imageAccessToggle = document.getElementById('image-access-toggle') as HTMLInputElement;
 const imageAccessHint = document.getElementById('image-access-hint') as HTMLElement;
+const imageAccessPending = document.getElementById('image-access-pending') as HTMLElement;
+const txtImageAccessPending = document.getElementById('txt-image-access-pending') as HTMLElement;
+const imageAccessGrantBtn = document.getElementById('image-access-grant-btn') as HTMLButtonElement;
 const txtImageAccessTitle = document.getElementById('txt-image-access-title') as HTMLElement;
 const txtImageAccessDesc = document.getElementById('txt-image-access-desc') as HTMLElement;
 
@@ -139,6 +165,8 @@ let currentTab: chrome.tabs.Tab | null = null;
 let isRestrictedPage = false;
 let hasPermissionError = false;
 let earlyCapturePattern: string | null = null;
+let captureSettings: CaptureSettings = { ...DEFAULT_CAPTURE_SETTINGS };
+let shouldPromptImageAccess = false;
 
 function isUrlRestricted(url?: string): boolean {
   if (!url) return true;
@@ -230,8 +258,7 @@ function applyLanguage(lang: ExtensionLanguage): void {
   if (txtEarlyTitle) txtEarlyTitle.textContent = t.earlyCaptureTitle;
   if (txtEarlyDesc) txtEarlyDesc.textContent = t.earlyCaptureDesc;
   if (txtEarlyLegend) txtEarlyLegend.textContent = t.earlyCaptureLegend;
-  if (txtImageAccessTitle) txtImageAccessTitle.textContent = t.imageAccessTitle;
-  if (txtImageAccessDesc) txtImageAccessDesc.textContent = t.imageAccessDesc;
+  applySettingsLanguage(lang);
   if (txtDefaultSettings) txtDefaultSettings.textContent = t.defaultSettings;
   if (txtResolutionLabel) txtResolutionLabel.textContent = t.resolution;
   if (txtFormatLabel) txtFormatLabel.textContent = t.format;
@@ -370,6 +397,8 @@ async function triggerTabAction(actionType: TabAction): Promise<void> {
     return;
   }
 
+  await requestImageAccessOnce();
+
   const inspectorOptions = {
     scale: Number(scaleSelect.value),
     format: formatSelect.value as 'png' | 'jpeg' | 'webp',
@@ -414,9 +443,6 @@ async function refreshEarlyCaptureUI(): Promise<void> {
   if (earlyCaptureToggle) {
     earlyCaptureToggle.checked = await isEarlyCaptureEnabled(earlyCapturePattern);
   }
-  if (imageAccessToggle) {
-    imageAccessToggle.checked = await isImageAccessEnabled();
-  }
 }
 
 function showImageAccessHint(message: string, isError = false): void {
@@ -426,26 +452,108 @@ function showImageAccessHint(message: string, isError = false): void {
   imageAccessHint.style.display = message ? 'block' : 'none';
 }
 
+function applySettingsLanguage(lang: ExtensionLanguage): void {
+  const t = translations[lang].popup;
+
+  settingsBtn.title = t.settingsButton;
+  settingsBtn.setAttribute('aria-label', t.settingsButton);
+  settingsBackBtn.setAttribute('aria-label', translations[lang].recorder.back);
+  txtSettingsTitle.textContent = t.settingsTitle;
+  txtSettingsSubtitle.textContent = t.settingsSubtitle;
+  txtSettingsCapture.textContent = t.settingsCaptureSection;
+  txtSettingsImages.textContent = t.settingsImagesSection;
+  txtShowModalTitle.textContent = t.showModalTitle;
+  txtShowModalDesc.textContent = t.showModalDesc;
+  txtAutoCopyTitle.textContent = t.autoCopyTitle;
+  txtAutoCopyDesc.textContent = t.autoCopyDesc;
+  autoCopyHint.textContent = t.autoCopyForced;
+  txtImageAccessTitle.textContent = t.imageAccessTitle;
+  txtImageAccessDesc.textContent = t.imageAccessDesc;
+  txtImageAccessPending.textContent = t.imageAccessPending;
+  imageAccessGrantBtn.textContent = t.imageAccessGrant;
+}
+
+function renderCaptureSettings(): void {
+  showModalToggle.checked = captureSettings.showModal;
+  autoCopyToggle.checked = shouldCopyAfterCapture(captureSettings);
+  autoCopyToggle.disabled = !captureSettings.showModal;
+  autoCopyHint.hidden = captureSettings.showModal;
+  imageAccessToggle.checked = captureSettings.crossOriginImages;
+}
+
+async function refreshImageAccessPending(): Promise<void> {
+  const isGranted = await isImageAccessEnabled();
+  imageAccessPending.hidden = !captureSettings.crossOriginImages || isGranted;
+}
+
+async function updateCaptureSettings(changes: Partial<CaptureSettings>): Promise<void> {
+  captureSettings = { ...captureSettings, ...changes };
+  renderCaptureSettings();
+  try {
+    await saveCaptureSettings(captureSettings);
+  } catch {}
+}
+
+async function initCaptureSettings(): Promise<void> {
+  captureSettings = await loadCaptureSettings();
+  renderCaptureSettings();
+  const [isGranted, wasPrompted] = await Promise.all([isImageAccessEnabled(), wasImageAccessPrompted()]);
+  shouldPromptImageAccess = captureSettings.crossOriginImages && !isGranted && !wasPrompted;
+  imageAccessPending.hidden = !captureSettings.crossOriginImages || isGranted;
+}
+
+async function requestImageAccess(): Promise<boolean> {
+  const t = translations[currentLanguage].popup;
+  try {
+    const granted = await enableImageAccess();
+    showImageAccessHint(granted ? t.imageAccessEnabled : t.imageAccessDenied, !granted);
+    return granted;
+  } catch {
+    showImageAccessHint(t.earlyCaptureError, true);
+    return false;
+  } finally {
+    await refreshImageAccessPending();
+  }
+}
+
+async function requestImageAccessOnce(): Promise<void> {
+  if (!shouldPromptImageAccess) return;
+  shouldPromptImageAccess = false;
+  const request = enableImageAccess().catch(() => false);
+  await markImageAccessPrompted();
+  await request;
+}
+
+showModalToggle?.addEventListener('change', () => {
+  void updateCaptureSettings({ showModal: showModalToggle.checked });
+});
+
+autoCopyToggle?.addEventListener('change', () => {
+  void updateCaptureSettings({ autoCopy: autoCopyToggle.checked });
+});
+
 imageAccessToggle?.addEventListener('change', async () => {
   const shouldEnable = imageAccessToggle.checked;
-  const t = translations[currentLanguage].popup;
   imageAccessToggle.disabled = true;
 
   try {
     if (shouldEnable) {
-      const granted = await enableImageAccess();
-      imageAccessToggle.checked = granted;
-      showImageAccessHint(granted ? t.imageAccessEnabled : t.imageAccessDenied, !granted);
+      const request = requestImageAccess();
+      await updateCaptureSettings({ crossOriginImages: true });
+      await request;
     } else {
-      await disableImageAccess();
+      await updateCaptureSettings({ crossOriginImages: false });
+      await disableImageAccess().catch(() => undefined);
       showImageAccessHint('');
+      await refreshImageAccessPending();
     }
-  } catch {
-    imageAccessToggle.checked = !shouldEnable;
-    showImageAccessHint(t.earlyCaptureError, true);
   } finally {
     imageAccessToggle.disabled = false;
   }
+});
+
+imageAccessGrantBtn?.addEventListener('click', () => {
+  void requestImageAccess();
 });
 
 earlyCaptureToggle?.addEventListener('change', async () => {
@@ -766,20 +874,36 @@ function stopStatePolling(): void {
   statePollId = null;
 }
 
+function activateView(view: HTMLElement): void {
+  for (const candidate of [mainView, recorderView, settingsView]) {
+    candidate.hidden = candidate !== view;
+  }
+}
+
 function showRecorderView(): void {
-  mainView.hidden = true;
-  recorderView.hidden = false;
+  activateView(recorderView);
   void refreshRecordingState();
   startStatePolling();
 }
 
 function showMainView(): void {
-  recorderView.hidden = true;
-  mainView.hidden = false;
+  activateView(mainView);
   stopStatePolling();
 }
 
+function showSettingsView(): void {
+  activateView(settingsView);
+  stopStatePolling();
+  showImageAccessHint('');
+  void refreshImageAccessPending();
+}
+
 recorderBackBtn?.addEventListener('click', showMainView);
+settingsBackBtn?.addEventListener('click', showMainView);
+settingsBtn?.addEventListener('click', () => {
+  if (settingsView.hidden) showSettingsView();
+  else showMainView();
+});
 
 recStartBtn?.addEventListener('click', async () => {
   await persistRecordingSettings();
@@ -871,4 +995,4 @@ async function initRecorder(): Promise<void> {
 
 buildLanguageMenu();
 initFastSettings();
-Promise.all([loadSettings(), checkActiveTab(), initRecorder(), initWhatsNew()]);
+Promise.all([loadSettings(), checkActiveTab(), initRecorder(), initWhatsNew(), initCaptureSettings()]);

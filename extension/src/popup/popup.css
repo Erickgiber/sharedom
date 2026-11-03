@@ -1,3 +1,8 @@
+:root {
+  --font-body: "ShareDOM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: "ShareDOM Display", "ShareDOM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -6,8 +11,20 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
+  font-feature-settings: "cv11";
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.title,
+.cta-title,
+.special-btn-title,
+.view-title,
+.whats-new-title,
+.banner-title,
+.rec-stat-value {
+  font-family: var(--font-display);
 }
 
 html {
@@ -62,9 +79,9 @@ body {
 }
 
 .title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: #ffffff;
 }
 
@@ -617,7 +634,8 @@ kbd {
 }
 
 /* ---- Early Capture (per-site opt-in) ---- */
-.early-capture-card {
+.early-capture-card,
+.settings-card {
   background: #14141a;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -627,13 +645,15 @@ kbd {
   gap: 8px;
 }
 
-.early-capture-main {
+.early-capture-main,
+.settings-row {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.early-capture-text {
+.early-capture-text,
+.settings-row-text {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -650,7 +670,8 @@ kbd {
   text-overflow: ellipsis;
 }
 
-.early-capture-desc {
+.early-capture-desc,
+.settings-row-desc {
   font-size: 11px;
   line-height: 1.35;
   color: #71717a;
@@ -750,7 +771,8 @@ kbd {
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18);
 }
 
-.early-capture-divider {
+.early-capture-divider,
+.settings-divider {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-top: 8px;
 }
@@ -1029,4 +1051,49 @@ kbd {
   height: 4px;
   border-radius: 50%;
   background: #a78bfa;
+}
+
+.header-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #18181f;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.header-icon-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.settings-row-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #f4f4f5;
+}
+
+.settings-pending {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 8px;
+}
+
+.settings-pending .settings-row-desc {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-pending .banner-btn {
+  flex-shrink: 0;
+  font-family: inherit;
 }

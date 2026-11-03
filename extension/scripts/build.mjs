@@ -78,6 +78,31 @@ fs.copyFileSync(path.resolve(extDir, 'src/offscreen/offscreen.html'), path.resol
 fs.copyFileSync(path.resolve(extDir, 'src/permission/microphone.html'), path.resolve(distDir, 'microphone.html'));
 fs.copyFileSync(path.resolve(extDir, 'src/permission/microphone.css'), path.resolve(distDir, 'microphone.css'));
 
+const fontsSrc = path.resolve(extDir, 'fonts');
+const fontsDest = path.resolve(distDir, 'fonts');
+fs.mkdirSync(fontsDest, { recursive: true });
+
+for (const file of fs.readdirSync(fontsSrc)) {
+  if (file.endsWith('.woff2') || file.endsWith('.txt')) {
+    fs.copyFileSync(path.join(fontsSrc, file), path.join(fontsDest, file));
+  }
+}
+
+const fontFaces = JSON.parse(fs.readFileSync(path.join(fontsSrc, 'fonts.json'), 'utf8'));
+const fontsCss = fontFaces
+  .map(
+    (face) => `@font-face {
+  font-family: '${face.family}';
+  font-style: normal;
+  font-display: swap;
+  font-weight: ${face.weight};
+  src: url('fonts/${face.file}') format('woff2');
+  unicode-range: ${face.unicodeRange};
+}`
+  )
+  .join('\n\n');
+fs.writeFileSync(path.resolve(distDir, 'fonts.css'), `${fontsCss}\n`);
+
 const iconsSrc = path.resolve(extDir, 'icons');
 const iconsDest = path.resolve(distDir, 'icons');
 if (!fs.existsSync(iconsDest)) {

@@ -451,6 +451,7 @@ Captures a DOM element and triggers a browser download.
 | `optimize`        | `boolean`                   | `true`           | Automatically clean transparent entropy and optimize Base64 output. |
 | `width`           | `number`                    | `element.width`  | Custom target width in pixels.                                      |
 | `height`          | `number`                    | `element.height` | Custom target height in pixels.                                     |
+| `clip`            | `{ x, y, width, height }`   | `undefined`      | Renders only this region of the element, in CSS pixels from its top-left corner. |
 | `language`        | `'en' \| 'es'`              | `'en'`           | Language for table headings, badges, and status labels.             |
 
 #### `downloadPDF(target, filename?, options?)`

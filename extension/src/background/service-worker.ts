@@ -6,6 +6,7 @@ import {
   syncEarlyCaptureScripts,
 } from '../shared/early-capture';
 import { ExtensionLanguage, normalizeLanguage, translations } from '../shared/i18n';
+import { loadCaptureSettings } from '../shared/capture-settings';
 import { RecordingSettings } from '../shared/recording';
 import type { CaptureVisibleTabResponse } from '../global';
 import {
@@ -235,7 +236,8 @@ onRecordingStateChange((state) => {
  */
 async function fetchImageAsDataUrl(url: string): Promise<string | null> {
   const origin = originPatternFromUrl(url);
-  if (!origin || !(await hasHostPermission(origin))) return null;
+  if (!origin || !(await loadCaptureSettings()).crossOriginImages) return null;
+  if (!(await hasHostPermission(origin))) return null;
 
   try {
     const response = await fetch(url, { credentials: 'omit' });

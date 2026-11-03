@@ -1,3 +1,5 @@
+import type { CaptureClip } from './types';
+
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /**
@@ -22,7 +24,8 @@ export function createSvgDataUrl(
     width: number,
     height: number,
     pixelWidth: number,
-    pixelHeight: number
+    pixelHeight: number,
+    viewport: CaptureClip = { x: 0, y: 0, width, height }
 ): string {
     const doc = root.ownerDocument;
     const wrapper = doc.createElement('div');
@@ -50,7 +53,7 @@ export function createSvgDataUrl(
     const markup = new XMLSerializer().serializeToString(wrapper).replace(INVALID_XML_CHARS, ' ');
     const svgString =
         `<svg xmlns="${SVG_NS}" width="${pixelWidth}" height="${pixelHeight}" ` +
-        `viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">` +
+        `viewBox="${viewport.x} ${viewport.y} ${viewport.width} ${viewport.height}" preserveAspectRatio="none">` +
         `<foreignObject x="0" y="0" width="${width}" height="${height}">${markup}</foreignObject></svg>`;
 
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;

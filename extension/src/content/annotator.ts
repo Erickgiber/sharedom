@@ -19,6 +19,15 @@ export interface AnnotatorLabels {
 const COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#ffffff', '#111116'];
 const SIZES = [3, 6, 12];
 
+export function scaleStrokes(strokes: Stroke[], factorX: number, factorY: number): Stroke[] {
+  const widthFactor = (factorX + factorY) / 2;
+  return strokes.map((stroke) => ({
+    ...stroke,
+    width: stroke.width * widthFactor,
+    points: stroke.points.map((point) => ({ x: point.x * factorX, y: point.y * factorY })),
+  }));
+}
+
 export function drawStrokes(context: CanvasRenderingContext2D, strokes: Stroke[]): void {
   context.save();
   context.lineCap = 'round';

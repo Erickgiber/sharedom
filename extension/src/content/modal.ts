@@ -10,17 +10,26 @@ import {
 } from '../../../src/index';
 import { translations, ExtensionLanguage } from '../shared/i18n';
 import { ScreenCapture, captureElementFromScreen } from './screen-capture';
-import { ImageAnnotator, Stroke, drawStrokes } from './annotator';
+import { RenderSource, detectBackgroundColor, renderWithEngine } from './raster-capture';
+import { ImageAnnotator, Stroke, drawStrokes, scaleStrokes } from './annotator';
 
 type CaptureType = 'element' | 'console' | 'network' | 'area';
 
 const SCREEN_EXPORT_QUALITY = 0.92;
+const ORIGINAL_SCALE = 1;
+const SCREEN_RASTER_KEY = 'screen';
 
 export interface ModalOptions {
   scale: number;
   format: 'png' | 'jpeg' | 'webp';
   backgroundColor: string | undefined;
   language: ExtensionLanguage;
+  autoCopy: boolean;
+}
+
+interface CanvasSize {
+  width: number;
+  height: number;
 }
 
 function rgbToHex(rgbStr: string): string {
@@ -43,7 +52,9 @@ export class ActionModal {
     format: 'png',
     backgroundColor: undefined,
     language: 'en',
+    autoCopy: false,
   };
+  private defaultScale = 2;
   private isCapturing = false;
   private currentCaptureType: CaptureType = 'element';
   private chunkElements: HTMLElement[] = [];
@@ -53,12 +64,15 @@ export class ActionModal {
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
   private idleTimer: number | null = null;
   private rawItems: any[] = [];
-  private usesEngine = false;
   /** Read once per selection; changing the format only re-encodes it. */
   private screenCapture: ScreenCapture | null = null;
+  private pageSource: RenderSource | null = null;
+  private basePixelRatio = 1;
+  private raster: ScreenCapture | null = null;
+  private rasterKey = '';
   private strokes: Stroke[] = [];
+  private strokeSpace: CanvasSize | null = null;
   private annotator: ImageAnnotator | null = null;
-  private scaleButtons: HTMLElement | null = null;
   private backgroundGroup: HTMLElement | null = null;
   private session = 0;
 
@@ -81,32 +95,22 @@ export class ActionModal {
     this.onToast = callbacks.onToast;
 
     if (initialOptions) {
-      this.currentOptions = { ...this.currentOptions, ...initialOptions };
+      this.setOptions(initialOptions);
     }
   }
 
   public setOptions(options: Partial<ModalOptions>): void {
     this.currentOptions = { ...this.currentOptions, ...options };
+    if (options.scale !== undefined) this.defaultScale = options.scale;
   }
 
-  private detectBackgroundColor(element: HTMLElement): string | undefined {
-    let current: HTMLElement | null = element;
-    while (current && current !== document.documentElement) {
-      const style = window.getComputedStyle(current);
-      const bg = style.backgroundColor;
-      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)' && !bg.endsWith(', 0)')) {
-        return bg;
-      }
-      current = current.parentElement;
-    }
-
-    const bodyStyle = window.getComputedStyle(document.body);
-    const bodyBg = bodyStyle.backgroundColor;
-    if (bodyBg && bodyBg !== 'transparent' && bodyBg !== 'rgba(0, 0, 0, 0)' && !bodyBg.endsWith(', 0)')) {
-      return bodyBg;
-    }
-
-    return undefined;
+  private resetPageCapture(source: RenderSource | null): void {
+    this.pageSource = source;
+    this.screenCapture = null;
+    this.raster = null;
+    this.rasterKey = '';
+    this.strokes = [];
+    this.strokeSpace = null;
   }
 
   public async show(
@@ -128,44 +132,52 @@ export class ActionModal {
       this.currentElement = element;
     }
 
+    const isElementCapture = captureType === 'element';
     this.currentCaptureType = captureType;
-    this.screenCapture = null;
-    this.strokes = [];
-    this.usesEngine = captureType !== 'element';
+    this.currentOptions.scale = isElementCapture ? ORIGINAL_SCALE : this.defaultScale;
+    this.resetPageCapture(isElementCapture ? { element } : null);
 
     if (captureType === 'console' || captureType === 'network') {
       this.detectedBgColor = '#0f172a';
       this.currentOptions.backgroundColor = '#0f172a';
     } else {
-      this.detectedBgColor = this.detectBackgroundColor(element);
+      this.detectedBgColor = detectBackgroundColor(element);
       this.currentOptions.backgroundColor = this.detectedBgColor;
     }
 
     this.hide();
     const session = this.session;
-    if (!this.usesEngine) await this.captureScreenPixels();
+    if (isElementCapture) await this.captureScreenPixels();
     if (session !== this.session) return;
 
-    this.createModalDOM();
-    await this.refreshCapture();
+    await this.openPreview(session);
   }
 
-  public async showImage(capture: ScreenCapture): Promise<void> {
+  public async showArea(capture: ScreenCapture, source: RenderSource): Promise<void> {
     this.rawItems = [];
     this.chunkElements = [];
     this.totalPages = 1;
     this.currentPageIndex = 0;
     this.currentElement = null;
     this.currentCaptureType = 'area';
+    this.currentOptions.scale = ORIGINAL_SCALE;
+    this.resetPageCapture(source);
     this.screenCapture = capture;
-    this.strokes = [];
-    this.usesEngine = false;
-    this.detectedBgColor = undefined;
-    this.currentOptions.backgroundColor = undefined;
+    this.detectedBgColor = detectBackgroundColor(source.element);
+    this.currentOptions.backgroundColor = this.detectedBgColor;
 
     this.hide();
+    await this.openPreview(this.session);
+  }
+
+  private async openPreview(session: number): Promise<void> {
+    this.basePixelRatio = this.screenCapture?.pixelRatio ?? window.devicePixelRatio;
     this.createModalDOM();
     await this.refreshCapture();
+    if (session !== this.session) return;
+    if (this.currentOptions.autoCopy && this.isPageCapture() && this.raster) {
+      await this.copyImageToClipboard();
+    }
   }
 
   private async captureScreenPixels(): Promise<void> {
@@ -176,13 +188,20 @@ export class ActionModal {
       }
       this.screenCapture = await captureElementFromScreen(this.currentElement, host);
     } catch {
-      this.usesEngine = true;
       this.onToast(translations[this.currentOptions.language].modal.engineFallback, 'ℹ️');
     }
   }
 
+  private isPageCapture(): boolean {
+    return this.currentCaptureType === 'element' || this.currentCaptureType === 'area';
+  }
+
   private usesScreenPixels(): boolean {
-    return !this.usesEngine && this.screenCapture !== null;
+    return this.isPageCapture() && this.currentOptions.scale === ORIGINAL_SCALE && this.screenCapture !== null;
+  }
+
+  private renderScale(): number {
+    return this.isPageCapture() ? this.basePixelRatio * this.currentOptions.scale : this.currentOptions.scale;
   }
 
   public hide(): void {
@@ -213,10 +232,9 @@ export class ActionModal {
     const meta = document.createElement('div');
     meta.className = 'sharedom-preview-meta';
     const format = this.currentOptions.format.toUpperCase();
-    if (this.screenCapture && !this.usesEngine) {
-      const { canvas, pixelRatio } = this.screenCapture;
-      const ratio = Number(pixelRatio.toFixed(2));
-      meta.textContent = `${canvas.width} × ${canvas.height} px (${ratio}x ${format})`;
+    if (this.isPageCapture() && this.raster) {
+      const { canvas } = this.raster;
+      meta.textContent = `${canvas.width} × ${canvas.height} px (${this.currentOptions.scale}x ${format})`;
     } else if (this.currentElement) {
       const rect = this.currentElement.getBoundingClientRect();
       const width = Math.round(rect.width * this.currentOptions.scale);
@@ -484,12 +502,13 @@ export class ActionModal {
       const btn = document.createElement('button');
       btn.className = `sharedom-btn-option ${this.currentOptions.scale === s ? 'active' : ''}`;
       btn.textContent = `${s}x`;
-      btn.disabled = !this.usesEngine;
+      if (s === ORIGINAL_SCALE && this.isPageCapture()) btn.title = t.scaleOriginal;
       btn.addEventListener('click', async () => {
         if (this.currentOptions.scale === s || this.isCapturing) return;
         scaleBtnGroup.querySelectorAll('.sharedom-btn-option').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         this.currentOptions.scale = s;
+        this.syncEngineControls();
         await this.refreshCapture();
       });
       scaleBtnGroup.appendChild(btn);
@@ -603,9 +622,8 @@ export class ActionModal {
     controlsGrid.appendChild(formatGroup);
     controlsGrid.appendChild(bgGroup);
 
-    this.scaleButtons = scaleBtnGroup;
     this.backgroundGroup = bgGroup;
-    bgGroup.hidden = !this.usesEngine;
+    bgGroup.hidden = this.usesScreenPixels();
     body.appendChild(controlsGrid);
 
     const footer = document.createElement('div');
@@ -788,13 +806,21 @@ export class ActionModal {
   }
 
   private syncEngineControls(): void {
-    this.scaleButtons?.querySelectorAll('button').forEach((button) => (button.disabled = !this.usesEngine));
-    if (this.backgroundGroup) this.backgroundGroup.hidden = !this.usesEngine;
+    if (this.backgroundGroup) this.backgroundGroup.hidden = this.usesScreenPixels();
+  }
+
+  private strokesFor(size: CanvasSize): Stroke[] {
+    if (!this.strokeSpace) return this.strokes;
+    return scaleStrokes(
+      this.strokes,
+      size.width / this.strokeSpace.width,
+      size.height / this.strokeSpace.height
+    );
   }
 
   private exportCanvas(format: ModalOptions['format']): HTMLCanvasElement {
-    if (!this.screenCapture) throw new Error('No screen capture to encode.');
-    const source = this.screenCapture.canvas;
+    if (!this.raster) throw new Error('No capture to encode.');
+    const source = this.raster.canvas;
     const isOpaqueFormat = format === 'jpeg';
     if (this.strokes.length === 0 && !isOpaqueFormat) return source;
 
@@ -809,62 +835,52 @@ export class ActionModal {
       context.fillRect(0, 0, canvas.width, canvas.height);
     }
     context.drawImage(source, 0, 0);
-    drawStrokes(context, this.strokes);
+    drawStrokes(context, this.strokesFor(canvas));
     return canvas;
   }
 
-  private encodeScreenCapture(format: ModalOptions['format']): string {
+  private encodeRaster(format: ModalOptions['format']): string {
     const mimeType = format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png';
     return this.exportCanvas(format).toDataURL(mimeType, SCREEN_EXPORT_QUALITY);
   }
 
-  private refreshScreenCapture(previewBox: HTMLElement | null): void {
-    this.currentDataUrl = this.encodeScreenCapture(this.currentOptions.format);
+  private currentRasterKey(): string {
+    if (this.usesScreenPixels()) return SCREEN_RASTER_KEY;
+    return `${this.renderScale()}|${this.currentOptions.backgroundColor ?? 'transparent'}`;
+  }
+
+  private async loadRaster(): Promise<ScreenCapture> {
+    const key = this.currentRasterKey();
+    if (this.raster && this.rasterKey === key) return this.raster;
+
+    let raster: ScreenCapture;
+    if (this.usesScreenPixels() && this.screenCapture) {
+      raster = this.screenCapture;
+    } else if (this.pageSource) {
+      raster = await renderWithEngine(this.pageSource, this.renderScale(), this.currentOptions.backgroundColor);
+    } else {
+      throw new Error('There is nothing to capture.');
+    }
+
+    this.raster = raster;
+    this.rasterKey = key;
+    return raster;
+  }
+
+  private async refreshPageCapture(previewBox: HTMLElement | null): Promise<void> {
+    const session = this.session;
+    await this.loadRaster();
+    if (session !== this.session) return;
+
+    this.currentDataUrl = this.encodeRaster(this.currentOptions.format);
     this.chunkDataUrls = [this.currentDataUrl];
     this.renderPreviewImage(previewBox, this.currentDataUrl);
   }
 
-  private async rasterizeEngineCapture(): Promise<ScreenCapture> {
-    if (!this.currentElement) throw new Error('There is no element to rasterize.');
-
-    const isPng = this.currentOptions.format === 'png' && this.currentDataUrl.startsWith('data:image/png');
-    const dataUrl = isPng
-      ? this.currentDataUrl
-      : await capture(this.currentElement, {
-          scale: this.currentOptions.scale,
-          format: 'png',
-          backgroundColor: this.currentOptions.backgroundColor,
-          optimize: true,
-        });
-
-    const image = new Image();
-    image.src = dataUrl;
-    await image.decode();
-
-    const canvas = document.createElement('canvas');
-    canvas.width = image.naturalWidth;
-    canvas.height = image.naturalHeight;
-    const context = canvas.getContext('2d');
-    if (!context) throw new Error('Could not obtain a 2D canvas context.');
-    context.drawImage(image, 0, 0);
-
-    return { canvas, pixelRatio: this.currentOptions.scale };
-  }
-
   private async openAnnotator(): Promise<void> {
-    if (this.isCapturing || this.annotator) return;
+    if (this.isCapturing || this.annotator || !this.raster) return;
     const t = translations[this.currentOptions.language].modal;
-    const session = this.session;
-
-    let source: ScreenCapture;
-    try {
-      source =
-        this.screenCapture && !this.usesEngine ? this.screenCapture : await this.rasterizeEngineCapture();
-    } catch {
-      this.onToast(t.captureFailed, '⚠️');
-      return;
-    }
-    if (session !== this.session || this.annotator) return;
+    const source = this.raster.canvas;
 
     const annotator = new ImageAnnotator(this.shadow, {
       done: t.editDone,
@@ -873,15 +889,13 @@ export class ActionModal {
       clear: t.editClear,
     });
     this.annotator = annotator;
-    const strokes = await annotator.open(source.canvas, this.strokes);
+    const strokes = await annotator.open(source, this.strokesFor(source));
     if (this.annotator !== annotator) return;
     this.annotator = null;
     if (!strokes) return;
 
-    this.screenCapture = source;
-    this.usesEngine = false;
     this.strokes = strokes;
-    this.syncEngineControls();
+    this.strokeSpace = { width: source.width, height: source.height };
     await this.refreshCapture();
   }
 
@@ -939,8 +953,8 @@ export class ActionModal {
     }
 
     try {
-      if (this.usesScreenPixels()) {
-        this.refreshScreenCapture(previewBox);
+      if (this.isPageCapture()) {
+        await this.refreshPageCapture(previewBox);
         return;
       }
 
@@ -1011,8 +1025,8 @@ export class ActionModal {
       if (this.currentOptions.format === 'png' && this.currentDataUrl.startsWith('data:image/png')) {
         const res = await fetch(this.currentDataUrl);
         pngBlob = await res.blob();
-      } else if (this.usesScreenPixels()) {
-        const res = await fetch(this.encodeScreenCapture('png'));
+      } else if (this.isPageCapture()) {
+        const res = await fetch(this.encodeRaster('png'));
         pngBlob = await res.blob();
       } else {
         if (!this.currentElement) throw new Error('There is no element to copy.');
@@ -1095,9 +1109,9 @@ export class ActionModal {
         pageSize: 'auto',
       };
 
-      if (this.screenCapture && !this.usesEngine) {
-        const { canvas, pixelRatio } = this.screenCapture;
-        const jpeg = this.encodeScreenCapture('jpeg');
+      if (this.isPageCapture() && this.raster) {
+        const { canvas, pixelRatio } = this.raster;
+        const jpeg = this.encodeRaster('jpeg');
         const bin = atob(jpeg.split(',')[1]);
         const bytes = new Uint8Array(bin.length);
         for (let b = 0; b < bin.length; b++) bytes[b] = bin.charCodeAt(b);

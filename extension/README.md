@@ -1,4 +1,4 @@
-# sharedom — Chrome Extension (DOM Screenshot Inspector)
+# ShareDOM — Chrome Extension (DOM Screenshot Inspector)
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Instalar-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/sharedom-dom-screenshot-i/nnpbohgnnkkagbbfjeknpeokbppddjnm)
 [![NPM Library](https://img.shields.io/badge/NPM_Library-sharedom-red?logo=npm&logoColor=white)](https://www.npmjs.com/package/sharedom)
@@ -20,8 +20,9 @@ Extensión profesional para Google Chrome basada en el motor de la librería **`
   - `Esc`: Cancela o cierra el inspector inmediatamente.
   - `Alt + Shift + S` (o `Cmd + Shift + S` en macOS): Atajo global para activar el inspector en la pestaña activa.
 - 🛡️ **Aislamiento con Shadow DOM**: La interfaz y overlays de la extensión no interfieren con el CSS de la página web ni son capturados en la imagen final.
-- 🖼️ **Captura fiel de la pantalla**: Cada elemento se captura copiando los píxeles reales que compone el navegador (iframes, WebGL, vídeo y desenfoques incluidos). Si esos píxeles no se pueden leer —por ejemplo, cuando el elemento es más grande que el área visible— el motor `sharedom` lo reconstruye desde el DOM y el modal lo avisa.
-- ✂️ **Captura de área libre**: Arrastra un rectángulo sobre la página, como en el capturador nativo de macOS o Windows. La imagen se copia al portapapeles en el acto, con su aviso, y se abre el panel para compartirla, descargarla o exportarla a PDF.
+- 🖼️ **Captura fiel de la pantalla (1x)**: Cada elemento o área se abre primero en 1x, la captura original con los píxeles reales que compone el navegador (iframes, WebGL, vídeo y desenfoques incluidos). Con `2x` o `3x` el motor `sharedom` vuelve a renderizar ese mismo elemento o área desde el DOM con más calidad. Si los píxeles originales no se pueden leer —por ejemplo, cuando el elemento es más grande que el área visible— el motor también se encarga de la versión 1x y el modal lo avisa.
+- ✂️ **Captura de área libre**: Arrastra un rectángulo sobre la página, como en el capturador nativo de macOS o Windows. La imagen se copia al portapapeles en el acto, con su aviso, y se abre el panel para cambiar la calidad (1x, 2x, 3x), compartirla, descargarla o exportarla a PDF.
+- ⚙️ **Configuración**: Desde el engranaje del popup eliges si mostrar la ventana de opciones tras cada captura y si copiarla automáticamente al portapapeles. Sin la ventana de opciones, la captura siempre se copia. Las imágenes de otros dominios están activadas por defecto: Chrome pide confirmar el acceso una sola vez, en la primera captura lanzada desde el popup.
 - ✏️ **Lápiz de edición**: Dibuja sobre cualquier captura (seis colores, tres grosores, deshacer y borrar) antes de copiarla, compartirla o descargarla.
 - 📋 **Copiar al portapapeles**: Copia la imagen PNG directamente al portapapeles del sistema operativo (`navigator.clipboard.write`).
 - 💾 **Descarga instantánea & ZIP Multipágina**: Descarga capturas optimizadas. Si la captura contiene múltiples páginas de red o consola, las empaqueta automáticamente en un archivo `.zip` comprimido con cero dependencias.
@@ -31,7 +32,7 @@ Extensión profesional para Google Chrome basada en el motor de la librería **`
 - 📄 **Exportación a PDF**: Descarga cualquier elemento o captura especializada directamente como documento PDF formateado.
 - 🎨 **Controles en tiempo real**:
   - **Formato**: `PNG` (con canal alfa), `JPEG`, `WebP`.
-  - **Resolución** (`1x`, `2x`, `3x`) y **Fondo** (`Transparente`, `Blanco`, `Oscuro` o `Color personalizado`): disponibles cuando la captura la renderiza el motor `sharedom`; la captura fiel usa la resolución de tu pantalla y el fondo que pinta la página.
+  - **Resolución** (`1x` original, `2x`, `3x`) y **Fondo** (`Transparente`, `Blanco`, `Oscuro` o `Color personalizado`): el fondo está disponible cuando la captura la renderiza el motor `sharedom`; la versión 1x original conserva el fondo que pinta la página.
 - 🎥 **Grabador de pantalla integrado en el popup**: Graba una pestaña, una ventana o la pantalla completa, con fps sin límite opcional, micrófono, presets de calidad, salida MP4 o WebM y marca de agua discreta. La grabación sigue corriendo con el popup cerrado y el buffer va a disco, no a memoria.
 - 🆕 **Novedades al actualizar**: La primera vez que abres el popup tras una actualización aparece una tarjeta con los cambios de esa versión, en tu idioma, y solo esa vez.
 - 🌐 **8 idiomas (EN / ES / ZH / JA / PT / DE / KO / RU)**: Selector con banderas en el popup, igual que la landing.

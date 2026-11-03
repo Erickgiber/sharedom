@@ -5,8 +5,22 @@ export const overlayStyles = `
   position: fixed;
   inset: 0;
   pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sharedom-font-body: "ShareDOM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sharedom-font-display: "ShareDOM Display", "ShareDOM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--sharedom-font-body);
+  font-feature-settings: "cv11";
   -webkit-font-smoothing: antialiased;
+}
+
+button,
+select,
+input {
+  font-family: inherit;
+}
+
+.sharedom-modal-title,
+.sharedom-status-title {
+  font-family: var(--sharedom-font-display);
 }
 
 *, *::before, *::after {
@@ -696,7 +710,8 @@ export const overlayStyles = `
   font-size: 12.5px;
   font-weight: 600;
   color: #cbd5e1;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
   min-width: 60px;
   text-align: center;
 }

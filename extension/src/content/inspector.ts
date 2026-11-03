@@ -1,8 +1,15 @@
 import { OverlayManager } from './overlay';
 import { ActionModal } from './modal';
 import { AreaSelector } from './area-selector';
-import { captureAreaFromScreen, copyCaptureToClipboard } from './screen-capture';
+import { ScreenCapture, captureAreaFromScreen, copyCaptureToClipboard } from './screen-capture';
+import { areaRenderSource, captureElementOriginal } from './raster-capture';
 import { ExtensionLanguage, normalizeLanguage, translations } from '../shared/i18n';
+import {
+  CaptureSettings,
+  DEFAULT_CAPTURE_SETTINGS,
+  loadCaptureSettings,
+  shouldCopyAfterCapture,
+} from '../shared/capture-settings';
 import {
   getConsoleLogs,
   getNetworkRequests,
@@ -33,7 +40,7 @@ export interface InspectorStartOptions {
   language?: ExtensionLanguage;
 }
 
-const FAILURE_TOAST_MS = 2600;
+const TOAST_LINGER_MS = 2600;
 
 const pageLogs: ConsoleLogEntry[] = [];
 const pageRequests: NetworkRequestEntry[] = [];
@@ -94,6 +101,7 @@ export class DomInspector {
   private isKeyboardNavigating = false;
   private isAreaCapture = false;
   private areaSelector: AreaSelector | null = null;
+  private captureSettings: CaptureSettings = { ...DEFAULT_CAPTURE_SETTINGS };
 
   private onMouseMoveBound = this.onMouseMove.bind(this);
   private onMouseOverBound = this.onMouseOver.bind(this);
@@ -122,6 +130,8 @@ export class DomInspector {
     }
 
     this.currentLanguage = language || 'en';
+    this.captureSettings = await loadCaptureSettings();
+    const autoCopy = this.captureSettings.autoCopy;
 
     if (!this.overlay) {
       this.overlay = new OverlayManager(this.currentLanguage);
@@ -138,10 +148,10 @@ export class DomInspector {
           onReselect: () => (this.isAreaCapture ? void this.selectArea() : this.resumeInspection()),
           onToast: (msg, icon) => this.overlay?.showToast(msg, icon),
         },
-        { scale, format, language: this.currentLanguage }
+        { scale, format, language: this.currentLanguage, autoCopy }
       );
     } else if (this.modal) {
-      this.modal.setOptions({ scale, format, language: this.currentLanguage });
+      this.modal.setOptions({ scale, format, language: this.currentLanguage, autoCopy });
     }
 
     return { scale, format };
@@ -270,25 +280,66 @@ export class DomInspector {
       return;
     }
 
+    const source = areaRenderSource(area, host);
+    const pending = captureAreaFromScreen(area, host);
+
+    if (!this.captureSettings.showModal) {
+      await this.copyAndFinish(pending);
+      return;
+    }
+
     try {
-      const pending = captureAreaFromScreen(area, host);
-      const copying = copyCaptureToClipboard(pending);
       const capture = await pending;
       if (this.overlay !== overlay || !this.modal) return;
-
-      await this.modal.showImage(capture);
-      if (await copying) {
-        overlay.showToast(t.modal.areaCopied, '📋');
-      } else {
-        overlay.showToast(t.modal.copyError, '⚠️');
-      }
+      await this.modal.showArea(capture, source);
     } catch {
       if (this.overlay !== overlay) return;
       overlay.showToast(t.modal.captureFailed, '⚠️');
-      setTimeout(() => {
-        if (this.overlay === overlay) this.stop();
-      }, FAILURE_TOAST_MS);
+      this.stopAfterToast(overlay);
     }
+  }
+
+  private async captureElement(element: HTMLElement): Promise<void> {
+    this.selectedElement = element;
+    this.isModalOpen = true;
+    this.overlay?.hideHighlight();
+    this.overlay?.hideStatusPill();
+
+    if (this.captureSettings.showModal) {
+      await this.modal?.show(element, 'element');
+      return;
+    }
+
+    const host = this.overlay?.getHostElement();
+    if (!host) return;
+    this.detachEvents();
+    await this.copyAndFinish(captureElementOriginal(element, host));
+  }
+
+  private async copyAndFinish(pending: Promise<ScreenCapture>): Promise<void> {
+    const overlay = this.overlay;
+    if (!overlay) return;
+    const t = translations[this.currentLanguage].modal;
+    const copying = shouldCopyAfterCapture(this.captureSettings) ? copyCaptureToClipboard(pending) : null;
+
+    let message = t.captureFailed;
+    let icon = '⚠️';
+    try {
+      await pending;
+      const copied = copying ? await copying : false;
+      message = copied ? t.copySuccess : t.copyError;
+      icon = copied ? '📋' : '⚠️';
+    } catch {}
+
+    if (this.overlay !== overlay) return;
+    overlay.showToast(message, icon);
+    this.stopAfterToast(overlay);
+  }
+
+  private stopAfterToast(overlay: OverlayManager): void {
+    setTimeout(() => {
+      if (this.overlay === overlay) this.stop();
+    }, TOAST_LINGER_MS);
   }
 
   public stop(): void {
@@ -414,15 +465,7 @@ export class DomInspector {
     const target = this.hoveredElement || (e.target instanceof HTMLElement ? e.target : null);
     if (!target || target === document.documentElement) return;
 
-    this.selectedElement = target;
-    this.isModalOpen = true;
-
-    this.overlay?.hideHighlight();
-    this.overlay?.hideStatusPill();
-
-    if (this.modal) {
-      await this.modal.show(this.selectedElement, 'element');
-    }
+    await this.captureElement(target);
   }
 
   private async onKeyDown(e: KeyboardEvent): Promise<void> {
@@ -443,14 +486,7 @@ export class DomInspector {
       e.stopPropagation();
       const target = this.hoveredElement;
       if (target && target !== document.documentElement) {
-        this.selectedElement = target;
-        this.isModalOpen = true;
-        this.overlay?.hideHighlight();
-        this.overlay?.hideStatusPill();
-
-        if (this.modal) {
-          await this.modal.show(this.selectedElement, 'element');
-        }
+        await this.captureElement(target);
       }
       return;
     }

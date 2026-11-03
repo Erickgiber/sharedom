@@ -1,5 +1,6 @@
 import { setImageResolver } from '../../../src/index';
 import { DomInspector } from './inspector';
+import { registerExtensionFonts } from '../shared/fonts';
 
 /**
  * Images blocked by CORS cannot be read from the page, but the extension can fetch them for the
@@ -21,6 +22,7 @@ if (!(window as any).__sharedom_content_script_loaded__) {
 
   const inspector = new DomInspector();
   installImageResolver();
+  registerExtensionFonts();
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (!message || typeof message !== 'object') return;
